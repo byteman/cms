@@ -5,30 +5,21 @@
     </div>
     <el-form  :model="form.form_data" :rules="rules" ref="devform" label-width="100px">
       <el-col :span="11">
-        <el-form-item label="设备名称" prop="name">
-          <el-input v-model="mydata.name"></el-input>
+        <el-form-item label="平台名称" prop="Name">
+          <el-input v-model="mydata.Name"></el-input>
         </el-form-item>
-        <el-form-item label="设备编号">
-          <el-input v-model="mydata.gbcode" :disabled="true"></el-input>
-        </el-form-item>
-        <el-form-item label="设备IP" prop="ip_addr">
-          <el-input v-model="mydata.ip_addr"></el-input>
-        </el-form-item>
-        <el-form-item label="设备端口" prop="port">
-          <el-input v-model="mydata.port"></el-input>
-        </el-form-item>
-        <el-form-item label="设备厂商" prop="vendor_id">
-          <el-select v-model="mydata.vendor_id" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in form.vendors_options" :key="item.value" :label="item.name" :value="item.value">
+        <el-form-item label="注册设备" prop="RegDevType">
+            <el-select v-model="mydata.RegDevType" placeholder="请选择" style="width:100%">
+            <el-option v-for="item in form.reg_dev_options" :key="item.value" :label="item.name" :value="item.value">
             </el-option>
           </el-select>
 
         </el-form-item>
-        <el-form-item label="设备型号" prop="dev_type">
-          <el-select v-model="mydata.dev_type" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in form.device_options" :key="item.value" :label="item.name" :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="用户名" prop="User">
+          <el-input v-model="mydata.User"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="Pwd">
+          <el-input v-model="mydata.Pwd"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -39,34 +30,23 @@
       </el-col>
 
       <el-col :span="11" :offset="1">
-        <el-form-item label="用户名" prop="user_name">
-          <el-input v-model="mydata.user_name"></el-input>
+        <el-form-item label="国标编码" prop="ID">
+          <el-input v-model="mydata.ID" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass_word">
-          <el-input v-model="mydata.pass_word"></el-input>
-        </el-form-item>
-        <el-form-item label="码流类型" prop="stream_type">
-          <el-select v-model="mydata.stream_type" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in form.stream_options" :key="item.value" :label="item.name" :value="item.value">
+        <el-form-item label="级联类型" prop="Cascade">
+          <el-select v-model="mydata.Cascade" placeholder="请选择" style="width:100%">
+            <el-option v-for="item in form.cascade_options" :key="item.value" :label="item.name" :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="连接协议" prop="conn_proto">
-          <el-select v-model="mydata.conn_proto" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in form.proto_options" :key="item.value" :label="item.name" :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="域名" prop="Domain">
+           <el-input v-model="mydata.Domain" ></el-input>
         </el-form-item>
-        <el-form-item label="传输类型" prop="transmode_id">
-          <el-select v-model="mydata.transmode_id" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in form.trans_options" :key="item.value" :label="item.name" :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="地址" prop="IP">
+          <el-input v-model="mydata.IP" ></el-input>
         </el-form-item>
-
-        <el-form-item v-if='mydata.conn_proto==="rtsp"' label="RTSP地址" prop="rtsp_url" 
-        :rules="{required: true, message: 'RTSP地址不能为空', trigger: 'blur'}">
-          <el-input v-model="mydata.rtsp_url"></el-input>
+        <el-form-item label="关联VTDU" prop="RefVTDU">
+          <el-input v-model="mydata.RefVTDU" ></el-input>
         </el-form-item>
 
       </el-col>
@@ -78,7 +58,7 @@
 
 <script>
 import { GetDictsByCode } from '@/api/dict'
-import { AddDevice } from '@/api/device'
+import { AddGBPlatform } from '@/api/gbplatform'
 
 export default {
 
@@ -88,34 +68,16 @@ export default {
     return {
       mydata: this.data,
       form: {
-        vendors_options: [],
-        trans_options: [],
-        proto_options: [],
-        stream_options: [],
-        device_options: [],
+        cascade_options: [],
+        reg_dev_options: [],
         form_data: this.data
       },
       rules: {
         name: [
-          { required: true, message: '请输入设备名称', trigger: 'blur' }
+          { required: true, message: '请选择注册设备', trigger: 'blur' }
         ],
         ip_addr: [
-          { required: true, message: '请输入IP地址', trigger: 'blur' }
-        ],
-        vendor_id: [
-          { required: true, message: '请选择设备厂商', trigger: 'blur' }
-        ],
-        dev_type: [
-          { required: true, message: '请选择设备类型', trigger: 'blur' }
-        ],
-        stream_type: [
-          { required: true, message: '请选择码流类型', trigger: 'blur' }
-        ],
-        conn_proto: [
-          { required: true, message: '请选择连接协议', trigger: 'blur' }
-        ],
-        transmode_id: [
-          { required: true, message: '请选择传输方式', trigger: 'blur' }
+          { required: true, message: '请选择级联类型', trigger: 'blur' }
         ]
       }
     }
@@ -126,7 +88,7 @@ export default {
       console.log('mydata', this.mydata)
       this.$refs.devform.validate((valid) => {
         if (valid) {
-          AddDevice(this.mydata).then(response => {
+          AddGBPlatform(this.mydata).then(response => {
             this.$emit('success', true)
             console.log(response.data)
           })
@@ -140,27 +102,14 @@ export default {
     },
     getDicts() {
       // 厂商类型
-      GetDictsByCode('VENDOR').then(response => {
-        this.form.vendors_options = response.data
+      GetDictsByCode('RegDevType').then(response => {
+        this.form.reg_dev_options = response.data
         console.log(response.data)
       })
       // 传输方式
-      GetDictsByCode('TRANSPORT').then(response => {
-        this.form.trans_options = response.data
+      GetDictsByCode('Cascade').then(response => {
+        this.form.cascade_options = response.data
         console.log(response.data)
-      })
-      // 取流协议
-      GetDictsByCode('CONPROTO').then(response => {
-        this.form.proto_options = response.data
-      })
-
-      // 码流类型
-      GetDictsByCode('STREAMTYPE').then(response => {
-        this.form.stream_options = response.data
-      })
-      // 设备类型
-      GetDictsByCode('DEVTYPE').then(response => {
-        this.form.device_options = response.data
       })
     },
     onCancel() {
