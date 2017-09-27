@@ -2,32 +2,39 @@
   <div>
     <div v-if="status==1">
 
-      <el-table :data="list" style="width: 100%">
+      <el-table :data="list" style="width: 100%" v-loading.lock="listLoading" element-loading-text="同步中">
 
         <el-table-column prop="ID" label="国标编码" min-width="120px">
         </el-table-column>
         <el-table-column prop="Name" label="国标名称">
         </el-table-column>
-        <el-table-column prop="Cascade" label="级联类型">
+        <el-table-column prop="Cascade" label="级联类型" :formatter="formatCascade">
         </el-table-column>
-        <el-table-column prop="RegDevType" label="注册设备类型">
+        <el-table-column prop="RegDevType" label="注册设备类型" :formatter="formatRegDevType">
         </el-table-column>
         <el-table-column prop="Domain" label="域名">
         </el-table-column>
-        <el-table-column prop="IP" label="地址" min-width="250px">
+        <el-table-column prop="IP" label="地址">
+        </el-table-column>
+        <el-table-column prop="ExpireAt" label="剩余时长(秒)">
         </el-table-column>
         <el-table-column prop="Status" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="300">
           <template scope="scope">
             <el-button-group>
-
-              <el-button size="small" icon="cw-bofang1"></el-button>
-
-              <el-button size="small" icon="edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
-
-              <el-button size="small" type="danger" icon="delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
-
+              <el-tooltip content="同步平台" placement="top">
+                <el-button size="small" icon="cw-shuaxin"  @click="handleSync('platform',scope.$index, scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="同步设备" placement="top">
+                <el-button size="small" icon="cw-shuaxin1" @click="handleSync('device',scope.$index, scope.row)" ></el-button>
+              </el-tooltip>
+              <el-tooltip content="编辑平台" placement="top">
+                <el-button size="small" icon="edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="删除平台" placement="top">
+                <el-button size="small" type="danger" icon="delete" @click="handleDelete(scope.$index, scope.row)"></el-button>
+              </el-tooltip>
             </el-button-group>
           </template>
         </el-table-column>
@@ -45,7 +52,7 @@
 </template>
 
 <script>
-import { GetGbPlatform, RemoveGbPlatform } from '@/api/gbplatform'
+import { GetGbPlatform, RemoveGbPlatform, SyncGBPlatform } from '@/api/gbplatform'
 
 import MyEditor from './edit'
 export default {
@@ -67,7 +74,7 @@ export default {
       },
       title: '新建平台',
       dialogVisible: false,
-      StatusFilters: [{ text: '离线', value: 0 }, { text: '在线', value: 1 }, { text: '未启动', value: 2 }]
+      StatusFilters: [{ text: '离线', value: 0 }, { text: '在线', value: 1 }]
     }
   },
   created() {
@@ -83,27 +90,65 @@ export default {
         this.listLoading = false
       })
     },
+    syncPlatform(id) {
+      this.listLoading = true
+      SyncGBPlatform(id).then(response => {
+        this.$message({
+          type: 'info',
+          message: '同步成功',
+          duration: 1000
+        })
+        this.listLoading = false
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '同步失败',
+          duration: 1000
+        })
+        this.listLoading = false
+      })
+    },
+    handleSync(type, index, row) {
+      if (type === 'platform') {
+          console.log('sync platform id=' + row.ID)
+          this.syncPlatform(row.ID)
+      } else if (type === 'device') {
+
+      }
+    },
     filterStatus(value, row) {
       return (row.status === value)
       // console.log(value, row)
     },
-    formatVendor(row, column, cellValue) {
+    formatCascade(row, column, cellValue) {
       // console.log(row, column, cellValue)
-      if (cellValue === 'hik') {
-        return '海康'
-      } else if (cellValue === 'dahua') {
-        return '大华'
+      if (cellValue === 1) {
+        return '下级平台'
+      } else if (cellValue === 2) {
+        return '上级平台'
+      } else if (cellValue === 3) {
+        return '其他设备'
+      } else if (cellValue === 0) {
+        return '本平台'
+      }
+    },
+    formatRegDevType(row, column, cellValue) {
+      // console.log(row, column, cellValue)
+      if (cellValue === 1) {
+        return '设备'
+      } else if (cellValue === 2) {
+        return '终端'
+      } else if (cellValue === 0) {
+        return '平台'
       }
     },
     formatStatus(row, column, cellValue) {
       // console.log(row, column, cellValue)
-      // 离线 0 在线 1 未启动 2
+      // 0-离线,其他-在线
       if (cellValue === 0) {
         return '离线'
-      } else if (cellValue === 1) {
+      } else {
         return '在线'
-      } else if (cellValue === 2) {
-        return '未启动'
       }
     },
     handleEdit(index, row) {
@@ -121,12 +166,22 @@ export default {
         type: 'warning'
       }).then(() => {
         RemoveGbPlatform(row).then(response => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.fetchData()
-          console.log(response.data)
+          if(response.data.success==true)
+          {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+            this.fetchData()
+            console.log(response.data)
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.message,
+              duration: 1000
+            })
+          }
+     
         })
       }).catch(() => {
         this.$message({
@@ -158,6 +213,9 @@ export default {
     onNew() {
       this.status = 2
       this.currentData = {
+        RegDevType: '',
+        Cascade: ''
+
       }
       this.title = '新建平台'
       this.btnName = '立即创建'

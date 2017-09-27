@@ -7,7 +7,7 @@
 
     </div>
 
-    <el-form ref="form" :model="form" label-width="100px">
+    <el-form ref="form" :model="form" label-width="100px" >
 
       <el-col :span="11">
 
@@ -110,7 +110,6 @@ export default {
         desc: ''
 
       },
-
       mydata: this.data
 
     }
@@ -122,8 +121,10 @@ export default {
     onSubmit() {
       console.log('mydata', this.mydata)
       // var call = (this.type === 1) ? AddService : UpdateService
+      this.fullscreenLoading = true
       AddService(this.mydata).then(response => {
         this.$emit('success', true)
+        this.fullscreenLoading = false
         console.log(response.data)
       })
     },

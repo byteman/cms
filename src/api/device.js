@@ -1,5 +1,13 @@
 import fetch from '@/utils/fetch'
 
+export function GetDeviceTrees(params) {
+  return fetch({
+    url: '/api/v1/devices/tree',
+    method: 'get',
+    params
+  })
+}
+
 export function getDevices(params) {
   return fetch({
     url: '/api/v1/devices',

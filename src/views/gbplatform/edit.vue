@@ -3,14 +3,15 @@
     <div slot="header" class="clearfix">
       <span style="line-height: 36px;">{{title}}</span>
     </div>
-    <el-form  :model="form.form_data" :rules="rules" ref="devform" label-width="100px">
+    <div>
+    <el-form  :model="form.form_data" :rules="rules" ref="devform" label-width="100px" class="clearfix">
       <el-col :span="11">
         <el-form-item label="平台名称" prop="Name">
           <el-input v-model="mydata.Name"></el-input>
         </el-form-item>
         <el-form-item label="注册设备" prop="RegDevType">
             <el-select v-model="mydata.RegDevType" placeholder="请选择" style="width:100%">
-            <el-option v-for="item in form.reg_dev_options" :key="item.value" :label="item.name" :value="item.value">
+              <el-option v-for="item in form.reg_dev_options" :key="item.value" :label="item.name" :value="item.value">
             </el-option>
           </el-select>
 
@@ -21,12 +22,6 @@
         <el-form-item label="密码" prop="Pwd">
           <el-input v-model="mydata.Pwd"></el-input>
         </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
-          <el-button @click="onCancel">取消</el-button>
-        </el-form-item>
-
       </el-col>
 
       <el-col :span="11" :offset="1">
@@ -52,7 +47,11 @@
       </el-col>
 
     </el-form>
-
+    </div>
+    <div class="footer">
+        <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
+        <el-button @click="onCancel">取消</el-button>
+    </div>
   </el-card>
 </template>
 
@@ -68,8 +67,8 @@ export default {
     return {
       mydata: this.data,
       form: {
-        cascade_options: [],
-        reg_dev_options: [],
+        cascade_options: [{ name: '下级平台', value: 1 }, { name: '上级平台', value: 2 }, { name: '本平台', value: 0 }, { name: '其他设备', value: 3 }],
+        reg_dev_options: [{ name: '平台', value: 0 }, { name: '设备', value: 1 }, { name: '终端', value: 2 }],
         form_data: this.data
       },
       rules: {
@@ -89,6 +88,14 @@ export default {
       this.$refs.devform.validate((valid) => {
         if (valid) {
           AddGBPlatform(this.mydata).then(response => {
+            if (response.data.success === false) {
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: response.data.message
+              })
+              return
+            }
             this.$emit('success', true)
             console.log(response.data)
           })
@@ -120,13 +127,13 @@ export default {
   },
   mounted() {
     console.log('mounted')
-    this.getDicts()
+    // this.getDicts()
   }
 
 }
 </script>
 
-<style>
+<style scoped>
 .text {
   font-size: 14px;
 }
@@ -145,7 +152,9 @@ export default {
   margin-bottom: 13px;
   line-height: 12px;
 }
-
+.footer{
+   margin-bottom: 13px;
+}
 .clearfix:after {
   clear: both
 }

@@ -1,7 +1,23 @@
 <template>
   <div>
-    <div v-if="status==1">
 
+    <div v-if="status==1">
+      <el-popover ref="popover4" placement="bottom-start" width="400" trigger="click" title="组织机构选择">
+        <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+      </el-popover>
+      <div class="head">
+        <el-form :inline="true">
+          <el-form-item label="组织机构">
+            <el-input>
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" v-popover:popover4>选择组织机构</el-button>
+          </el-form-item>
+        </el-form>
+
+      </div>
+      
       <el-table :data="list" style="width: 100%">
 
         <el-table-column prop="gbcode" label="设备编码" min-width="120px">
@@ -47,7 +63,7 @@
 </template>
 
 <script>
-import { getDevices } from '@/api/device'
+import { getDevices, GetDeviceTrees } from '@/api/device'
 import { RemoveDevice } from '@/api/device'
 import MyEditor from './edit'
 export default {
@@ -61,6 +77,11 @@ export default {
       listLoading: true,
       show: false,
       status: 1,
+      treeData: [],
+      defaultProps: {
+          children: 'nodes',
+          label: 'text'
+      },
       currentData: {
         vendor_id: '',
         transmode_id: '',
@@ -79,7 +100,10 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-
+      GetDeviceTrees().then(response => {
+        console.log(response.data)
+        this.treeData = response.data
+      })
       getDevices(this.org).then(response => {
         this.list = response.data
         this.listLoading = false
@@ -157,6 +181,9 @@ export default {
       console.log('onSuccess!')
       this.status = 1
     },
+    handleNodeClick(data) {
+      console.log(data)
+    },
     onNew() {
       this.status = 2
       this.currentData = {
@@ -195,4 +222,10 @@ export default {
 .tree {
   height: 1000px;
 }
+.head {
+  width: 500px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 </style>

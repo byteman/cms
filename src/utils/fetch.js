@@ -35,11 +35,11 @@ service.interceptors.response.use(
       location.href = '/login'
     } else {
       // do something
-      Message({
-        message: error.message,
-        type: 'error',
-        duration: 5 * 1000
-      })
+      // Message({
+      //   message: error.message,
+      //   type: 'error',
+      //   duration: 1 * 1000
+      // })
     }
     return Promise.reject(error)
   }

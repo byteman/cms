@@ -1,5 +1,5 @@
 <template>
- <el-form ref="form" :model="form" label-width="100px">
+ <el-form ref="form" :model="form" label-width="100px" v-loading.lock="listLoading" element-loading-text="正在加载参数">
   <el-card class="box-card" v-for="(section,index) in sections" :key="index">
     <div slot="header" class="clearfix">
       <span style="line-height: 24px;">{{section.Name}}</span>
@@ -49,7 +49,8 @@ export default {
       column: 2,
       span: 12,
       name: 'jerry',
-      form: {}
+      form: {},
+      listLoading: false
     }
   },
   methods: {
