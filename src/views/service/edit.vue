@@ -47,9 +47,9 @@
 
         </el-form-item>
 
-        <el-form-item label="主机端口">
+        <el-form-item label="监听端口">
 
-          <el-input v-model="mydata.NatsPort"></el-input>
+          <el-input v-model="mydata.PortListener"></el-input>
 
         </el-form-item>
 

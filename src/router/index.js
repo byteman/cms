@@ -22,6 +22,9 @@ const Device = _import('device/index')
 const Param = _import('param/index')
 const GBPlatform = _import('gbplatform/index')
 const GBDevice = _import('gbdevice/index')
+const HardInfo = _import('hardinfo/index')
+
+
 Vue.use(Router)
 
  /**
@@ -96,6 +99,14 @@ export const asyncRouterMap = [
     icon: 'camera',
     noDropdown: true,
     children: [{ path: 'index', component: GBDevice, name: '国标设备', meta: { role: ['admin'] }}]
+  },
+  {
+    path: '/hardinfo',
+    component: Layout,
+    redirect: '/hardinfo/index',
+    icon: 'service',
+    noDropdown: true,
+    children: [{ path: 'index', component: HardInfo, name: '主机信息', meta: { role: ['admin'] }}]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -126,7 +126,7 @@ export default {
 
   },
   mounted() {
-    console.log('mounted')
+    console.log('mounted', this.$el)
     // this.getDicts()
   }
 

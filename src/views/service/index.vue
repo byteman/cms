@@ -15,7 +15,7 @@
       </el-table-column>
       <el-table-column prop="Status" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center">
         <template scope="scope">
           <el-button-group>
             <el-button size="small" icon="edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
@@ -32,7 +32,7 @@
 
     <MyEditor v-if="status==2" @success="onSuccess" :data="currentData" :title="title" :btnName='btnName'></MyEditor>
     <el-dialog title="服务部署" :visible.sync="dialogVisible" size="tiny">
-      <el-upload class="upload-demo" ref="upload" :action="action" :headers="headers" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
+      <el-upload class="upload-demo" ref="upload" :action="action" :headers="headers" :on-error="handleError" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传tar.gz文件</div>
       </el-upload>
@@ -121,8 +121,15 @@ export default {
     HandleSetting(index, row) {
       // 出现自动配置参数框,根据自定义参数选项，动态生成表单.
       console.log(index, row)
-      var url='subj_' + row.Name + "_" + row.ID 
-      this.$router.push('/service/param/' + url) 
+      var url = 'subj_' + row.Name + '_' + row.ID
+      this.$router.push('/service/param/' + url)
+    },
+    handleError(err, file, fileList) {
+        console.log(err,file,fileList)
+        this.$message({
+          type: 'error',
+          message: '上传失败!'
+        })
     },
     handleDelete(index, row) {
       this.$confirm('确认删除该服务, 是否继续?', '提示', {
@@ -172,11 +179,12 @@ export default {
       this.btnName = '立即创建'
     },
     onUpdate(index, row) {
-      console.log("onUpldate");
-      console.log(index, row.Name);
+      
+      console.log(index, row.HostAddress, row.PortListener, row.Name);
 
-      this.action = "http://192.168.40.9:8999/upload?name=" + row.Name
-      this.dialogVisible = true;
+      this.action = 'http://' + row.HostAddress + ':' + row.PortListener + '/upload?name=' + row.Name
+      console.log("onUpldate action=", this.action)
+      this.dialogVisible = true
       console.log(this.$refs.upload)
       if (this.$refs.upload !== undefined)
         this.$refs.upload.clearFiles()
