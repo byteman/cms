@@ -100,13 +100,13 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [{ path: 'index', component: GBDevice, name: '国标设备', meta: { role: ['admin'] }}]
   },
-  {
-    path: '/hardinfo',
-    component: Layout,
-    redirect: '/hardinfo/index',
-    icon: 'service',
-    noDropdown: true,
-    children: [{ path: 'index', component: HardInfo, name: '主机信息', meta: { role: ['admin'] }}]
-  },
+  // {
+  //   path: '/hardinfo',
+  //   component: Layout,
+  //   redirect: '/hardinfo/index',
+  //   icon: 'service',
+  //   noDropdown: true,
+  //   children: [{ path: 'index', component: HardInfo, name: '主机信息', meta: { role: ['admin'] }}]
+  // },
   { path: '*', redirect: '/404', hidden: true }
 ]

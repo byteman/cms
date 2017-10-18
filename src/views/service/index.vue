@@ -32,7 +32,7 @@
 
     <MyEditor v-if="status==2" @success="onSuccess" :data="currentData" :title="title" :btnName='btnName'></MyEditor>
     <el-dialog title="服务部署" :visible.sync="dialogVisible" size="tiny">
-      <el-upload class="upload-demo" ref="upload" :action="action" :headers="headers" :on-error="handleError" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
+      <el-upload class="upload-demo" ref="upload" :action="action" :data="params" :headers="headers" :on-error="handleError" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList">
         <el-button size="small" type="primary">点击上传</el-button>
         <div slot="tip" class="el-upload__tip">只能上传tar.gz文件</div>
       </el-upload>
@@ -50,7 +50,7 @@
 
 <script>
 import { getServices } from '@/api/service'
-import { RemoveService } from '@/api/service'
+import { RemoveService, StopService } from '@/api/service'
 import MyEditor from './edit'
 export default {
   components: {
@@ -64,6 +64,7 @@ export default {
       fileList: [],
       show: false,
       status: 1,
+      params: {'a':1 },
       form: {
         name: '',
         region: '',
@@ -102,11 +103,11 @@ export default {
       // console.log(row, column, cellValue)
       if (cellValue === 0) {
         return '未上线'
-      } else if (cellValue === 0) {
+      } else if (cellValue === 1) {
         return '在线'
-      } else if (cellValue === 0) {
+      } else if (cellValue === 2) {
         return '禁用'
-      } else if (cellValue === 0) {
+      } else if (cellValue === 3) {
         return '服务异常'
       }
     },
@@ -125,11 +126,43 @@ export default {
       this.$router.push('/service/param/' + url)
     },
     handleError(err, file, fileList) {
-        console.log(err,file,fileList)
+      console.log(err, file, fileList)
+      this.$message({
+        type: 'error',
+        message: '上传失败!'
+      })
+    },
+    removeService()
+    {
+      
+      RemoveService(row.ID).then(response => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.fetchData()
+          console.log(response.data)
+        }).catch(() => {
         this.$message({
-          type: 'error',
-          message: '上传失败!'
+          type: 'info',
+          message: '已取消删除'
         })
+      })
+    },
+    stopService(row)
+    {
+      var url = 'http://' + row.HostAddress + ':' + row.PortListener + '/api/programs/'+ row.Name + '/stop'   
+
+      StopService(url).then(response => {
+          RemoveService(row)
+          console.log(response.data)
+        }).catch(() => {
+          this.$message({
+          type: 'error',
+          message: '停止服务失败'
+        })
+        console.log('cancel')
+      })
     },
     handleDelete(index, row) {
       this.$confirm('确认删除该服务, 是否继续?', '提示', {
@@ -137,22 +170,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        RemoveService(row.ID).then(response => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.fetchData()
-          console.log(response.data)
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+        this.stopService(row)
+        console.log(index, row)
       })
-
-      console.log(index, row)
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -178,11 +198,34 @@ export default {
       this.title = "新建服务";
       this.btnName = '立即创建'
     },
+    /*
+* 用来遍历指定对象所有的属性名称和值
+* obj 需要遍历的对象
+* author: Jet Mah
+* website: http://www.javatang.com/archives/2006/09/13/442864.html 
+*/ 
+  allPrpos(obj) { 
+    // 用来保存所有的属性名称和值
+    var props = "";
+    // 开始遍历
+    for(var p in obj){ 
+        // 方法
+        if(typeof(obj[p])=="function"){ 
+            obj[p]();
+        }else{ 
+            // p 为属性名称，obj[p]为对应属性的值
+            props+= "&" + p + "=" + obj[p] ;
+        } 
+    } 
+    // 最后显示所有的属性
+    return props
+},
     onUpdate(index, row) {
       
       console.log(index, row.HostAddress, row.PortListener, row.Name);
-
-      this.action = 'http://' + row.HostAddress + ':' + row.PortListener + '/upload?name=' + row.Name
+      console.log(this.allPrpos(row))
+      this.action = 'http://' + row.HostAddress + ':' + row.PortListener + '/upload?name=' + row.Name + this.allPrpos(row)
+     
       console.log("onUpldate action=", this.action)
       this.dialogVisible = true
       console.log(this.$refs.upload)

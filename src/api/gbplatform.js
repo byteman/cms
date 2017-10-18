@@ -17,7 +17,14 @@ export function AddGBPlatform(params) {
   return fetch({
     url: '/api/v1/gbplatforms',
     method: 'post',
-    params
+    data: params
+  })
+}
+export function UpdateGBPlatform(params) {
+  return fetch({
+    url: '/api/v1/gbplatforms',
+    method: 'put',
+    data: params
   })
 }
 export function SyncGBPlatform(id) {
@@ -27,10 +34,17 @@ export function SyncGBPlatform(id) {
   })
 }
 
-export function GetGbDevices(page, page_size, params) {
+export function GetGbDevices(params) {
   return fetch({
-    url: '/api/v1/gbdevices?page=' + page + '&page_size=' + page_size,
+    // url: '/api/v1/gbdevices?page=' + page + '&page_size=' + page_size,
+    url: '/api/v1/gbdevices',
     method: 'get',
     params
+  })
+}
+export function SyncGBDevice(plat_id, dev_id) {
+  return fetch({
+    url: '/api/v1/gbdevices/sync/' + plat_id + '/' + dev_id,
+    method: 'get'
   })
 }

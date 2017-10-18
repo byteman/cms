@@ -28,6 +28,13 @@
           <el-input v-model="mydata.LoginName"></el-input>
 
         </el-form-item>
+        <el-form-item label="消息中心地址">
+          <el-input v-model="mydata.NatsAddr"></el-input>
+        </el-form-item>
+
+        <el-form-item label="数据库地址">
+          <el-input v-model="mydata.DBAddr"></el-input>
+        </el-form-item>
 
         <el-form-item>
 
@@ -61,6 +68,11 @@
 
         </el-form-item>
 
+        <el-form-item label="消息中心端口">
+          <el-input v-model="mydata.NatsPort"></el-input>
+        </el-form-item>
+        <el-form-item label="数据库端口">
+          <el-input v-model="mydata.DBPort"></el-input>
         </el-form-item>
 
       </el-col>
@@ -77,11 +89,7 @@ import {
 
 } from '@/api/service'
 
-import {
-
-  UpdateService
-
-} from '@/api/service'
+import { UpdateService } from '@/api/service'
 
 export default {
 

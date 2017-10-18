@@ -7,3 +7,9 @@ export function GetDictsByCode(code) {
   })
 }
 
+export function GetOrgById(code) {
+  return fetch({
+    url: '/api/v1/org/' + code,
+    method: 'get'
+  })
+}

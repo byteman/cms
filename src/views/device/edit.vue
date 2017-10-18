@@ -30,6 +30,12 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="VTDU" prop="ref_vtdu">
+          <el-select v-model="mydata.ref_vtdu" placeholder="请选择" style="width:100%">
+            <el-option v-for="item in form.vtdu_options" :key="item.value" :label="item.name" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
 
         <el-form-item>
           <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
@@ -69,6 +75,15 @@
           <el-input v-model="mydata.rtsp_url"></el-input>
         </el-form-item>
 
+        <el-form-item label="组织机构">
+          <el-popover  ref="popover4" placement="bottom-start" width="400" trigger="click" title="组织机构选择">
+                 <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+          </el-popover>
+          <el-input placeholder="请选择" v-model="orgName" ref="org" icon="caret-bottom" readonly v-popover:popover4>
+            
+          </el-input>
+        </el-form-item>
+
       </el-col>
 
     </el-form>
@@ -77,9 +92,10 @@
 </template>
 
 <script>
-import { GetDictsByCode } from '@/api/dict'
+import { GetDictsByCode, GetOrgById } from '@/api/dict'
 import { AddDevice } from '@/api/device'
-
+import { GetDeviceTrees } from '@/api/device'
+import { getServices } from '@/api/service'
 export default {
 
   props: ['data', 'title', 'btnName', 'type'],
@@ -87,13 +103,22 @@ export default {
   data() {
     return {
       mydata: this.data,
+      showOrg: false,
+      treeData: [],
+      levelCode: '',
+      orgName: '',
       form: {
         vendors_options: [],
         trans_options: [],
         proto_options: [],
         stream_options: [],
         device_options: [],
+        vtdu_options: [{name:"126",value:"126"}],
         form_data: this.data
+      },
+      defaultProps: {
+        children: 'nodes',
+        label: 'text'
       },
       rules: {
         name: [
@@ -116,12 +141,27 @@ export default {
         ],
         transmode_id: [
           { required: true, message: '请选择传输方式', trigger: 'blur' }
+        ],
+        ref_vtdu: [
+          { required: true, message: '请选择关联的', trigger: 'blur' }
+        ],
+        orgName: [
+          { required: true, message: '请选择关联的', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
-
+    fetchDevTree() {
+      GetDeviceTrees().then(response => {
+        console.log(response.data)
+        this.treeData = response.data
+      })
+    },
+    onClickOrg(event) {
+      console.log('click org', event)
+      this.showOrg = true
+    },
     onSubmit() {
       console.log('mydata', this.mydata)
       this.$refs.devform.validate((valid) => {
@@ -135,10 +175,23 @@ export default {
         }
       })
     },
+    handleNodeClick(org) {
+      this.orgName = org.text
+      this.mydata.orgId = org.id
+      console.log('nodeclick--->', org)
+    },
     resetForm(formName) {
       this.$refs.devform.resetFields()
     },
     getDicts() {
+      console.log(this.mydata.orgId)
+      if (this.mydata.orgId !== undefined) {
+        GetOrgById(this.mydata.orgId).then(response => {
+          this.orgName = response.data.name
+          // this.levelCode = response.data.levelCode
+          console.log(response.data)
+        })
+      }
       // 厂商类型
       GetDictsByCode('VENDOR').then(response => {
         this.form.vendors_options = response.data
@@ -170,14 +223,15 @@ export default {
 
   },
   mounted() {
-    console.log('mounted')
+    console.log('edit mounted')
     this.getDicts()
+    this.fetchDevTree()
   }
 
 }
 </script>
 
-<style>
+<style scoped>
 .text {
   font-size: 14px;
 }
@@ -209,6 +263,7 @@ export default {
 .box-card {
   width: 800px;
   margin: 30px auto;
-  height: 500px;
+  height: 700px;
 }
+
 </style>

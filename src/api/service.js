@@ -20,3 +20,10 @@ export function RemoveService(id) {
     method: 'delete'
   })
 }
+export function StopService(url) {
+  return fetch({
+    baseurl: '',
+    url: url,
+    method: 'delete'
+  })
+}

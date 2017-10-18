@@ -22,11 +22,28 @@
         <el-form-item label="密码" prop="Pwd">
           <el-input v-model="mydata.Pwd"></el-input>
         </el-form-item>
+
+       
+
+         <el-form-item label="关联VTDU" prop="RefVTDU">
+          <el-select v-model="mydata.RefVTDU" placeholder="请选择" style="width:100%">
+            <el-option v-for="item in form.vtdu_options" :key="item.value" :label="item.name" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+
+         <el-form-item>
+          <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
+          <el-button @click="onCancel">取消</el-button>
+        </el-form-item>
+
+
       </el-col>
 
       <el-col :span="11" :offset="1">
         <el-form-item label="国标编码" prop="ID">
-          <el-input v-model="mydata.ID" :disabled="true"></el-input>
+          <el-input v-model="mydata.ID" :disabled='title!=="新建平台"' ></el-input>
         </el-form-item>
         <el-form-item label="级联类型" prop="Cascade">
           <el-select v-model="mydata.Cascade" placeholder="请选择" style="width:100%">
@@ -40,28 +57,23 @@
         <el-form-item label="地址" prop="IP">
           <el-input v-model="mydata.IP" ></el-input>
         </el-form-item>
-        <el-form-item label="关联VTDU" prop="RefVTDU">
-          <el-input v-model="mydata.RefVTDU" ></el-input>
-        </el-form-item>
+       
 
       </el-col>
 
     </el-form>
     </div>
-    <div class="footer">
-        <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
-        <el-button @click="onCancel">取消</el-button>
-    </div>
+   
   </el-card>
 </template>
 
 <script>
 import { GetDictsByCode } from '@/api/dict'
-import { AddGBPlatform } from '@/api/gbplatform'
+import { AddGBPlatform, UpdateGBPlatform } from '@/api/gbplatform'
 
 export default {
 
-  props: ['data', 'title', 'btnName', 'type'],
+  props: ['data', 'title', 'btnName'],
 
   data() {
     return {
@@ -69,25 +81,25 @@ export default {
       form: {
         cascade_options: [{ name: '下级平台', value: 1 }, { name: '上级平台', value: 2 }, { name: '本平台', value: 0 }, { name: '其他设备', value: 3 }],
         reg_dev_options: [{ name: '平台', value: 0 }, { name: '设备', value: 1 }, { name: '终端', value: 2 }],
+        vtdu_options: [ {name: '126', value: '126'} ],
         form_data: this.data
       },
       rules: {
-        name: [
-          { required: true, message: '请选择注册设备', trigger: 'blur' }
-        ],
-        ip_addr: [
-          { required: true, message: '请选择级联类型', trigger: 'blur' }
+        ID: [
+          { required: true, message: '请输入国标编号', trigger: 'blur' }
         ]
       }
     }
   },
+
   methods: {
 
     onSubmit() {
       console.log('mydata', this.mydata)
       this.$refs.devform.validate((valid) => {
         if (valid) {
-          AddGBPlatform(this.mydata).then(response => {
+          if (this.title === '新建平台') {
+             AddGBPlatform(this.mydata).then(response => {
             if (response.data.success === false) {
               this.$message({
                 type: 'error',
@@ -99,6 +111,21 @@ export default {
             this.$emit('success', true)
             console.log(response.data)
           })
+
+          } else {
+          UpdateGBPlatform(this.mydata).then(response => {
+            if (response.data.success === false) {
+              this.$message({
+                type: 'error',
+                showClose: true,
+                message: response.data.message
+              })
+              return
+            }
+            this.$emit('success', true)
+            console.log(response.data)
+          })
+          }
         } else {
           console.log('error submit!!')
         }
@@ -126,7 +153,8 @@ export default {
 
   },
   mounted() {
-    console.log('mounted', this.$el)
+    // console.log('type=', this.$props.title)
+    console.log('mounted ', this.$el)
     // this.getDicts()
   }
 

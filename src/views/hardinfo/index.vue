@@ -41,6 +41,9 @@ export default {
   },
   beforeDestroy() {
    
+  },
+  mounted() {
+    console.log('hardinfo mounted')
   }
 }
 </script>

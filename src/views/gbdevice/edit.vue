@@ -31,10 +31,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
-          <el-button @click="onCancel">取消</el-button>
-        </el-form-item>
+     
 
       </el-col>
 
@@ -69,6 +66,10 @@
           <el-input v-model="mydata.rtsp_url"></el-input>
         </el-form-item>
 
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">{{btnName}}</el-button>
+          <el-button @click="onCancel">取消1</el-button>
+        </el-form-item>
       </el-col>
 
     </el-form>
@@ -177,7 +178,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .text {
   font-size: 14px;
 }

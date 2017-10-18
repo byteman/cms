@@ -8,11 +8,10 @@ export function GetDeviceTrees(params) {
   })
 }
 
-export function getDevices(params) {
+export function getDevices(page_num, page_size, org) {
   return fetch({
-    url: '/api/v1/devices',
-    method: 'get',
-    params
+    url: '/api/v1/devices?' + 'page_num=' + page_num + '&page_size=' + page_size + '&org=' + org,
+    method: 'get'
   })
 }
 export function RemoveDevice(params) {

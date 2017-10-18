@@ -2,18 +2,19 @@
   <div>
 
     <div v-if="status==1">
-      <el-popover ref="popover4" placement="bottom-start" width="400" trigger="click" title="组织机构选择">
+      <!-- <el-popover ref="popover4" placement="bottom-start" width="400" trigger="click" title="组织机构选择">
         <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
-      </el-popover>
+      </el-popover> -->
       <div class="head">
         <el-form :inline="true">
-          <el-form-item label="组织机构">
-            <el-input>
-            </el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" v-popover:popover4>选择组织机构</el-button>
-          </el-form-item>
+              <el-form-item label="组织机构">
+                <el-popover  ref="popover4" placement="bottom-start" width="400" trigger="click" title="组织机构选择">
+                      <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+                </el-popover>
+                <el-input placeholder="请选择" v-model="orgName" ref="org" icon="caret-bottom" readonly v-popover:popover4>
+                  
+                </el-input>
+            </el-form-item>
         </el-form>
 
       </div>
@@ -51,9 +52,14 @@
         </el-table-column>
 
       </el-table>
-
+      <div class="footer">
+        <div class="block">
+          <el-pagination layout="prev, pager, next" @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="total">
+          </el-pagination>
+        </div>
+      </div>
     </div>
-    <MyEditor v-if="status==2" @success="onSuccess" :data="currentData" :title="title" :btnName='btnName'></MyEditor>
+    <MyEditor v-if="status==2" @success="onSuccess" :data="currentData" :title="title" :btnName='btnName' ></MyEditor>
 
     <div class="footer">
       <el-button type="primary" icon="edit" @click="onNew" v-if="status==1">新建</el-button>
@@ -75,12 +81,18 @@ export default {
       headers: { 'x-requested-with': '222' },
       list: null,
       listLoading: true,
+      page_size: 25,
+      total: 0,
+      levelCode: '',
+      orgId: '',
+      page_index: 1,
       show: false,
+      orgName: '',
       status: 1,
       treeData: [],
       defaultProps: {
-          children: 'nodes',
-          label: 'text'
+        children: 'nodes',
+        label: 'text'
       },
       currentData: {
         vendor_id: '',
@@ -95,19 +107,33 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    console.log("index mounted")
+    this.fetchDevTree()
+    this.fetchData(1, 25, this.levelCode)
   },
   methods: {
-    fetchData() {
+    fetchData(page_index, page_size, org) {
       this.listLoading = true
+      
+      getDevices(page_index, page_size, org).then(response => {
+        this.list = response.data.data
+        this.page_num = response.data.current_page
+        this.page_size = 10
+        this.total = response.data.total_records
+        this.listLoading = false
+      })
+    },
+    fetchDevTree() {
       GetDeviceTrees().then(response => {
         console.log(response.data)
         this.treeData = response.data
       })
-      getDevices(this.org).then(response => {
-        this.list = response.data
-        this.listLoading = false
-      })
+    },
+    handleSizeChange(val) {
+
+    },
+    handleCurrentChange(val) {
+      this.fetchData(val, this.page_size, this.levelCode)
     },
     filterStatus(value, row) {
       return (row.status === value)
@@ -124,18 +150,17 @@ export default {
     formatStatus(row, column, cellValue) {
       // console.log(row, column, cellValue)
       // 离线 0 在线 1 未启动 2
-      if (cellValue === 0) {
+      if (cellValue === 'OFF') {
         return '离线'
-      } else if (cellValue === 1) {
+      } else if (cellValue === 'ON') {
         return '在线'
-      } else if (cellValue === 2) {
-        return '未启动'
-      }
+      } 
     },
     handleEdit(index, row) {
       // 深度拷贝row对象，否则在子组件中会修改到row的内容.
       this.currentData = Object.assign({}, row)
       this.status = 2
+      //this.orgId = this.currentData.orgId
       this.title = '编辑设备'
       this.btnName = '立即修改'
       console.log(index, row)
@@ -151,7 +176,7 @@ export default {
             type: 'success',
             message: '删除成功!'
           })
-          this.fetchData()
+          this.fetchData(this.page_index, this.page_num, this.levelCode)
           console.log(response.data)
         })
       }).catch(() => {
@@ -174,15 +199,20 @@ export default {
       this.status = 1
     },
     onSuccess(refresh) {
+      console.log("levelcode == ", this.levelCode)
       if (refresh === true) {
-        this.fetchData()
+        this.fetchData(this.page_index, this.page_size, this.levelCode)
       }
 
       console.log('onSuccess!')
       this.status = 1
     },
     handleNodeClick(data) {
-      console.log(data)
+      console.log('nodeclick--->', data.levelCode)
+      this.orgName = data.text
+      this.levelCode = data.levelCode
+      console.log("levelcode == ", this.levelCode)
+      this.fetchData(this.page_index, this.page_size, data.levelCode)
     },
     onNew() {
       this.status = 2
@@ -191,7 +221,8 @@ export default {
         transmode_id: '',
         conn_proto: '',
         stream_type: '',
-        dev_type: ''
+        dev_type: '',
+        ref_vtdu: ''
       }
       this.title = '新建设备'
       this.btnName = '立即创建'
@@ -207,7 +238,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .footer {
   height: 50px;
   margin-top: 10px;
@@ -218,12 +249,16 @@ export default {
 .el-card__header {
   padding: 1px 2px
 }
-
+.el-form-item{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 .tree {
   height: 1000px;
 }
 .head {
   width: 500px;
+  vertical-align:middle;
   margin-top: 5px;
   margin-bottom: 5px;
 }

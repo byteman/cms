@@ -16,19 +16,17 @@
         </el-table-column>
         <el-table-column prop="IP" label="地址">
         </el-table-column>
-        <el-table-column prop="ExpireAt" label="剩余时长(秒)">
-        </el-table-column>
+        <!-- <el-table-column prop="ExpireAt" label="剩余时长(秒)">
+        </el-table-column> -->
         <el-table-column prop="Status" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
         </el-table-column>
         <el-table-column label="操作" width="300">
           <template scope="scope">
             <el-button-group>
-              <el-tooltip content="同步平台" placement="top">
+              <el-tooltip content="同步设备" placement="top">
                 <el-button size="small" icon="cw-shuaxin"  @click="handleSync('platform',scope.$index, scope.row)"></el-button>
               </el-tooltip>
-              <el-tooltip content="同步设备" placement="top">
-                <el-button size="small" icon="cw-shuaxin1" @click="handleSync('device',scope.$index, scope.row)" ></el-button>
-              </el-tooltip>
+            
               <el-tooltip content="编辑平台" placement="top">
                 <el-button size="small" icon="edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
               </el-tooltip>
@@ -78,7 +76,11 @@ export default {
     }
   },
   created() {
+    console.log('gbplatform created')
     this.fetchData()
+  },
+  mounted() {
+    console.log('gbplatform mounted')
   },
   methods: {
     fetchData() {
@@ -110,8 +112,8 @@ export default {
     },
     handleSync(type, index, row) {
       if (type === 'platform') {
-          console.log('sync platform id=' + row.ID)
-          this.syncPlatform(row.ID)
+        console.log('sync platform id=' + row.ID)
+        this.syncPlatform(row.ID)
       } else if (type === 'device') {
 
       }
@@ -145,7 +147,7 @@ export default {
     formatStatus(row, column, cellValue) {
       // console.log(row, column, cellValue)
       // 0-离线,其他-在线
-      if (cellValue === 0) {
+      if (cellValue === 'OFF') {
         return '离线'
       } else {
         return '在线'
@@ -153,11 +155,11 @@ export default {
     },
     handleEdit(index, row) {
       // 深度拷贝row对象，否则在子组件中会修改到row的内容.
-      this.currentData = Object.assign({}, row)
-      this.status = 2
+      this.currentData = Object.assign({}, row)    
       this.title = '编辑平台'
       this.btnName = '立即修改'
       console.log(index, row)
+      this.status = 2
     },
     handleDelete(index, row) {
       this.$confirm('确认删除该平台, 是否继续?', '提示', {
@@ -166,8 +168,7 @@ export default {
         type: 'warning'
       }).then(() => {
         RemoveGbPlatform(row).then(response => {
-          if(response.data.success==true)
-          {
+          if (response.data.success === true) {
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -181,7 +182,6 @@ export default {
               duration: 1000
             })
           }
-     
         })
       }).catch(() => {
         this.$message({
@@ -210,15 +210,16 @@ export default {
       console.log('onSuccess!')
       this.status = 1
     },
-    onNew() {
-      this.status = 2
+    onNew() {  
       this.currentData = {
         RegDevType: '',
-        Cascade: ''
+        Cascade: '',
+        RefVTDU: ''
 
       }
       this.title = '新建平台'
       this.btnName = '立即创建'
+      this.status = 2
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
@@ -231,7 +232,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .footer {
   height: 50px;
   margin-top: 10px;

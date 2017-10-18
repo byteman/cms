@@ -25,6 +25,9 @@ export default {
     sidebar() {
       return this.$store.state.app.sidebar
     }
+  },
+  mounted() {
+    console.log('layout mounted')
   }
 }
 </script>

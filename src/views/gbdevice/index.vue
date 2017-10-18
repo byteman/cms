@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column prop="Manufacturer" label="厂商">
         </el-table-column>
-        <el-table-column prop="Address" label="设备IP">
+        <el-table-column prop="IPAddress" label="设备IP">
         </el-table-column>
         <el-table-column prop="Port" label="端口地址">
         </el-table-column>
@@ -37,8 +37,13 @@
         </el-table-column>
         <el-table-column label="操作">
           <template scope="scope">
-
-            <el-button :plain=true size="small" icon="cw-shuaxin"></el-button>
+ 
+            <el-button-group>
+              <el-tooltip content="同步设备" placement="top">
+                <el-button size="small" icon="cw-shuaxin"  @click="handleSync(scope.$index, scope.row)"></el-button>
+              </el-tooltip>
+            </el-button-group>
+           
 
           </template>
         </el-table-column>
@@ -57,7 +62,7 @@
 </template>
 
 <script>
-import { GetGbDevices } from '@/api/gbplatform'
+import { GetGbDevices, SyncGBDevice } from '@/api/gbplatform'
 
 import MyEditor from './edit'
 export default {
@@ -97,23 +102,47 @@ export default {
       },
       title: '新建设备',
       dialogVisible: false,
-      StatusFilters: [{ text: '离线', value: 0 }, { text: '在线', value: 1 }, { text: '未启动', value: 2 }]
+      StatusFilters: [{ text: '离线', value: 'OFF' }, { text: '在线', value: 'ON' }, { text: '其他', value: '' }]
     }
   },
   created() {
+    console.log('gbdevice created')
     this.fetchData(1, 10)
+  },
+  mounted() {
+    console.log('gbdevice mounted')
   },
   methods: {
     fetchData(page, page_size) {
       this.listLoading = true
-
-      GetGbDevices(page, page_size).then(response => {
+      GetGbDevices({ page, page_size }).then(response => {
         this.list = response.data.data
         this.page_num = response.data.current_page
         this.page_size = 10
         this.total = response.data.total_records
         this.listLoading = false
       })
+    },
+    syncGBDevice(plat_id, dev_id) {
+      this.listLoading = true
+      SyncGBDevice(plat_id, dev_id).then(response => {
+        this.$message({
+          type: 'info',
+          message: '同步成功',
+          duration: 1000
+        })
+        this.listLoading = false
+      }).catch(() => {
+        this.$message({
+          type: 'error',
+          message: '同步失败',
+          duration: 1000
+        })
+        this.listLoading = false
+      })
+    },
+    handleSync(index, row) {
+      this.syncGBDevice(row.PlateID, row.DeviceID)
     },
     handleSizeChange(val) {
 
@@ -123,19 +152,19 @@ export default {
       this.fetchData(val, 10)
     },
     filterStatus(value, row) {
-      return (row.status === value)
+      return (row.Status === value)
       // console.log(value, row)
     },
 
     formatStatus(row, column, cellValue) {
-      // console.log(row, column, cellValue)
+      console.log(cellValue)
       // 离线 0 在线 1 未启动 2
-      if (cellValue === 0) {
+      if (row.Status === 'OFF') {
         return '离线'
-      } else if (cellValue === 1) {
+      } else if (row.Status === 'ON') {
         return '在线'
-      } else if (cellValue === 2) {
-        return '未启动'
+      } else {
+        return '其他'
       }
     },
     handleEdit(index, row) {
@@ -213,7 +242,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .head {
   width: 500px;
   margin-top: 5px;
