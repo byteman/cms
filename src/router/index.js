@@ -24,6 +24,9 @@ const GBPlatform = _import('gbplatform/index')
 const GBDevice = _import('gbdevice/index')
 const HardInfo = _import('hardinfo/index')
 const Algo = _import('algo/index')
+const SysConfig = _import('sysconfig/index')
+const NetConfig = _import('netconfig/index')
+const CameraConfig = _import('cameraconfig/index');
 
 Vue.use(Router)
 
@@ -73,6 +76,36 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [
       { path: 'index', component: Algo, name: '算法参数', meta: { role: ['admin'] }},
+    ]
+  },
+  {
+    path: '/sysconfig',
+    component: Layout,
+    redirect: '/sysconfig/index',
+    icon: 'config',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
+    ]
+  },
+  {
+    path: '/netconfig',
+    component: Layout,
+    redirect: '/netconfig/index',
+    icon: 'network36',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: NetConfig, name: '网络设置', meta: { role: ['admin'] }},
+    ]
+  },
+  {
+    path: '/cameraconfig',
+    component: Layout,
+    redirect: '/cameraconfig/index',
+    icon: 'camera',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: CameraConfig, name: '相机设置', meta: { role: ['admin'] }},
     ]
   },
   // {

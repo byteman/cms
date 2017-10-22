@@ -10,6 +10,7 @@ export function GetAlgoParam() {
 export function SetAlgoParam(code) {
   return fetch({
     url: '/api/v1/algo',
-    method: 'post'
+    method: 'post',
+    data: code
   })
 }
