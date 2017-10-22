@@ -23,7 +23,7 @@ const Param = _import('param/index')
 const GBPlatform = _import('gbplatform/index')
 const GBDevice = _import('gbdevice/index')
 const HardInfo = _import('hardinfo/index')
-
+const Algo = _import('algo/index')
 
 Vue.use(Router)
 
@@ -66,39 +66,14 @@ export const asyncRouterMap = [
   // },
 
   {
-    path: '/service',
+    path: '/algo',
     component: Layout,
-    redirect: '/service/index',
+    redirect: '/algo/index',
     icon: 'service',
     noDropdown: true,
     children: [
-      { path: 'index', component: Service, name: '服务管理', meta: { role: ['admin'] }},
-      { path: 'param/:id', component: Param, name: '参数配置', meta: { role: ['admin'] }}
+      { path: 'index', component: Algo, name: '算法参数', meta: { role: ['admin'] }},
     ]
-  },
-  {
-    path: '/device',
-    component: Layout,
-    redirect: '/device/index',
-    icon: 'camera',
-    noDropdown: true,
-    children: [{ path: 'index', component: Device, name: '设备管理', meta: { role: ['admin'] }}]
-  },
-  {
-    path: '/gbplatform',
-    component: Layout,
-    redirect: '/gbplatform/index',
-    icon: 'platform',
-    noDropdown: true,
-    children: [{ path: 'index', component: GBPlatform, name: '国标平台', meta: { role: ['admin'] }}]
-  },
-  {
-    path: '/gbdevice',
-    component: Layout,
-    redirect: '/gbdevice/index',
-    icon: 'camera',
-    noDropdown: true,
-    children: [{ path: 'index', component: GBDevice, name: '国标设备', meta: { role: ['admin'] }}]
   },
   // {
   //   path: '/hardinfo',

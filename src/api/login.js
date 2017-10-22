@@ -15,7 +15,7 @@ export function getInfo(token) {
   return fetch({
     url: '/api/v1/user/info',
     method: 'get',
-    params: { token }
+    data: token
   })
 }
 
