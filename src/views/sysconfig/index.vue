@@ -5,8 +5,8 @@
     </div>
     <el-form :model="param" :rules="rules" ref="devform" label-width="150px">
       <el-col :span="23">
-        <el-form-item label="相机编号(ID)" prop="cameraId">
-          <el-input v-model="param.cameraId" disabled></el-input>
+        <el-form-item label="相机编号(ID)" prop="deviceId">
+          <el-input v-model="param.deviceId" disabled></el-input>
         </el-form-item>
         <el-form-item label="管理平台地址" prop="platformURL">
           <el-input v-model="param.platformURL"></el-input>

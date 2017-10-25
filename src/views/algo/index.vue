@@ -5,6 +5,7 @@
     </div>
     <el-form :model="param" :rules="rules" ref="devform" label-width="150px">
       <el-col :span="11">
+        <!--
          <el-form-item label="设备编号" prop="deviceId">
           <el-input v-model="param.deviceId" disabled></el-input>
         </el-form-item>
@@ -12,16 +13,13 @@
           <el-input v-model="param.maxFaceNum" type="number"></el-input>
         </el-form-item>
         <el-form-item label="最低质量分" prop="qualityScore">
+          <el-input v-model="param.qualityScore" type="number"></el-input>-->
+        </el-form-item>
+        <el-form-item label="质量分阀值" prop="qualityScore">
           <el-input v-model="param.qualityScore" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="质量分阀值" prop="qualityThreshold">
-          <el-input v-model="param.qualityThreshold" type="number"></el-input>
-        </el-form-item>
-        <el-form-item label="识别阀值" prop="recgThreshold">
-          <el-input v-model="param.recgThreshold" type="number"></el-input>
-        </el-form-item>
-        <el-form-item label="识别间隔(毫秒)" prop="recgInterval">
-          <el-input v-model="param.recgInterval" type="number"></el-input>
+        <el-form-item label="识别阀值" prop="compareScore">
+          <el-input v-model="param.compareScore" type="number"></el-input>
         </el-form-item>
         <el-form-item label="重新建模" prop="rebuildModel">
           <el-checkbox v-model="param.rebuildModel">重新建模</el-checkbox>
@@ -31,9 +29,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="11" :offset="1">
-        <el-form-item label="陌生人阀值" prop="strangerThreshold">
-          <el-input v-model="param.strangerThreshold" type="number"></el-input>
-        </el-form-item>
+        <!--
         <el-form-item label="抬头角度" prop="rise">
           <el-input v-model="param.rise" type="number"></el-input>
         </el-form-item>
@@ -45,6 +41,16 @@
         </el-form-item>
         <el-form-item label="偏头角度" prop="side">
           <el-input v-model="param.side" type="number"></el-input>
+        </el-form-item>
+        -->
+        <el-form-item label="陌生人阀值" prop="strangerThreshold">
+          <el-input v-model="param.strangerThreshold" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="识别间隔(毫秒)" prop="regcoInterval">
+          <el-input v-model="param.regcoInterval" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="选人开关" prop="vip_selection">
+          <el-checkbox v-model="param.vip_selection">VIP选人开关</el-checkbox>
         </el-form-item>
       </el-col>
     </el-form>
@@ -85,10 +91,10 @@ export default {
         qualityThreshold: [
           { required: true, message: '请输入质量分阀值'},
         ],
-        recgThreshold: [
+        compareScore: [
           { required: true, message: '请输入识别阀值'},
         ],
-        recgInterval: [
+        regcoInterval: [
           { required: true, message: '请输入识别间隔'}
         ],
         strangerThreshold: [
@@ -136,6 +142,12 @@ export default {
   mounted() {
     console.log('edit mounted')
     this.fetchAlgo()
+  },
+  fillter: {
+    cutName(value){
+      return value.toFixed(2)
+    }
+
   }
 
 }

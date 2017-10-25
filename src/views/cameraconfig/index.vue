@@ -11,7 +11,7 @@
         <el-form-item label="子网掩码" prop="subneMask">
           <el-input v-model="param.subneMask"></el-input>
         </el-form-item>
-        <el-form-item label="默认网关" prop="defaultGateway">
+        <el-form-item label="默认网关：" prop="defaultGateway">
           <el-input v-model="param.defaultGateway" type="ip"></el-input>
         </el-form-item>
         <el-form-item label="备用网关-1" prop="spareGateway1">
