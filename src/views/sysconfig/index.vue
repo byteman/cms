@@ -41,7 +41,7 @@ export default {
     return {
       param:{
           cameraId: '1',
-          platformURL: 3000,
+          platformURL: '',
           socketPort: 3000,
           statusKeepTimes: 0,
       },
@@ -73,10 +73,19 @@ export default {
         if (valid) {
           console.log('*******', this.param);
           SetSysConfigParam(this.param).then(response => {
-            console.log(response);
+              this.$message({
+                type: 'info',
+                showClose: true,
+                message: '保存成功'
+              })
           })
         } else {
-          console.log('error submit!!')
+          
+           this.$message({
+                type: 'error',
+                showClose: true,
+                message: '保存失败'
+              })
         }
       })
     },
