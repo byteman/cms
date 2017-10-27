@@ -21,8 +21,8 @@
         <el-form-item label="识别阀值" prop="compareScore">
           <el-input v-model="param.compareScore" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="陌生人开关" prop="isAllOutput">
-          <el-checkbox v-model="param.isAllOutput">陌生人开启</el-checkbox>
+        <el-form-item label="陌生人开关" prop="isAllOutPut">
+          <el-checkbox v-model="param.isAllOutPut">陌生人开启</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">设 置</el-button>
@@ -72,6 +72,7 @@ export default {
           maxFaceNum: 1,
           qualityScore: 0.4,
           qualityThreshold: 0.5,
+          isAllOutPut:'false',
           recgThreshold: 0.7,
           rebuildModel: false,
           strangerThreshold: 0,
