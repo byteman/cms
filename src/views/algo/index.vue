@@ -21,8 +21,8 @@
         <el-form-item label="识别阀值" prop="compareScore">
           <el-input v-model="param.compareScore" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="重新建模" prop="rebuildModel">
-          <el-checkbox v-model="param.rebuildModel">重新建模</el-checkbox>
+        <el-form-item label="陌生人开关" prop="isAllOutput">
+          <el-checkbox v-model="param.isAllOutput">陌生人开启</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">设 置</el-button>
