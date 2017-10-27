@@ -127,10 +127,18 @@ export default {
         console.log('*******', this.param);
         if (valid) {
           SetAlgoParam(this.param).then(response => {
-            console.log(response);
+            this.$message({
+                type: 'info',
+                showClose: true,
+                message: '保存成功'
+              })
           })
         } else {
-          console.log('error submit!!')
+           this.$message({
+                type: 'error',
+                showClose: true,
+                message: '保存失败'
+              })
         }
       })
     },
