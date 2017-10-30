@@ -7,9 +7,11 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // 权限
 import { VTooltip } from 'v-tooltip'
+import echarts from 'echarts'
 
 Vue.directive('tooltip', VTooltip)
 Vue.use(ElementUI)
+Vue.prototype.$echarts = echarts	// 注册echarts
 
 Vue.config.productionTip = false
 
