@@ -27,6 +27,7 @@ const Algo = _import('algo/index')
 const SysConfig = _import('sysconfig/index')
 const NetConfig = _import('netconfig/index')
 const CameraConfig = _import('cameraconfig/index');
+const Monitor = _import('monitor/index');
 
 Vue.use(Router)
 
@@ -106,6 +107,16 @@ export const asyncRouterMap = [
     noDropdown: true,
     children: [
       { path: 'index', component: CameraConfig, name: '相机设置', meta: { role: ['admin'] }},
+    ]
+  },
+  {
+    path: '/monitor',
+    component: Layout,
+    redirect: '/monitor/index',
+    icon: 'camera',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: Monitor, name: '设备监控', meta: { role: ['admin'] }},
     ]
   },
   // {
