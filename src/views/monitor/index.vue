@@ -255,7 +255,7 @@ export default {
       //})
     },
 
-    // 初始化数据
+    // 初始化图表数据
     _initData() {
       let lineNum = this.monitorProp.durationTimes / this.monitorProp.intervalTimes;
       for (let i = 0; i < lineNum; i++) {
@@ -279,7 +279,7 @@ export default {
     _genInitData() {
       let oneDay = 24 * 3600 * 1000;
       this.monitorProp.genNow = new Date(+this.monitorProp.genNow + oneDay);
-      this.monitorProp.genValue = this.monitorProp.genValue + Math.random() * 21 - 10;
+      // this.monitorProp.genValue = this.monitorProp.genValue + Math.random() * 21 - 10;
       return {
         name: this.monitorProp.genNow.toString(),
         value: [
