@@ -17,6 +17,12 @@
         <el-form-item label="状态维持时间(秒)" prop="statusKeepTimes">
           <el-input v-model="param.statusKeepTimes" type="number"></el-input>
         </el-form-item>
+        <el-form-item label="AppId" prop="AppId">
+          <el-input v-model="param.AppId" type="number"></el-input>
+        </el-form-item>
+          <el-form-item label="AppSecret" prop="AppSecret">
+          <el-input v-model="param.AppSecret" type="number"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="danger" @click="restoreSettings">一键还原出厂设置</el-button>
           <el-button type="info" @click="checkPlatFormStatus">校验后台在线状态</el-button>
@@ -31,7 +37,7 @@
 
 <script>
 
-import { GetSysConfigParam,  SetSysConfigParam} from '@/api/sysconfig'
+import { GetStatus,Restore, GetSysConfigParam, SetSysConfigParam} from '@/api/sysconfig'
 
 export default {
 
@@ -44,6 +50,8 @@ export default {
           platformURL: '',
           socketPort: 3000,
           statusKeepTimes: 0,
+          AppId: '',
+          AppSecret: ''
       },
       rules: {
         cameraId: [
@@ -58,6 +66,12 @@ export default {
         statusKeepTimes: [
           { required: true, message: '请输入状态维持时间'}
         ],
+        AppId: [
+          { required: true, message: '请输入唯一编号'}
+        ],
+        AppSecret: [
+          { required: true, message: '请输入安全密码'}
+        ]
       }
     }
   },
@@ -94,11 +108,37 @@ export default {
       this.$emit('success', false)
     },
     restoreSettings(){
+        var param={type:'all'}
+         Restore(param).then(response => {
+              this.$message({
+                type: 'info',
+                showClose: true,
+                message: '还原成功'
+              })
+          })
       console.log('restoreSettings')
     },
-    checkPlatFormStatus(){
+    checkPlatFormStatus() {
+      GetStatus().then(response => {
+        console.log(response.data)
+        var state = response.data
+        var msg = '通讯正常'
+        if(state.connected === false){
+           msg = "未连接"
+        }else if(state.registed === false){
+          msg = '未注册'
+        }else if(state.authed === false){
+           msg = "未认证"
+        }
+
+        this.$message({
+          type: 'info',
+          showClose: true,
+          message: msg
+        })
+      })
       console.log('checkPlatFormStatus')
-    },
+    }
   },
   mounted() {
     console.log('edit mounted')
