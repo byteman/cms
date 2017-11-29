@@ -89,36 +89,36 @@ export const asyncRouterMap = [
       { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
     ]
   },
-  {
-    path: '/netconfig',
-    component: Layout,
-    redirect: '/netconfig/index',
-    icon: 'network36',
-    noDropdown: true,
-    children: [
-      { path: 'index', component: NetConfig, name: '网络设置', meta: { role: ['admin'] }},
-    ]
-  },
-  {
-    path: '/cameraconfig',
-    component: Layout,
-    redirect: '/cameraconfig/index',
-    icon: 'camera',
-    noDropdown: true,
-    children: [
-      { path: 'index', component: CameraConfig, name: '相机设置', meta: { role: ['admin'] }},
-    ]
-  },
-  {
-    path: '/monitor',
-    component: Layout,
-    redirect: '/monitor/index',
-    icon: 'camera',
-    noDropdown: true,
-    children: [
-      { path: 'index', component: Monitor, name: '设备监控', meta: { role: ['admin'] }},
-    ]
-  },
+  // {
+  //   path: '/netconfig',
+  //   component: Layout,
+  //   redirect: '/netconfig/index',
+  //   icon: 'network36',
+  //   noDropdown: true,
+  //   children: [
+  //     { path: 'index', component: NetConfig, name: '网络设置', meta: { role: ['admin'] }},
+  //   ]
+  // },
+  // {
+  //   path: '/cameraconfig',
+  //   component: Layout,
+  //   redirect: '/cameraconfig/index',
+  //   icon: 'camera',
+  //   noDropdown: true,
+  //   children: [
+  //     { path: 'index', component: CameraConfig, name: '相机设置', meta: { role: ['admin'] }},
+  //   ]
+  // },
+  // {
+  //   path: '/monitor',
+  //   component: Layout,
+  //   redirect: '/monitor/index',
+  //   icon: 'camera',
+  //   noDropdown: true,
+  //   children: [
+  //     { path: 'index', component: Monitor, name: '设备监控', meta: { role: ['admin'] }},
+  //   ]
+  // },
   // {
   //   path: '/hardinfo',
   //   component: Layout,
