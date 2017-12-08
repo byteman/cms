@@ -54,7 +54,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/sysconfig/index',
     icon: 'config',
-    noDropdown: true,
+    //noDropdown: true,
     children: [
       { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
     ]

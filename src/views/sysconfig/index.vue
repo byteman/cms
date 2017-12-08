@@ -4,9 +4,9 @@
 
       <el-table :data="list" style="width: 100%"  element-loading-text="同步中">
 
-        <el-table-column prop="ID" label="摄像头ID">
+        <el-table-column prop="channel" label="摄像头ID">
         </el-table-column>
-        <el-table-column prop="Name" label="网络接收帧">
+        <el-table-column prop="totalNetFrame" label="网络接收帧">
         </el-table-column>
         <el-table-column prop="Cascade" label="网络丢失帧" >
         </el-table-column>
@@ -18,7 +18,7 @@
         </el-table-column>
         <!-- <el-table-column prop="ExpireAt" label="剩余时长(秒)">
         </el-table-column> -->
-        <el-table-column prop="Status" label="上次接收视频时间" >
+        <el-table-column prop="lastNetTime" label="上次接收视频时间" >
         </el-table-column>
 
         <el-table-column prop="Status" label="编码视频帧">
@@ -72,7 +72,9 @@ export default {
        
     
       GetVideoDebug().then(response => {    
-        console.log(response.data)
+         
+        this.list=response.data.data
+        console.log(this.list)
       }).catch(() => {
         
       })
