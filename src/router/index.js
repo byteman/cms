@@ -89,16 +89,16 @@ export const asyncRouterMap = [
       { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
     ]
   },
-  // {
-  //   path: '/netconfig',
-  //   component: Layout,
-  //   redirect: '/netconfig/index',
-  //   icon: 'network36',
-  //   noDropdown: true,
-  //   children: [
-  //     { path: 'index', component: NetConfig, name: '网络设置', meta: { role: ['admin'] }},
-  //   ]
-  // },
+  {
+    path: '/param',
+    component: Layout,
+    redirect: '/param/index',
+    icon: 'network36',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: Param, name: '抓拍诊断', meta: { role: ['admin'] }},
+    ]
+  },
   // {
   //   path: '/cameraconfig',
   //   component: Layout,
