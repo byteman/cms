@@ -14,7 +14,8 @@ export default {
       name: 'admin',
       avatar: '/logo.gif'
     }
-    this.$store.dispatch('GenerateRoutes', { role }).then(() => {
+    const roles = role
+    this.$store.dispatch('GenerateRoutes', { roles }).then(() => {
       this.$router.addRoutes(this.$store.getters.addRouters)
     })
   }
