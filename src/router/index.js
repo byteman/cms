@@ -48,17 +48,8 @@ export const constantRouterMap = [
     name: 'Home',
     hidden: true,
     children: [{ path: 'dashboard', component: dashboard }]
-  },
-  {
-    path: '/sysconfig',
-    component: Layout,
-    redirect: '/sysconfig/index',
-    icon: 'config',
-    //noDropdown: true,
-    children: [
-      { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
-    ]
-  },
+  }
+
 ]
 
 export default new Router({
@@ -91,12 +82,13 @@ export const asyncRouterMap = [
   },
   {
     path: '/sysconfig',
-    component: Layout,
+    component: Layout, 
     redirect: '/sysconfig/index',
     icon: 'config',
-    noDropdown: true,
+    name: '参数配置',
+    //noDropdown: true,
     children: [
-      { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
+      { path: 'index', component: SysConfig, name: '抓拍诊断', meta: { role: ['admin'] }},
     ]
   },
   // {
