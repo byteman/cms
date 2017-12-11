@@ -23,9 +23,6 @@
         <el-form-item>
         <el-button plain @click="onAddCamera">新增</el-button>
         </el-form-item>
-          <el-form-item>
-        <el-button plain @click="onAddGB28181">新增GB28181</el-button>
-        </el-form-item>
        <el-form-item>
         <el-button plain @click="onPreviewConfig">预览地址配置</el-button>
         </el-form-item>
@@ -51,7 +48,7 @@
 
           <el-button type="text" size="small" @click="handleDetail(scope.row)">详情</el-button>
             <el-button type="text" size="small">编辑</el-button>
-              <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button>
+              <el-button @click="handleRemove(scope.row)" type="text" size="small">删除</el-button>
                <el-button type="text" size="small">抓拍设置</el-button>
                 <el-button type="text" size="small">预览设置</el-button>
               <el-button type="text" size="small">禁用通道</el-button>
@@ -77,31 +74,48 @@
 
           <el-form-item label="相机编号">
 
-            <el-input v-model="camera.Name"></el-input>
+            <el-input v-model="camera.cameraId"></el-input>
 
           </el-form-item>
 
           <el-form-item label="是否启用">
 
-            <el-input v-model="camera.enable"></el-input>
-
+          
+              <el-switch
+              v-model="camera.enable"
+                active-color="#13ce66"
+                inactive-color="#dfdfdf">
+            </el-switch>
           </el-form-item>
 
-          <el-form-item label="视频源类型">
-
-            <el-input v-model="camera.srctype"></el-input>
-
+          <el-form-item label="运算单元">
+ 
+            <el-select v-model="camera.protocal" placeholder="请选择运算单元" style="width:100%">
+                <el-option
+                  v-for="item in calcOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="传输协议">
-            <el-input v-model="camera.transport"></el-input>
+          <el-form-item label="人脸底库">
+            <el-select v-model="camera.group_id" placeholder="请选择人脸底库" style="width:100%">
+                <el-option
+                  v-for="item in facedbs"
+                  :key="item.id"
+                  :label="item.group_name"
+                  :value="item.id">
+                </el-option>
+            </el-select>
           </el-form-item>
 
           <el-form-item label="端口">
-            <el-input v-model="camera.port"></el-input>
+            <el-input v-model="camera.cameraPort"></el-input>
           </el-form-item>
 
           <el-form-item label="密码">
-              <el-input v-model="camera.password"></el-input>
+              <el-input v-model="camera.cameraPwd"></el-input>
           </el-form-item>
 
         </el-col>
@@ -110,13 +124,21 @@
 
           <el-form-item label="相机名称">
 
-            <el-input v-model="camera.name"></el-input>
+            <el-input v-model="camera.cameraName"></el-input>
 
           </el-form-item>
 
           <el-form-item label="相机类型">
 
-            <el-input v-model="camera.cameraType" ></el-input>
+          
+            <el-select v-model="camera.cameraType" placeholder="请选择相机类型" style="width:100%">
+                <el-option
+                  v-for="item in cameraTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select>
 
           </el-form-item>
 
@@ -124,16 +146,16 @@
 
           <el-form-item label="URL">
 
-            <el-input v-model="camera.url"></el-input>
+            <el-input v-model="camera.cameraChannel"></el-input>
 
           </el-form-item>
 
           <el-form-item label="IP地址">
-            <el-input v-model="camera.ipaddr"></el-input>
+            <el-input v-model="camera.cameraIp"></el-input>
           </el-form-item>
 
           <el-form-item label="用户名">
-            <el-input v-model="camera.username"></el-input>
+            <el-input v-model="camera.cameraUser"></el-input>
           </el-form-item>
         
 
@@ -141,17 +163,35 @@
 
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="cameraConfig = false">取 消</el-button>
+        <el-button @click="showChannel = false">取 消</el-button>
         <el-button type="primary" @click="handleSaveCamera">保 存</el-button>
       </span>
     </el-dialog>
+  
+  <el-dialog :title="title" :visible.sync="showVms" width="30%" center >   
+      <el-form ref="form" :model="camera" label-width="100px">
+
+          <el-form-item label="预览地址IP">
+            <el-input v-model="vms.host"></el-input>
+          </el-form-item>
+
+          <el-form-item label="预览地址端口">
+            <el-input v-model="vms.port"></el-input> 
+          </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showVms = false">取 消</el-button>
+        <el-button type="primary" @click="handleSaveVms">保 存</el-button>
+      </span>
+    </el-dialog>
+  
   </div>
   
 </template>
 
 <script>
-import { CommQuery } from '@/api/sysconfig'
-import Channel from './channel'
+import { CommQuery, CommPost, OperChannel } from "@/api/sysconfig";
+import Channel from "./channel";
 export default {
   components: {
     Channel
@@ -160,62 +200,192 @@ export default {
     return {
       total: 50,
       showChannel: false,
+      showVms: false,
       camera: {},
-      cameraConfig: false,
-      title: '相机详情',
+      vms: {
+        host: "127.0.0.1",
+        port: 554
+      },
+      title: "相机详情",
       list: [],
       formInline: {
-        name: ''
-      }
-    }
+        name: ""
+      },
+      cameraTypeOptions: [
+        {
+          value: "rtsp",
+          label: "RTSP"
+        },
+        {
+          value: "hikcap",
+          label: "海康抓拍相机"
+        }
+      ],
+      calcOptions: [
+        {
+          value: "0",
+          label: "CPU"
+        },
+        {
+          value: "1",
+          label: "显卡1"
+        },
+        {
+          value: "2",
+          label: "显卡2"
+        },
+        {
+          value: "3",
+          label: "显卡3"
+        },
+        {
+          value: "4",
+          label: "显卡3"
+        }
+      ],
+      facedbs: []
+    };
   },
   created() {
-    console.log('camera mount')
+    console.log("camera mount");
   },
   mounted() {
-    CommQuery(0x12003)
+    this.onRefresh();
+    CommQuery(80001)
       .then(response => {
-        this.list = response.data.data.channels
-        console.log(this.list)
+        this.facedbs = response.data.data.group_ids;
       })
-      .catch(() => {})
+      .catch(() => {});
   },
   methods: {
     onSubmit: function() {},
     onReset: function() {},
     onAddCamera: function() {
-      this.showChannel = true
+      this.showChannel = true;
+      this.camera = {};
+    },
+    onRefresh() {
+      CommQuery(0x12003)
+        .then(response => {
+          this.list = response.data.data.channels;
+          console.log(this.list);
+        })
+        .catch(() => {});
     },
     onAddGB28181: function() {},
-    onPreviewConfig: function() {},
-    handleClick(row) {
-      console.log(row)
+    onPreviewConfig: function() {
+      CommQuery(0x10314)
+        .then(response => {
+          var rtsp = response.data.data.rtspurl;
+          var rtsps = rtsp.split(":");
+          this.vms.host = rtsps[0];
+          this.vms.port = rtsps[1];
+          console.log(rtsp);
+          this.showVms = true;
+        })
+        .catch(() => {});
     },
-    handleClose: function(){},
-    handleSizeChange: function(){},
-    handleCurrentChange: function(){},
+    handleSaveVms() {
+      var data = {
+        requestdata: {
+          token: 1,
+          bcode: "0x10315",
+          rtspurl: this.vms.host + ":" + this.vms.port
+        }
+      };
+
+      CommPost(data)
+        .then(response => {
+          this.showVms = false;
+        })
+        .catch(() => {});
+    },
+    handleRemove(row) {
+      this.$confirm('确认删除该设备, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          OperChannel(0x12001, row.id)
+            .then(response => {})
+            .catch(() => {});
+          this.onRefresh();
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    str2json(jsonstr) {
+      return eval("(" + jsonstr + ")");
+    },
+    handleClose: function() {},
+    handleSizeChange: function() {},
+    handleCurrentChange: function() {},
     handleDetail(row) {
-      this.cameraConfig = true
+      OperChannel(0x12000, row.id)
+        .then(response => {
+          var tmp = this.str2json(response.data.data);
+
+          this.camera = tmp.ags;
+          console.log(this.camera);
+          this.showChannel = true;
+        })
+        .catch(() => {});
     },
     handleSaveCamera() {
-      this.cameraConfig = false
+      console.log(this.camera);
+
+      var chan = this.camera.cameraId;
+      var data = {
+        requestdata: {
+          token: 1,
+          bcode: "0x12002",
+          channel: chan
+        }
+      };
+      var ags = {
+        ags: this.camera
+      };
+      delete ags.ags.enable;
+      console.log("-----------------");
+      console.log(ags);
+      if (ags.enable) {
+        ags.ags.enable = 1;
+      } else {
+        ags.ags.enable = 0;
+      }
+      console.log(ags);
+      data.requestdata[chan] = ags;
+      console.log(data);
+
+      CommPost(data)
+        .then(response => {
+          this.showChannel = false;
+        })
+        .catch(() => {});
+      this.showChannel = false;
+      this.onRefresh();
     },
     formatType(row, column, cellValue) {
-      console.log(cellValue)
+      console.log(cellValue);
       // 离线 0 在线 1 未启动 2
-      if (row.cameraType === 'file') {
-        return '视频文件'
+      if (row.cameraType === "file") {
+        return "视频文件";
       } else {
-        return '其他'
+        return "其他";
       }
     },
     formatStatus(row, column, cellValue) {
-      console.log(cellValue)
+      console.log(cellValue);
       // 离线 0 在线 1 未启动 2
       if (row.cameraState === 1) {
-        return '禁用'
+        return "禁用";
       } else {
-        return '其他'
+        return "其他";
       }
     }
   }
@@ -261,8 +431,7 @@ export default {
 .tree {
   height: 1000px;
 }
-.el-form{
+.el-form {
   overflow: hidden;
 }
-
 </style>

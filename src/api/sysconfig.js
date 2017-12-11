@@ -55,3 +55,36 @@ export function CommQuery(bcode) {
     }
   })
 }
+export function QueryChannel(chan) {
+  return fetch({
+    url: '/channel/query',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '0x12000',
+        channel: chan
+      }
+    }
+  })
+}
+export function OperChannel(code, chan) {
+  return fetch({
+    url: '/channel/query',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '' + code,
+        channel: chan
+      }
+    }
+  })
+}
+export function CommPost(para) {
+  return fetch({
+    url: '/channel/query',
+    method: 'post',
+    data: para
+  })
+}

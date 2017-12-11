@@ -2,7 +2,7 @@
   
 
    <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="基本资料" name="basic">
+    <el-tab-pane label="基本资料" name="basic" ref='basic'>
       <basic></basic>
     </el-tab-pane>
     <el-tab-pane label="参数配置" name="param">
@@ -30,7 +30,7 @@ export default {
    
 
     return {
-      activeName:'basic',
+      activeName: 'basic',
     
     };
   },
@@ -39,9 +39,11 @@ export default {
   },
   mounted() {},
   methods: {
-      handleClick(){
-
-      }
+    handleClick(tab, event) {
+      this.$refs.basic.Reload()
+      console.log('---------')
+      console.log(tab, event)
+    }
   }
 };
 </script>

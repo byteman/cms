@@ -27,20 +27,26 @@ export default {
   data() {
     return {
       basic: {}
-    };
+    }
   },
   created() {
     console.log('video debug  created')
   },
   mounted() {
-    CommQuery(0x10303)
-      .then(response => {
-        this.basic = response.data.data
-        console.log(this.list)
-      })
-      .catch(() => {})
+    console.log('basic mount')
+    this.Reload()
   },
-  methods: {}
+  methods: {
+    Reload() {
+      console.log('reload ')
+      CommQuery(0x10303)
+        .then(response => {
+          this.basic = response.data.data
+          console.log(this.list)
+        })
+        .catch(() => {})
+    }
+  }
 }
 </script>
 

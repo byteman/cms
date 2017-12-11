@@ -69,7 +69,7 @@ export default {
       .catch(() => {})
   },
   methods: {
-    
+  
   }
 };
 </script>
