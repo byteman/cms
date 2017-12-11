@@ -2,14 +2,14 @@
   
 
    <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="基本资料" name="basic" ref='basic'>
-      <basic></basic>
+    <el-tab-pane label="基本资料" name="basic">
+      <basic  ref='basic'></basic>
     </el-tab-pane>
     <el-tab-pane label="参数配置" name="param">
-      <paramx></paramx>
+      <paramx  ref='param'></paramx>
     </el-tab-pane>
     <el-tab-pane label="状态查询" name="status">
-      <status></status>
+      <status  ref='status'></status>
     </el-tab-pane>
    
   </el-tabs>

@@ -29,32 +29,30 @@
       </el-form>
       <el-table :data="list" >
 
-      <el-table-column type="selection"width="55">
+      <el-table-column type="selection" width="55">
       </el-table-column>
 
-      <el-table-column prop="id" label="相机编号">
+      <el-table-column prop="id" label="相机编号" width="200">
       </el-table-column>
-      <el-table-column prop="name" label="相机名称">
+      <el-table-column prop="name" label="相机名称" width="200">
       </el-table-column>
-      <el-table-column prop="cameraType" label="相机类型" :formatter="formatType">
+      <el-table-column prop="cameraType" label="相机类型" :formatter="formatType" width="150">
       </el-table-column>
-      <el-table-column prop="cameraState" label="设备状态" :formatter="formatStatus">
+      <el-table-column prop="cameraState" label="设备状态" :formatter="formatStatus" width="150">
       </el-table-column>
-        <el-table-column prop="stream_status" label="视频流状态" >
-      </el-table-column>
+  
 
-          <el-table-column label="操作" width="300" align='center'>
-          <template slot-scope="scope">
-
-          <el-button type="text" size="small" @click="handleDetail(scope.row)">详情</el-button>
-            <el-button type="text" size="small">编辑</el-button>
-              <el-button @click="handleRemove(scope.row)" type="text" size="small">删除</el-button>
-               <el-button type="text" size="small">抓拍设置</el-button>
-                <el-button type="text" size="small">预览设置</el-button>
-              <el-button type="text" size="small">禁用通道</el-button>
-               <el-button type="text" size="small">ROI设置</el-button>
-            </template>
-          </el-table-column>
+      <el-table-column label="操作"  align='center'>
+      <template slot-scope="scope">
+        <el-button type="text" size="small" @click="handleDetail(scope.row)">详情</el-button>
+        <el-button type="text" size="small">编辑</el-button>
+        <el-button @click="handleRemove(scope.row)" type="text" size="small">删除</el-button>
+        <el-button type="text" size="small" @click="handleSnap(scope.row)">抓拍设置</el-button>
+        <el-button type="text" size="small" @click="handlePreview(scope.row)">预览设置</el-button>
+        <el-button type="text" size="small" @click="handleChannel(scope.row)">{{scope.row.cameraState | filterChannelStatus}}</el-button>
+        <el-button type="text" size="small"  @click="handleROI(scope.row)" >ROI设置</el-button>
+      </template>
+      </el-table-column>
   
       </el-table>
 
@@ -168,7 +166,42 @@
       </span>
     </el-dialog>
   
-  <el-dialog :title="title" :visible.sync="showVms" width="30%" center >   
+  <el-dialog :title="title" :visible.sync="showSnap" width="30%" center >   
+      <el-form ref="form" :model="camera" label-width="100px">
+
+          <el-form-item label="相机编号">
+            <el-input v-model="snap.id"></el-input>
+          </el-form-item>
+
+          <el-form-item label="最大人脸尺寸">
+            <el-input v-model="snap.maxFaceSize"></el-input> 
+          </el-form-item>
+           <el-form-item label="最小人脸尺寸">
+            <el-input v-model="snap.minFaceSize"></el-input> 
+          </el-form-item>
+           <el-form-item label="人脸过滤分数">
+            <el-input v-model="snap.quality"></el-input> 
+          </el-form-item>
+           <el-form-item label="ROI-X">
+            <el-input v-model="snap.roiX"></el-input> 
+          </el-form-item>
+           <el-form-item label="ROI-Y">
+            <el-input v-model="snap.roiY"></el-input> 
+          </el-form-item>
+           <el-form-item label="ROI-W">
+            <el-input v-model="snap.roiW"></el-input> 
+          </el-form-item>
+          <el-form-item label="ROI-H">
+            <el-input v-model="snap.roiH"></el-input> 
+          </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showSnap = false">取 消</el-button>
+        <el-button type="primary" @click="handleSaveSnap">保 存</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog :title="title" :visible.sync="showVms" width="30%" center >   
       <el-form ref="form" :model="camera" label-width="100px">
 
           <el-form-item label="预览地址IP">
@@ -184,14 +217,60 @@
         <el-button type="primary" @click="handleSaveVms">保 存</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :title="title" :visible.sync="showPrew" width="30%" center >   
+      <el-form ref="form" :model="camera" label-width="100px">
+
+          <el-form-item label="相机编号">
+            <el-input v-model="prew.id"></el-input>
+          </el-form-item>
+
+          <el-form-item label="绘制人脸框">
+             <el-switch
+              v-model="prew.enableDrawFace"
+                active-color="#13ce66"
+                inactive-color="#dfdfdf">
+            </el-switch>
+           
+          </el-form-item>
+           <el-form-item label="I帧间隔">
+            <el-input v-model="prew.gop"></el-input> 
+          </el-form-item>
+           <el-form-item label="分辨率">
+             <el-select v-model="prew.imgSize" placeholder="请选择分辨率" style="width:100%">
+                <el-option
+                  v-for="item in imgOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select> 
+          </el-form-item>
+           <el-form-item label="视频质量">
+             <el-select v-model="prew.videoQuality" placeholder="请选择视频质量" style="width:100%">
+                <el-option
+                  v-for="item in vqOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+            </el-select> 
+          </el-form-item>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showPrew = false">取 消</el-button>
+        <el-button type="primary" @click="handleSavePrew">保 存</el-button>
+      </span>
+    </el-dialog>
   
   </div>
   
 </template>
 
 <script>
-import { CommQuery, CommPost, OperChannel } from "@/api/sysconfig";
-import Channel from "./channel";
+import { CommQuery, CommPost, OperChannel } from '@/api/sysconfig'
+import Channel from './channel'
 export default {
   components: {
     Channel
@@ -199,26 +278,62 @@ export default {
   data() {
     return {
       total: 50,
+      snap: {},
+      prew: {},
       showChannel: false,
       showVms: false,
+      showSnap: false,
+      showPrew: false,
       camera: {},
       vms: {
-        host: "127.0.0.1",
+        host: '127.0.0.1',
         port: 554
       },
-      title: "相机详情",
+      title: '相机详情',
       list: [],
       formInline: {
-        name: ""
+        name: ''
       },
-      cameraTypeOptions: [
+      imgOptions: [
         {
-          value: "rtsp",
-          label: "RTSP"
+          value: '1',
+          label: '原始大小'
         },
         {
-          value: "hikcap",
-          label: "海康抓拍相机"
+          value: '2',
+          label: '640x480'
+        },
+        {
+          value: '3',
+          label: '1280x720'
+        },
+        {
+          value: '4',
+          label: '1920x1080'
+        }
+      ],
+      vqOptions: [
+        {
+          value: '1',
+          label: '标清'
+        },
+        {
+          value: '2',
+          label: '高清'
+        },
+        {
+          value: '3',
+          label: '超清'
+        }
+      ],
+      cameraTypeOptions: [
+        {
+          value: 'rtsp',
+          label: 'RTSP'
+        },
+        {
+          value: 'hikcap',
+          label: '海康抓拍相机'
         }
       ],
       calcOptions: [
@@ -244,25 +359,38 @@ export default {
         }
       ],
       facedbs: []
-    };
+    }
   },
   created() {
-    console.log("camera mount");
+    console.log('camera created')
   },
   mounted() {
-    this.onRefresh();
+    this.onRefresh()
     CommQuery(80001)
       .then(response => {
-        this.facedbs = response.data.data.group_ids;
+        this.facedbs = response.data.data.group_ids
       })
-      .catch(() => {});
+      .catch(() => {})
+  },
+  filters: {  
+    filterChannelStatus: function (value) {  
+      switch (value)
+      {
+        case 1:
+          return '禁用'
+        case -1:
+          return '离线'
+        case 0:
+          return '启用'
+      }
+    }
   },
   methods: {
     onSubmit: function() {},
     onReset: function() {},
     onAddCamera: function() {
-      this.showChannel = true;
-      this.camera = {};
+      this.showChannel = true
+      this.camera = {}
     },
     onRefresh() {
       CommQuery(0x12003)
@@ -276,29 +404,32 @@ export default {
     onPreviewConfig: function() {
       CommQuery(0x10314)
         .then(response => {
-          var rtsp = response.data.data.rtspurl;
-          var rtsps = rtsp.split(":");
-          this.vms.host = rtsps[0];
-          this.vms.port = rtsps[1];
-          console.log(rtsp);
-          this.showVms = true;
+          var rtsp = response.data.data.rtspurl
+          var rtsps = rtsp.split(':')
+          this.vms.host = rtsps[0]
+          this.vms.port = rtsps[1]
+          console.log(rtsp)
+          this.showVms = true
         })
         .catch(() => {});
+    },
+    handleSaveSnap() {
+
     },
     handleSaveVms() {
       var data = {
         requestdata: {
           token: 1,
-          bcode: "0x10315",
-          rtspurl: this.vms.host + ":" + this.vms.port
+          bcode: '0x10315',
+          rtspurl: this.vms.host + ':' + this.vms.port
         }
-      };
+      }
 
       CommPost(data)
         .then(response => {
-          this.showVms = false;
+          this.showVms = false
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     handleRemove(row) {
       this.$confirm('确认删除该设备, 是否继续?', '提示', {
@@ -309,8 +440,8 @@ export default {
         .then(() => {
           OperChannel(0x12001, row.id)
             .then(response => {})
-            .catch(() => {});
-          this.onRefresh();
+            .catch(() => {})
+          this.onRefresh()
         })
         .catch(() => {
           this.$message({
@@ -320,11 +451,61 @@ export default {
         });
     },
     str2json(jsonstr) {
-      return eval("(" + jsonstr + ")");
+      return eval("(" + jsonstr + ")")
+    },
+    handleChannel(row) {
+      var state = 0
+      if (row.cameraState === 1)
+      {
+        ///已经禁用
+        state = 1
+      }
+      
+      var data = {
+        requestdata: {
+          token: 1,
+          bcode: '0x12007',
+          channel: row.id,
+          enable: state
+        }
+      }
+
+      CommPost(data)
+        .then(response => {
+          this.showVms = false
+        })
+        .catch(() => {})
+    },
+    handleROI(row){
+
     },
     handleClose: function() {},
     handleSizeChange: function() {},
     handleCurrentChange: function() {},
+    handleSnap(row) {
+      OperChannel(0x12000, row.id)
+        .then(response => {
+          var tmp = this.str2json(response.data.data);
+
+          this.snap = tmp.snap
+          this.snap.id = row.id
+          console.log(this.camera)
+          this.showSnap = true
+        })
+        .catch(() => {});
+    },
+    handlePreview(row) {
+      OperChannel(0x12000, row.id)
+        .then(response => {
+          var tmp = this.str2json(response.data.data);
+
+          this.prew = tmp.preview
+          this.prew.id = row.id
+          console.log(this.camera)
+          this.showPrew = true
+        })
+        .catch(() => {});
+    },
     handleDetail(row) {
       OperChannel(0x12000, row.id)
         .then(response => {
@@ -337,59 +518,66 @@ export default {
         .catch(() => {});
     },
     handleSaveCamera() {
-      console.log(this.camera);
+      console.log(this.camera)
 
-      var chan = this.camera.cameraId;
+      var chan = this.camera.cameraId
       var data = {
         requestdata: {
           token: 1,
-          bcode: "0x12002",
+          bcode: '0x12002',
           channel: chan
         }
-      };
+      }
       var ags = {
         ags: this.camera
-      };
-      delete ags.ags.enable;
-      console.log("-----------------");
-      console.log(ags);
-      if (ags.enable) {
-        ags.ags.enable = 1;
-      } else {
-        ags.ags.enable = 0;
       }
-      console.log(ags);
-      data.requestdata[chan] = ags;
-      console.log(data);
+      delete ags.ags.enable
+      console.log(ags)
+      if (ags.enable) {
+        ags.ags.enable = 1
+      } else {
+        ags.ags.enable = 0
+      }
+      console.log(ags)
+      data.requestdata[chan] = ags
+      console.log(data)
 
       CommPost(data)
         .then(response => {
-          this.showChannel = false;
+          this.showChannel = false
         })
-        .catch(() => {});
-      this.showChannel = false;
-      this.onRefresh();
+        .catch(() => {})
+      this.showChannel = false
+      this.onRefresh()
+    },
+    handleSavePrew() {
+
+    },
+    handleEnableChannel(enable) {
+
     },
     formatType(row, column, cellValue) {
-      console.log(cellValue);
+      console.log(cellValue)
       // 离线 0 在线 1 未启动 2
-      if (row.cameraType === "file") {
-        return "视频文件";
+      if (row.cameraType === 'file') {
+        return '视频文件'
       } else {
-        return "其他";
+        return '其他'
       }
     },
     formatStatus(row, column, cellValue) {
-      console.log(cellValue);
+      console.log(cellValue)
       // 离线 0 在线 1 未启动 2
       if (row.cameraState === 1) {
-        return "禁用";
-      } else {
-        return "其他";
+        return '禁用'
+      } else if(row.cameraState === -1) {
+        return '离线'
+      } else if(row.cameraState === 0) {
+        return '在线'
       }
     }
   }
-};
+}
 </script>
 
 <style scoped>
