@@ -24,7 +24,11 @@ const GBPlatform = _import('gbplatform/index')
 const GBDevice = _import('gbdevice/index')
 const HardInfo = _import('hardinfo/index')
 const Algo = _import('algo/index')
-const SysConfig = _import('sysconfig/index')
+const VideoDebug = _import('sysconfig/index')
+const SysConfig = _import('sysconfig/sysconfig')
+const FaceDB = _import('sysconfig/facedb')
+const FaceImg = _import('sysconfig/faceimg')
+const Camera = _import('sysconfig/camera')
 const NetConfig = _import('netconfig/index')
 const CameraConfig = _import('cameraconfig/index');
 const Monitor = _import('monitor/index');
@@ -49,6 +53,7 @@ export const constantRouterMap = [
     hidden: true,
     children: [{ path: 'dashboard', component: dashboard }]
   }
+
 ]
 
 export default new Router({
@@ -58,16 +63,7 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: 'noredirect',
-  //   name: 'Example',
-  //   icon: 'zujian',
-  //   children: [
-  //     { path: 'index', component: Form, name: 'Form', icon: 'zonghe' }
-  //   ]
-  // },
+
 
   {
     path: '/algo',
@@ -81,51 +77,19 @@ export const asyncRouterMap = [
   },
   {
     path: '/sysconfig',
-    component: Layout,
+    component: Layout, 
     redirect: '/sysconfig/index',
     icon: 'config',
-    noDropdown: true,
+    name: '参数配置',
+    //noDropdown: true,
     children: [
-      { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
+      { path: 'index', component: VideoDebug, name: '抓拍诊断', meta: { role: ['admin'] }},
+      { path: 'facedb', component: FaceDB, name: '底库管理', meta: { role: ['admin'] }},
+      { path: 'faceimg', component: FaceImg, name: '底库照片管理', meta: { role: ['admin'] }},
+      { path: 'camera', component: Camera, name: '摄像头管理', meta: { role: ['admin'] }},
+      { path: 'system', component: SysConfig, name: '系统管理', meta: { role: ['admin'] }},
     ]
   },
-  {
-    path: '/param',
-    component: Layout,
-    redirect: '/param/index',
-    icon: 'network36',
-    noDropdown: true,
-    children: [
-      { path: 'index', component: Param, name: '抓拍诊断', meta: { role: ['admin'] }},
-    ]
-  },
-  // {
-  //   path: '/cameraconfig',
-  //   component: Layout,
-  //   redirect: '/cameraconfig/index',
-  //   icon: 'camera',
-  //   noDropdown: true,
-  //   children: [
-  //     { path: 'index', component: CameraConfig, name: '相机设置', meta: { role: ['admin'] }},
-  //   ]
-  // },
-  // {
-  //   path: '/monitor',
-  //   component: Layout,
-  //   redirect: '/monitor/index',
-  //   icon: 'camera',
-  //   noDropdown: true,
-  //   children: [
-  //     { path: 'index', component: Monitor, name: '设备监控', meta: { role: ['admin'] }},
-  //   ]
-  // },
-  // {
-  //   path: '/hardinfo',
-  //   component: Layout,
-  //   redirect: '/hardinfo/index',
-  //   icon: 'service',
-  //   noDropdown: true,
-  //   children: [{ path: 'index', component: HardInfo, name: '主机信息', meta: { role: ['admin'] }}]
-  // },
+  
   { path: '*', redirect: '/404', hidden: true }
 ]

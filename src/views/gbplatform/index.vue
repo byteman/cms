@@ -21,7 +21,7 @@
         <el-table-column prop="Status" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
         </el-table-column>
         <el-table-column label="操作" width="300">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-button-group>
               <el-tooltip content="同步设备" placement="top">
                 <el-button size="small" icon="cw-shuaxin"  @click="handleSync('platform',scope.$index, scope.row)"></el-button>

@@ -88,7 +88,7 @@ export default {
   .login-container {
     @include relative;
     height: 100vh;
-    background-color: #2d3a4b;
+    background-color: $bg;
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;

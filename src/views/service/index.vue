@@ -16,7 +16,7 @@
       <el-table-column prop="Status" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button-group>
             <el-button size="small" icon="edit" @click="handleEdit(scope.$index, scope.row)"></el-button>
             <el-button size="small" icon="upload" @click="onUpdate(scope.$index, scope.row)"></el-button>

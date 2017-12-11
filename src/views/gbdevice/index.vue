@@ -36,7 +36,7 @@
         <el-table-column prop="status" center="center" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
  
             <el-button-group>
               <el-tooltip content="同步设备" placement="top">

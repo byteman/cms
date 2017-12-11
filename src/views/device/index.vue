@@ -38,7 +38,7 @@
         <el-table-column prop="status" label="状态" :filters="StatusFilters" :formatter="formatStatus" :filter-method="filterStatus">
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-button-group>
 
               <el-button size="small" icon="cw-bofang1"></el-button>
