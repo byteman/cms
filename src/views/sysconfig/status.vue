@@ -13,32 +13,32 @@
    <el-form-item label="剩余磁盘容量">
     <el-input v-model="status.diskused" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="CPU使用率" readonly="readonly">
-    <el-input v-model="status.cpu"></el-input>
+   <el-form-item label="CPU使用率" >
+    <el-input v-model="status.cpu" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="建模状态" readonly="readonly">
-    <el-input v-model="status.createLibStatus"></el-input>
+   <el-form-item label="建模状态" >
+    <el-input v-model="status.createLibStatus" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="注册照总数" readonly="readonly">
-    <el-input v-model="status.createLibAllFace"></el-input>
+   <el-form-item label="注册照总数" >
+    <el-input v-model="status.createLibAllFace" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="已建注册照数" readonly="readonly">
-    <el-input v-model="status.createLibCreated"></el-input>
+   <el-form-item label="已建注册照数" >
+    <el-input v-model="status.createLibCreated" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="异常注册照数" readonly="readonly">
-    <el-input v-model="status.createLibFailed"></el-input>
+   <el-form-item label="异常注册照数" >
+    <el-input v-model="status.createLibFailed" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="可增量注册数" readonly="readonly">
-    <el-input v-model="status.num_space_spare"></el-input>
+   <el-form-item label="可增量注册数" >
+    <el-input v-model="status.num_space_spare" readonly="readonly"></el-input>
   </el-form-item>
-   <el-form-item label="建模开始时间" readonly="readonly">
-    <el-input v-model="status.createLibStartTime"></el-input>
+   <el-form-item label="建模开始时间" >
+    <el-input v-model="status.createLibStartTime" readonly="readonly"></el-input>
   </el-form-item>
- <el-form-item label="建模结束时间" readonly="readonly">
-    <el-input v-model="status.createLibEndTime"></el-input>
+ <el-form-item label="建模结束时间" >
+    <el-input v-model="status.createLibEndTime" readonly="readonly"></el-input>
   </el-form-item>
- <el-form-item label="建模耗时" readonly="readonly">
-    <el-input v-model="status.createLibDuration"></el-input>
+ <el-form-item label="建模耗时" >
+    <el-input v-model="status.createLibDuration" readonly="readonly"></el-input>
   </el-form-item>
 
 

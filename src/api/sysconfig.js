@@ -117,3 +117,28 @@ export function BasicSave(bcode, code) {
   })
 }
 
+export function GetGroup(code) {
+  return fetch({
+    url: '/test/abc',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '' + code
+      }
+    }
+  })
+}
+export function RemoveGroup(id) {
+  return fetch({
+    url: '/test/abc',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '80002',
+        group_id: id
+      }
+    }
+  })
+}
