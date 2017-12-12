@@ -88,3 +88,32 @@ export function CommPost(para) {
     data: para
   })
 }
+
+export function PortSave(bcode, code) {
+  return fetch({
+    url: '/port/save',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '' + bcode,
+        code: '' + code
+      }
+    }
+  })
+}
+
+export function BasicSave(bcode, code) {
+  return fetch({
+    url: '/port/save',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '' + bcode,
+        code: '' + code
+      }
+    }
+  })
+}
+
