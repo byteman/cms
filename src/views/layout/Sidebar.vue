@@ -20,5 +20,6 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .el-menu {
   min-height: 100%;
+  background: #e0e3e8;
 }
 </style>

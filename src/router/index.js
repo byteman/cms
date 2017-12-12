@@ -55,7 +55,6 @@ export const constantRouterMap = [
     hidden: true,
     children: [{ path: 'dashboard', component: dashboard }]
   }
-
 ]
 
 export default new Router({

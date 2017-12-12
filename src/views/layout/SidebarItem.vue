@@ -25,22 +25,66 @@
 
 <script>
 export default {
-  name: 'SidebarItem',
+  name: "SidebarItem",
   props: {
     routes: {
       type: Array
     }
   }
-}
+};
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style rel="stylesheet/scss" lang="scss" >
 .svg-icon {
   margin-right: 10px;
 }
-.hideSidebar .menu-indent{
+.hideSidebar .menu-indent {
   display: block;
   text-indent: 10px;
+}
+.el-submenu .el-menu-item {
+  background: #edf1f9;
+  color: #6699cc;
+  font-size: 14px;
+  padding-left: 59px !important;
+  padding: 0;
+}
+.el-submenu .el-menu-item.is-active {
+  background: #abbde1;
+  color: #fff;
+}
+.el-submenu .el-menu-item:hover {
+  background: #d5dff3 !important;
+  color: #6699cc;
+}
+.el-menu-item {
+  font-size: 16px;
+  height: 50px;
+  color: #333;
+}
+.el-menu-item:hover {
+  background: #7596d7 !important;
+  color: #fff;
+}
+.el-menu-item.is-active {
+  background: #4f73bc;
+  color: #fff;
+}
+.el-submenu {
+  font-size: 16px;
+  color: #333;
+  overflow: hidden;
+}
+.el-submenu.is-active .el-submenu__title {
+  background: #4f73bc;
+  color: #fff;
+}
+.el-submenu__title:hover {
+  background: #7596d7 !important;
+  color: #fff;
+}
+.el-submenu__title {
+  font-size: 16px;
 }
 </style>
 
