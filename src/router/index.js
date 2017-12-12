@@ -23,7 +23,9 @@ const Param = _import('param/index')
 const GBPlatform = _import('gbplatform/index')
 const GBDevice = _import('gbdevice/index')
 const HardInfo = _import('hardinfo/index')
-const Algo = _import('algo/index')
+const Preview = _import('preview/index')
+const Snap = _import('snap/index')
+const Recognize = _import('recognize/index')
 const VideoDebug = _import('sysconfig/index')
 const SysConfig = _import('sysconfig/sysconfig')
 const FaceDB = _import('sysconfig/facedb')
@@ -63,33 +65,49 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-
-
   {
-    path: '/algo',
+    path: '/preview',
     component: Layout,
-    redirect: '/algo/index',
+    redirect: '/preview/index',
     icon: 'service',
     noDropdown: true,
     children: [
-      { path: 'index', component: Algo, name: '算法参数', meta: { role: ['admin'] }},
+      { path: 'index', component: Preview, name: '实时预览', meta: { role: ['admin'] }}
     ]
   },
   {
     path: '/sysconfig',
-    component: Layout, 
+    component: Layout,
     redirect: '/sysconfig/index',
     icon: 'config',
     name: '参数配置',
-    //noDropdown: true,
     children: [
       { path: 'index', component: VideoDebug, name: '抓拍诊断', meta: { role: ['admin'] }},
       { path: 'facedb', component: FaceDB, name: '底库管理', meta: { role: ['admin'] }},
       { path: 'faceimg', component: FaceImg, name: '底库照片管理', meta: { role: ['admin'] }},
       { path: 'camera', component: Camera, name: '摄像头管理', meta: { role: ['admin'] }},
-      { path: 'system', component: SysConfig, name: '系统管理', meta: { role: ['admin'] }},
+      { path: 'system', component: SysConfig, name: '系统管理', meta: { role: ['admin'] }}
     ]
   },
-  
+  {
+    path: '/snap',
+    component: Layout,
+    redirect: '/snap/index',
+    icon: 'service',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: Snap, name: '抓拍配置', meta: { role: ['admin'] }}
+    ]
+  },
+  {
+    path: '/recognize',
+    component: Layout,
+    redirect: '/recognize/index',
+    icon: 'service',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: Recognize, name: '识别配置', meta: { role: ['admin'] }}
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]

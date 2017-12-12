@@ -13,7 +13,7 @@ export default {
   computed: {
     ...mapGetters(['permission_routers'])
   }
-  
+
 }
 </script>
 
