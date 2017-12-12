@@ -15,9 +15,9 @@ export default {
       avatar: '/logo.gif'
     }
     const roles = role
-    this.$store.dispatch('GenerateRoutes', { roles }).then(() => {
-      this.$router.addRoutes(this.$store.getters.addRouters)
-    })
+    // this.$store.dispatch('GenerateRoutes', { roles }).then(() => {
+    //   this.$router.addRoutes(this.$store.getters.addRouters)
+    // })
   }
 }
 </script>

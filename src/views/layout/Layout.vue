@@ -2,7 +2,6 @@
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <div class="sidebar-wrapper">
       <div class="logo-container">
-        <i class="el-icon-delete"></i>
       </div>
       <sidebar class="sidebar-container"></sidebar>
     </div>
@@ -61,7 +60,7 @@
       }
     }
     .sidebar-wrapper {
-      width: 180px;
+      width: 190px;
       position: fixed;
       top: 0;
       bottom: 0;
@@ -73,19 +72,23 @@
     .sidebar-container {
       transition: all .28s ease-out;
       position: absolute;
-      top: 0;
+      top: 60px;
       bottom: 0;
       left: 0;
-      right: -17px;
-      overflow-y: scroll;
+      right: 0;
+      overflow-y: auto;
     }
     .main-container {
       min-height: 100%;
       transition: all .28s ease-out;
-      margin-left: 180px;
+      margin-left: 190px;
     }
     .logo-container{
-
+      width:190px;
+      height:60px;
+      background-size: 100%;
+      background-repeat: no-repeat;
+      background-image: url("../../assets/common_search/logo.png");
     }
   }
 </style>

@@ -1,10 +1,11 @@
 /**
  * Created by jiachenpan on 16/11/18.
  */
+import crypto from "crypto";
 
 export function isvalidUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  const valid_map = 'admin'
+  return str.trim().indexOf(valid_map) >= 0
 }
 
 /* 合法uri*/
@@ -31,3 +32,7 @@ export function validatAlphabets(str) {
   return reg.test(str)
 }
 
+export function md5(str) {
+  var ret = crypto.createHash('md5').update(str.toString()).digest("hex");
+  return ret;
+}
