@@ -59,7 +59,7 @@ export default {
 }
 .el-menu-item {
   font-size: 16px;
-  height: 50px;
+  height: 56px;
   color: #333;
 }
 .el-menu-item:hover {
