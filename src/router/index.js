@@ -31,6 +31,7 @@ const SysConfig = _import('sysconfig/sysconfig')
 const FaceDB = _import('sysconfig/facedb')
 const FaceImg = _import('sysconfig/faceimg')
 const Camera = _import('sysconfig/camera')
+const SnapConfig = _import('snap/config')
 const NetConfig = _import('netconfig/index')
 const CameraConfig = _import('cameraconfig/index');
 const Monitor = _import('monitor/index');
@@ -91,11 +92,12 @@ export const asyncRouterMap = [
   {
     path: '/snap',
     component: Layout,
-    redirect: '/snap/index',
-    icon: 'service',
-    noDropdown: true,
+    redirect: '/snap/facedb',
+    icon: 'camera',
+    name: '抓拍配置',
     children: [
-      { path: 'index', component: Snap, name: '抓拍配置', meta: { role: ['admin'] }}
+      { path: 'facedb', component: FaceDB, name: '抓拍记录', meta: { role: ['admin'] }},
+      { path: 'config', component: SnapConfig, name: '抓拍设置', meta: { role: ['admin'] }}
     ]
   },
   {
@@ -105,7 +107,7 @@ export const asyncRouterMap = [
     icon: 'service',
     noDropdown: true,
     children: [
-      { path: 'index', component: Recognize, name: '识别配置', meta: { role: ['admin'] }}
+      { path: 'index', component: Recognize, name: '识别配置', meta: { role: ['admin'] }},
     ]
   },
   { path: '*', redirect: '/404', hidden: true }
