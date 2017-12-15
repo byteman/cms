@@ -156,7 +156,7 @@ export default {
     },
     onRest() {
       this.param = {
-        total: 100,
+        total: 0,
         currrent: 1,
         size: 10,
         datetime: [],

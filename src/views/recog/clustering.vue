@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       param: {
-        total: 100,
+        total: 0,
         currrent: 1,
         size: 10,
         list: []
