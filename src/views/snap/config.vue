@@ -106,7 +106,7 @@
 <style scoped>
   .container {
     width: 99%;
-    height:99%;
+    height: 99%;
     margin: 0 auto;
     border: 1px solid #dfe6ec;
     min-height: 600px;

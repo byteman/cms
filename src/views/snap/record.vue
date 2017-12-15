@@ -18,7 +18,7 @@
               v-for="item in camoptions"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
+              :value="item.value" >
             </el-option>
           </el-select>
         </el-form-item>
