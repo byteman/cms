@@ -23,10 +23,9 @@
           <div class="right-content">
             <el-form class="right-form">
               <el-form-item label="抓拍线程数" prop="snap_thread_num">
-                <el-input v-model="snap_thread_num"></el-input>
-              </el-form-item>
-              <el-form-item label="抓拍照缓存大小" prop="snap_cache_vol">
-                <el-input v-model="snap_cache_vol"></el-input>
+                <el-select v-model="snap_thread_num" placeholder="请选择">
+                  <el-option v-for="item in snap_thread_num_options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="onConfigSave">保存</el-button>
@@ -40,14 +39,28 @@
 </template>
 
 <script>
-  import { Query } from '@/api/snap'
-  import { RecordSave } from '@/api/snap'
+  import { Query, RecordSave, ConfigSave } from '@/api/snap'
 
   export default {
     data() {
       return {
+        snap_thread_num_options: [{
+          value: '选项1',
+          label: '1'
+        }, {
+          value: '选项2',
+          label: '2'
+        }, {
+          value: '选项3',
+          label: '4'
+        }, {
+          value: '选项4',
+          label: '6'
+        }, {
+          value: '选项5',
+          label: '8'
+        }],
         snap_thread_num: '',
-        snap_cache_vol: '',
         region: '',
         checkList: []
       }
@@ -64,6 +77,7 @@
           if (response.data.data.fullsave === 1) {
             this.checkList.push('全景图')
           }
+          this.snap_thread_num = response.data.data.encodetasksize
           console.log(response.data.data)
         })
         .catch(() => {})
@@ -72,10 +86,15 @@
     },
     methods: {
       onConfigSave() {
+        ConfigSave(this.snap_thread_num)
+          .then(response => {
+            this.$message('保存抓拍线程数(重启后生效):' + response.data.message)
+          })
+          .catch(() => {})
       },
       onRecordSave() {
-        const facesave = '人脸图' in this.checkList ? 1 : 0
-        const fullsave = '全景图' in this.checkList ? 1 : 0
+        const facesave = (this.checkList.indexOf('人脸图') !== -1) ? 1 : 0
+        const fullsave = (this.checkList.indexOf('全景图') !== -1) ? 1 : 0
         RecordSave(facesave, fullsave)
           .then(response => {
             this.$message('保存图片设置(重启后生效):' + response.data.message)

@@ -24,7 +24,6 @@ const GBPlatform = _import('gbplatform/index')
 const GBDevice = _import('gbdevice/index')
 const HardInfo = _import('hardinfo/index')
 const Preview = _import('preview/index')
-const Snap = _import('snap/index')
 const Recognize = _import('recognize/index')
 const VideoDebug = _import('sysconfig/index')
 const SysConfig = _import('sysconfig/sysconfig')
@@ -32,9 +31,10 @@ const FaceDB = _import('sysconfig/facedb')
 const FaceImg = _import('sysconfig/faceimg')
 const Camera = _import('sysconfig/camera')
 const SnapConfig = _import('snap/config')
+const SnapRecord = _import('snap/record')
 const NetConfig = _import('netconfig/index')
-const CameraConfig = _import('cameraconfig/index');
-const Monitor = _import('monitor/index');
+const CameraConfig = _import('cameraconfig/index')
+const Monitor = _import('monitor/index')
 
 Vue.use(Router)
 
@@ -92,11 +92,11 @@ export const asyncRouterMap = [
   {
     path: '/snap',
     component: Layout,
-    redirect: '/snap/facedb',
+    redirect: '/snap/record',
     icon: 'camera',
     name: '抓拍配置',
     children: [
-      { path: 'facedb', component: FaceDB, name: '抓拍记录', meta: { role: ['admin'] }},
+      { path: 'record', component: SnapRecord, name: '抓拍记录', meta: { role: ['admin'] }},
       { path: 'config', component: SnapConfig, name: '抓拍设置', meta: { role: ['admin'] }}
     ]
   },
