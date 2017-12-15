@@ -33,7 +33,7 @@
     </div>
 
     <div class="content">
-      <el-table :data="list">
+      <el-table :data="list" v-loading="loading" element-loading-text="加载中,请等待">
         <el-table-column prop="camid" label="通道ID" align='center' width="150"></el-table-column>
         <el-table-column prop="camname" label="相机编号" align='center' width="150"></el-table-column>
         <el-table-column prop="framenum" label="人脸所属帧号" align='center' width="150"></el-table-column>
@@ -81,13 +81,15 @@
         camoptions: [],
         currentPage: 1,
         total: 0,
-        list: []
+        list: [],
+        loading: false
       }
     },
     created() {
       console.log('snap record page created')
     },
     mounted() {
+      this.loading = true
       CommQuery(0x12003)
         .then(response => {
           const tmpList = response.data.data.channels
@@ -134,6 +136,7 @@
             camid.push(item.toString())
           })
         }
+        this.loading = true
         QuerySnapRecord(this.currentPage.toString(), '10', starttime, endtime, camid, camname)
           .then(response => {
             const tmpList = response.data.data.list
@@ -143,9 +146,11 @@
             })
             this.list = tmpList
             this.total = parseInt(response.data.data.total)
+            this.loading = false
             console.log(this.list)
           })
           .catch(() => {
+            this.loading = false
             console.log('error')
           })
       },
