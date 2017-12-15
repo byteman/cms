@@ -179,7 +179,7 @@
     margin: 0 auto;
   }
   .avatar {
-    width: 20%
+    width: 50%
   }
   .header {
     padding: 24px;
