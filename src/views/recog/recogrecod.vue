@@ -1,5 +1,7 @@
 <template>
-  <div>
+  
+    <div class="container">
+    <div class="header">
     <el-form :inline="true" :model="param" :rules="rules" class="demo-form-inline">
       <el-form-item label="抓拍时间">
         <div class="block">
@@ -26,14 +28,16 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button  @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
 
       <el-form-item>
-        <el-button  @click="onRest">重置</el-button>
+        <el-button type="primary" @click="onRest">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="param.list">
+    </div>
+    <div class="content">
+    <el-table :data="param.list" v-loading="param.loading" element-loading-text="加载中,请等待">
       <el-table-column type="selection" width="55">
       </el-table-column>
 
@@ -97,15 +101,18 @@
 
     </el-table>
 
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-sizes="[10, 15, 20]"
-        :page-size="10"
-        layout="sizes, prev, pager, next"
-        :total="param.total">
-      </el-pagination>
+    </div>
+    <div class="footer">
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="[10, 15, 20]"
+          :page-size="10"
+          layout="sizes, prev, pager, next"
+          :total="param.total">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -128,6 +135,7 @@ export default {
 
     return {
       param: {
+        loading: false,
         total: 100,
         currrent: 1,
         size: 10,
@@ -171,6 +179,7 @@ export default {
       this.getResult();
     },
     getResult() {
+      this.param.loading = true;
       if (this.param.datetime[0]) {
         var start = this.param.datetime[0].getTime();
       }
@@ -198,9 +207,7 @@ export default {
           item.live_id = resultObj.liveArray[i].live_id;
           item.channel_id = resultObj.liveArray[i].channel_id;
           var timestamp = resultObj.liveArray[i].timeStamp;
-          var newDate = new Date();
-          newDate.setTime(timestamp * 1000);
-          item.timeStamp = newDate.toJSON();
+          item.timeStamp = new Date(timestamp).toLocaleString();
           item.liveFaceData =
             "data:image/jpeg;base64," + resultObj.liveArray[i].liveFaceData;
           item.similar_live_id = resultObj.liveArray[i].similar_live_id;
@@ -231,6 +238,7 @@ export default {
           }
           this.param.list.push(item);
         }
+        this.param.loading = false;
       });
     }
   },
@@ -239,3 +247,30 @@ export default {
   }
 };
 </script>
+<style scoped>
+.container {
+  width: 99%;
+  margin: 0 auto;
+  border: 1px solid #dfe6ec;
+  min-height: 600px;
+}
+.content {
+  width: 97%;
+  margin: 0 auto;
+}
+.avatar {
+  width: 50%;
+}
+.header {
+  padding: 24px;
+
+  background-color: rgb(248, 249, 248);
+  height: 80px;
+}
+.footer {
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 90px;
+  text-align: right;
+}
+</style>

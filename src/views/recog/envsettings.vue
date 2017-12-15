@@ -1,4 +1,5 @@
 <template>
+  <div class="content">
     <el-form :model="param" :rules="rules" ref="devform" label-width="150px" size="mini">
       <el-col :span="23">
         <el-form-item label="性别优化" >
@@ -51,11 +52,14 @@
         <el-form-item label="负系数" prop="score_for_minus">
           <el-input v-model="param.score_for_minus"></el-input>
         </el-form-item>
+        <div margin-left="500px">        
+          <el-form-item>
+          <el-button type="primary"  @click="onSubmit">保存</el-button>
         </el-form-item>
-          <el-button   @click="onSubmit">保存</el-button>
-        </el-form-item>
+        </div>
       </el-col>
     </el-form>
+  </div>
 </template>
 
 <script>
@@ -187,4 +191,11 @@ export default {
   }
 };
 </script>
+<style scoped>
+.content {
+  width: 97%;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+</style>
 
