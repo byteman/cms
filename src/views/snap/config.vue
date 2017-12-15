@@ -1,45 +1,40 @@
 <template>
   <div class="container">
-    <table align="center" width="100%">
-      <tr>
-        <td>
-          <label>抓拍记录配置</label>
-          <div class="left-content">
-            <el-form class="left-form">
-              <el-form-item label="保存图片">
-                <el-checkbox-group v-model="checkList">
-                  <el-checkbox label="人脸图"></el-checkbox>
-                  <el-checkbox label="全景图"></el-checkbox>
-                </el-checkbox-group>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="onRecordSave">保存</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </td>
-        <td>
-          <label>抓拍参数配置</label>
-          <div class="right-content">
-            <el-form class="right-form">
-              <el-form-item label="抓拍线程数" prop="snap_thread_num">
-                <el-select v-model="snap_thread_num" placeholder="请选择">
-                  <el-option v-for="item in snap_thread_num_options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="onConfigSave">保存</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </td>
-      </tr>
-    </table>
+
+    <div class="left-content" align='center'>
+      <label>抓拍记录配置</label>
+      <el-form class="left-form">
+        <el-form-item label="保存图片">
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox label="人脸图"></el-checkbox>
+            <el-checkbox label="全景图"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onRecordSave">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div class="right-content" align='center'>
+      <label>抓拍参数配置</label>
+      <el-form class="right-form">
+        <el-form-item label="抓拍线程数" prop="snap_thread_num">
+          <el-select v-model="snap_thread_num" placeholder="请选择">
+            <el-option v-for="item in snap_thread_num_options" :key="item.value" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onConfigSave">保存</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
   </div>
 </template>
 
 <script>
-  import { Query, RecordSave, ConfigSave } from '@/api/snap'
+  import {Query, RecordSave, ConfigSave} from '@/api/snap'
 
   export default {
     data() {
@@ -80,7 +75,8 @@
           this.snap_thread_num = response.data.data.encodetasksize
           console.log(response.data.data)
         })
-        .catch(() => {})
+        .catch(() => {
+        })
     },
     beforeDestroy() {
     },
@@ -90,7 +86,8 @@
           .then(response => {
             this.$message('保存抓拍线程数(重启后生效):' + response.data.message)
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       },
       onRecordSave() {
         const facesave = (this.checkList.indexOf('人脸图') !== -1) ? 1 : 0
@@ -99,7 +96,8 @@
           .then(response => {
             this.$message('保存图片设置(重启后生效):' + response.data.message)
           })
-          .catch(() => {})
+          .catch(() => {
+          })
       }
     }
   }
@@ -108,16 +106,23 @@
 <style scoped>
   .container {
     width: 99%;
+    height:99%;
     margin: 0 auto;
     border: 1px solid #dfe6ec;
     min-height: 600px;
   }
 
   .left-content {
-    margin: 0 auto;
+    position: absolute;
+    left: 20%;
+    top: 40%;
+    width: 20%
   }
 
   .right-content {
-    margin: 0 auto;
+    position: absolute;
+    right: 20%;
+    top: 40%;
+    width: 20%
   }
 </style>
