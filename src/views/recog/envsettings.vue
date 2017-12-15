@@ -64,17 +64,24 @@ import { GetEngineSettings, SetEngineSettings } from "@/api/envsettings";
 export default {
   data() {
     var age_validator = (rule, value, callback) => {
-      var flg = value < 0 || value > 120;
-      if (flg) {
-        callback(new Error("年龄必须在0-120之间"));
-      } else {
-        callback();
+      var re = /^\d+(\.\d+)?$/;
+      var re2 = /^[1-9]+[0-9]*]*$/;
+      console.log(re.test(value));
+      if (!re.test(value)) {
+        callback(new Error("年龄必须在0-120之间的整数"));
+      } else if (value < 0 || value > 120) {
+        callback(new Error("年龄必须在0-120之间的整数"));
+      } else if (!re2.test(value)) {
+        callback(new Error("年龄必须在0-120之间的整数"));
       }
     };
 
     var threshold_validator = (rule, value, callback) => {
-      if (value < 0 || value > 1) {
-        callback(new Error("该值必须在0-1之间"));
+      var re = /^\d+(\.\d+)?$/;
+      if (!re.test(value)) {
+        callback(new Error("该值必须在0-1之间的数字"));
+      } else if (value < 0 || value > 1) {
+        callback(new Error("该值必须在0-1之间的数字"));
       } else {
         callback();
       }
