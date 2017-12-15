@@ -34,10 +34,10 @@ export function GetVideoDebug() {
   return fetch({
     url: '/channel/query',
     method: 'post',
-    data:{
-      "requestdata":{
-        token:1,
-        bcode:"0x12008"
+    data: {
+      'requestdata': {
+        token: 1,
+        bcode: '0x12008'
       }
     }
   })

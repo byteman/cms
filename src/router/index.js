@@ -32,8 +32,12 @@ const FaceDB = _import('sysconfig/facedb')
 const FaceImg = _import('sysconfig/faceimg')
 const Camera = _import('sysconfig/camera')
 const NetConfig = _import('netconfig/index')
-const CameraConfig = _import('cameraconfig/index');
-const Monitor = _import('monitor/index');
+const CameraConfig = _import('cameraconfig/index')
+const Monitor = _import('monitor/index')
+const Engine_Settings = _import('recog/envsettings')
+const Engine_System_Settings = _import('recog/envsystemsettings')
+const RecogRecod = _import('recog/recogrecod')
+const Clustering = _import('recog/clustering')
 
 Vue.use(Router)
 
@@ -102,10 +106,13 @@ export const asyncRouterMap = [
     path: '/recognize',
     component: Layout,
     redirect: '/recognize/index',
-    icon: 'service',
-    noDropdown: true,
+    icon: 'config',
+    name: '识别配置',
     children: [
-      { path: 'index', component: Recognize, name: '识别配置', meta: { role: ['admin'] }}
+      { path: 'recog_recod', component: RecogRecod, name: '识别记录', meta: { role: ['admin'] }},
+      { path: 'clustering', component: Clustering, name: '频次分析', meta: { role: ['admin'] }},
+      { path: 'engine_settings', component: Engine_Settings, name: '引擎设置', meta: { role: ['admin'] }},
+      { path: 'engine_system_settings', component: Engine_System_Settings, name: '引擎系统操作', meta: { role: ['admin'] }}
     ]
   },
   { path: '*', redirect: '/404', hidden: true }
