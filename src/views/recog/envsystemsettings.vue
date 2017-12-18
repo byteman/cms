@@ -1,13 +1,13 @@
 <template>
-   <div>
-  <el-button @click="OnSave1" >清空识别记录</el-button>
-  <el-button @click="OnSave2" >重新加载</el-button>
-  <el-button @click="OnSave3" >加载特征优化</el-button>
-  <el-button @click="OnSave4" >增量建模</el-button>
-  <el-button @click="OnSave5" >本地序列化</el-button>
-  <el-button @click="OnSave6" >充值正负值</el-button>
-  <el-button @click="OnSave7" >新建特征模型</el-button>
-  <el-button @click="OnSave8" >重启系统</el-button>
+   <div class="content">
+  <el-button type="primary" @click="OnSave1" >清空识别记录</el-button>
+  <el-button type="primary" @click="OnSave2" >重新加载</el-button>
+  <el-button  type="primary" @click="OnSave3" >加载特征优化</el-button>
+  <el-button type="primary" @click="OnSave4" >增量建模</el-button>
+  <el-button type="primary"  @click="OnSave5" >本地序列化</el-button>
+  <el-button type="primary" @click="OnSave6" >充值正负值</el-button>
+  <el-button type="primary" @click="OnSave7" >新建特征模型</el-button>
+  <el-button type="primary" @click="OnSave8" >重启系统</el-button>
 </div>
 </template>
 
@@ -111,4 +111,13 @@ export default {
   }
 };
 </script>
+<style scoped>
+
+.content {
+  width: 97%;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-left: 50px;
+}
+</style>
 

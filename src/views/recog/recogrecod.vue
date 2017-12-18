@@ -1,5 +1,7 @@
 <template>
-  <div>
+  
+    <div class="container">
+    <div class="header">
     <el-form :inline="true" :model="param" :rules="rules" class="demo-form-inline">
       <el-form-item label="抓拍时间">
         <div class="block">
@@ -26,92 +28,121 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button  @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
 
       <el-form-item>
-        <el-button  @click="onRest">重置</el-button>
+        <el-button type="primary" @click="onRest">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="param.list">
-      <el-table-column type="selection" width="55">
+    </div>
+    <div class="content">
+    <el-table :data="param.list" v-loading="param.loading" element-loading-text="加载中,请等待">
+      <el-table-column type="selection" width="50">
       </el-table-column>
 
-      <el-table-column prop="live_id" label="抓拍ID">
+      <el-table-column prop="live_id" label="抓拍ID" width="100">
       </el-table-column>
 
-      <el-table-column prop="channel_id" label="通道ID">
+      <el-table-column prop="channel_id" label="通道ID" width="100">
       </el-table-column>
 
-      <el-table-column prop="liveFaceData" label="抓拍图">
+      <el-table-column prop="liveFaceData" label="抓拍图" width="150">
          <template slot-scope="scope">
           <img class="avatar" :src="scope.row.liveFaceData" />
         </template>
       </el-table-column>
 
-      <el-table-column prop="timeStamp" label="抓拍时间">
+      <el-table-column prop="timeStamp" label="抓拍时间" width="200">
       </el-table-column>
 
-      <el-table-column prop="similar_live_id" label="相似ID">
+      <el-table-column prop="similar_live_id" label="相似ID" width="100">
       </el-table-column>
 
-      <el-table-column prop="top1Score" label="TOP1对比分">
+      <el-table-column prop="top1Score" label="TOP1对比分" width="100">
       </el-table-column>
 
-      <el-table-column prop="top1" label="TOP1">
+      <el-table-column prop="top1" label="TOP1" width="150">
         <template slot-scope="scope">
           <img class="avatar" :src="scope.row.top1" />
         </template>
       </el-table-column>
 
-      <el-table-column prop="top2" label="TOP2">
+      <el-table-column prop="top2" label="TOP2" width="150">
         <template slot-scope="scope">
           <img class="avatar" :src="scope.row.top2" />
         </template>
       </el-table-column>
 
-      <el-table-column prop="top3" label="TOP3">
+      <el-table-column prop="top3" label="TOP3" width="150">
         <template slot-scope="scope">
           <img class="avatar" :src="scope.row.top3" />
         </template>
       </el-table-column>
 
-      <el-table-column prop="top4" label="TOP4">
+      <el-table-column prop="top4" label="TOP4" width="150">
         <template slot-scope="scope">
           <img class="avatar" :src="scope.row.top4" />
         </template>
       </el-table-column>
 
-      <el-table-column prop="top5" label="TOP5">
+      <el-table-column prop="top5" label="TOP5" width="150">
         <template slot-scope="scope">
           <img class="avatar" :src="scope.row.top5" />
         </template>
       </el-table-column>
 
         
-      <el-table-column label="操作" width="300" align='center'>
+      <el-table-column label="操作" >
         <template slot-scope="scope">
-          <el-button type="text" size="small" >详情</el-button>
+          <el-button type="text" size="small" @click="more(scope.row)" >详情</el-button>
         </template>
-       </el-table-column>
+      </el-table-column>
 
     </el-table>
 
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-sizes="[10, 15, 20]"
-        :page-size="10"
-        layout="sizes, prev, pager, next"
-        :total="param.total">
-      </el-pagination>
     </div>
+      <div class="footer">
+        <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="[10, 15, 20]"
+          :page-size="10"
+          layout="sizes, prev, pager, next"
+          :total="param.total">
+        </el-pagination>
+      </div>
+    </div>
+
+    <el-dialog
+      :title="title"
+      :visible.sync="showChannel"
+      width="1300px"
+      center>
+      <div class="more-dialog">
+        <div class="more-dialog-left">
+          <img class="more-dialog-left-src" v-bind:src="this.selectedSrc"/>
+          <p class="more-dialog-left-channel">channel:{{ this.selectedchannel_id }}</p>
+          <p class="more-dialog-left-live">live_id:{{ this.selectedlive_id }}</p>
+        </div>
+        <ul class="more-dialog-right">
+          <li class="more-dialog-right-li" v-for="value in this.selected">
+            <div>
+              <p class="more-dialog-right-li-top">注册ID:{{ value.registerId }}</p>
+              <img class="more-dialog-right-src" v-bind:src="value.regFaceData"/>
+              <p class="more-dialog-right-li-bottum">性别:{{ value.sex }} 年龄:{{ value.age }}</p>
+            </div>                
+          </li>
+        </ul>
+      <div class="clearfix"></div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { Page } from "@/api/recogrecod";
+import { Page, List } from "@/api/recogrecod";
 
 export default {
   data() {
@@ -127,7 +158,19 @@ export default {
     };
 
     return {
+      title: "识别详情",
+      showChannel: false,
+      selectedSrc: "",
+      selectedchannel_id: "",
+      selectedlive_id: "",
+      selected: {
+        liveFaceData: "",
+        live_id: "123",
+        channel_id: "123",
+        recodArray: []
+      },
       param: {
+        loading: false,
         total: 100,
         currrent: 1,
         size: 10,
@@ -170,7 +213,35 @@ export default {
       };
       this.getResult();
     },
+    more(row) {
+      this.showChannel = true;
+      List(row.channel_id, row.live_id, row.timeStamp0).then(resp => {
+        var resultObj = eval("(" + resp.data.data.results + ")");
+        this.selected = resultObj.recogArray;
+        for (var i = 0; i < this.selected.length; i++) {
+          this.selected[i].regFaceData =
+            "data:image/jpeg;base64," + this.selected[i].regFaceData;
+          if (this.selected[i].sex === "1") {
+            this.selected[i].sex = "男";
+          } else if (this.selected[i].sex === "2") {
+            this.selected[i].sex = "女";
+          } else {
+            this.selected[i].sex = "未知";
+          }
+          console.log(this.selected[i].age);
+          if (this.selected[i].age === 0) {
+            this.selected[i].age = "未知";
+          } else {
+            this.selected[i].age = this.selected[i].age + "岁";
+          }
+        }
+      });
+      this.selectedSrc = row.liveFaceData;
+      this.selectedlive_id = row.live_id;
+      this.selectedchannel_id = row.channel_id;
+    },
     getResult() {
+      this.param.loading = true;
       if (this.param.datetime[0]) {
         var start = this.param.datetime[0].getTime();
       }
@@ -186,21 +257,17 @@ export default {
         start,
         end
       ).then(resp => {
-        console.log(resp);
         var result = resp.data.data.results;
         var resultObj = eval("(" + result + ")");
         this.param.total = resultObj.total;
-        console.log(this.param.total);
-        console.log(resultObj.liveArray);
         this.param.list = [];
         for (var i = 0; i < resultObj.liveArray.length; i++) {
           var item = new Object();
           item.live_id = resultObj.liveArray[i].live_id;
           item.channel_id = resultObj.liveArray[i].channel_id;
           var timestamp = resultObj.liveArray[i].timeStamp;
-          var newDate = new Date();
-          newDate.setTime(timestamp * 1000);
-          item.timeStamp = newDate.toJSON();
+          item.timeStamp = new Date(timestamp).toLocaleString();
+          item.timeStamp0 = timestamp;
           item.liveFaceData =
             "data:image/jpeg;base64," + resultObj.liveArray[i].liveFaceData;
           item.similar_live_id = resultObj.liveArray[i].similar_live_id;
@@ -208,7 +275,6 @@ export default {
           item.top1 =
             "data:image/jpeg;base64," +
             resultObj.liveArray[i].recogArray[0].regFaceData;
-
           if (resultObj.liveArray[i].recogArray[1]) {
             item.top2 =
               "data:image/jpeg;base64," +
@@ -231,6 +297,7 @@ export default {
           }
           this.param.list.push(item);
         }
+        this.param.loading = false;
       });
     }
   },
@@ -239,3 +306,70 @@ export default {
   }
 };
 </script>
+<style scoped>
+.container {
+  width: 99%;
+  margin: 0 auto;
+  border: 1px solid #dfe6ec;
+  min-height: 600px;
+}
+.content {
+  width: 97%;
+  margin: 0 auto;
+}
+.avatar {
+  width: 80%;
+}
+.header {
+  padding: 24px;
+  background-color: rgb(248, 249, 248);
+  height: 80px;
+}
+.footer {
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 90px;
+  text-align: right;
+}
+.more-dialog {
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
+.more-dialog-left {
+  width: 15%;
+  height: 100%;
+  float: left;
+}
+.more-dialog-left-src {
+  margin-left: 45px;
+  width: 60%;
+  margin-top: 67px;
+}
+.more-dialog-left-channel {
+  margin-left: 45px;
+  width: 60%;
+}
+.more-dialog-left-live {
+  margin-left: 45px;
+  width: 60%;
+}
+.more-dialog-right {
+  width: 85%;
+  list-style: none;
+  float: left;
+}
+.more-dialog-right-li {
+  float: left;
+  margin-left: 10px;
+}
+.clearfix {
+  clear: both;
+}
+.more-dialog-right-li-top {
+  margin-left: 43px;
+}
+.more-dialog-right-li-bottum {
+  margin-left: 22px;
+}
+</style>

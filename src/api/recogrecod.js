@@ -20,3 +20,20 @@ export function Page(current, pagesize, channel_id, identify_id, top1_scoreMin, 
   })
 }
 
+export function List(channel_id, live_id, timeStamp) {
+  console.log(timeStamp)
+  return fetch({
+    url: '/channel/list',
+    method: 'post',
+    data: {
+      'requestdata': {
+        'token': '1',
+        'bcode': '0x12027',
+        'channel_id': channel_id + "",
+        'live_id': live_id + "",
+        'timeStamp': timeStamp
+      }
+    }
+  })
+}
+
