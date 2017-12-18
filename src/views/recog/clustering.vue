@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="container">
+    <div class="content">
     <el-table :data="param.list">
       <el-table-column type="selection" width="55">
       </el-table-column>
@@ -24,19 +25,20 @@
           <el-button type="text" size="small" >导出</el-button>
         </template>
        </el-table-column>
-
     </el-table>
-
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-sizes="[10, 15, 20]"
-        :page-size="10"
-        layout="sizes, prev, pager, next"
-        :total="param.total">
-      </el-pagination>
     </div>
+      <div class="footer">
+        <div class="block">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :page-sizes="[10, 15, 20]"
+            :page-size="10"
+            layout="sizes, prev, pager, next"
+            :total="param.total">
+          </el-pagination>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -90,3 +92,21 @@ export default {
   }
 };
 </script>
+<style scoped>
+.container {
+  width: 99%;
+  margin: 0 auto;
+  border: 1px solid #dfe6ec;
+  min-height: 600px;
+}
+.content {
+  width: 97%;
+  margin: 0 auto;
+}
+.footer {
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 90px;
+  text-align: right;
+}
+</style>
