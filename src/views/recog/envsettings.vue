@@ -20,7 +20,7 @@
 
 
         <el-form-item label="年龄优化最小值" prop="ageMin">
-          <el-input v-model="param.ageMin"></el-input>
+          <el-input v-model="param.ageMin" ></el-input>
         </el-form-item>
 
 
