@@ -18,7 +18,7 @@
               v-for="item in camoptions"
               :key="item.value"
               :label="item.label"
-              :value="item.value" >
+              :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -95,7 +95,7 @@
           const tmpList = response.data.data.channels
           tmpList.forEach(function (item) {
             item.value = item.id
-            item.label = item.name
+            item.label = item.id + '(' + item.name + ')'
           })
           this.camoptions = tmpList
           console.log(this.camoptions)
@@ -105,7 +105,7 @@
       this.onRefresh()
     },
     methods: {
-      onRefresh: function() {
+      onRefresh() {
         let starttime = null
         let endtime = null
         let camid = null
@@ -132,15 +132,17 @@
         }
         if (this.selectcam.length > 0) {
           camid = []
-          this.selectcam.forEach(function(item) {
+          this.selectcam.forEach(function (item) {
             camid.push(item.toString())
           })
         }
         this.loading = true
         QuerySnapRecord(this.currentPage.toString(), '10', starttime, endtime, camid, camname)
           .then(response => {
+            this.list = []
+            this.total = 0
             const tmpList = response.data.data.list
-            tmpList.forEach(function(item) {
+            tmpList.forEach(function (item) {
               item.aligndata = Base64ToImage(item.aligndata)
               item.kfktimestamp = new Date(item.kfktimestamp).toLocaleString()
             })
@@ -150,6 +152,8 @@
             console.log(this.list)
           })
           .catch(() => {
+            this.list = []
+            this.total = 0
             this.loading = false
             console.log('error')
           })
@@ -179,19 +183,23 @@
     border: 1px solid #dfe6ec;
     min-height: 600px;
   }
+
   .content {
     width: 97%;
     margin: 0 auto;
   }
+
   .avatar {
     width: 50%
   }
+
   .header {
     padding: 24px;
 
     background-color: rgb(248, 249, 248);
     height: 80px;
   }
+
   .footer {
     height: 50px;
     margin-top: 10px;

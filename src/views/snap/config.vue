@@ -84,7 +84,7 @@
       onConfigSave() {
         ConfigSave(this.snap_thread_num)
           .then(response => {
-            this.$message('保存抓拍线程数(重启后生效):' + response.data.message)
+            this.$message('保存抓拍线程数(后台服务重启后生效):' + response.data.message)
           })
           .catch(() => {
           })
@@ -94,7 +94,7 @@
         const fullsave = (this.checkList.indexOf('全景图') !== -1) ? 1 : 0
         RecordSave(facesave, fullsave)
           .then(response => {
-            this.$message('保存图片设置(重启后生效):' + response.data.message)
+            this.$message('保存图片设置(后台服务重启后生效):' + response.data.message)
           })
           .catch(() => {
           })
