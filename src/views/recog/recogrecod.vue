@@ -2,7 +2,7 @@
   
     <div class="container">
     <div class="header">
-    <el-form :inline="true" :model="param" :rules="rules" class="demo-form-inline">
+    <el-form :inline="true" :model="param" :rules="rules" ref="myform">
       <el-form-item label="抓拍时间">
         <div class="block">
           <el-date-picker
@@ -211,6 +211,7 @@ export default {
         top1_scoreMin: "",
         list: []
       };
+      this.$refs.myform.resetFields();
       this.getResult();
     },
     more(row) {
@@ -323,7 +324,7 @@ export default {
 .header {
   padding: 24px;
   background-color: rgb(248, 249, 248);
-  height: 80px;
+  height: 90px;
 }
 .footer {
   height: 50px;
