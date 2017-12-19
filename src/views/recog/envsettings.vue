@@ -84,7 +84,9 @@ export default {
       var re = /^\d+(\.\d+)?$/;
       if (!re.test(value)) {
         callback(new Error("该值必须在0-1之间的数字"));
-      } else if (value < 0 || value > 1) {
+      }  else if (value.length > 7) {
+        callback(new Error("该值必须在0-1之间的数字,只支持小数点后5位"));
+      }else if (value < 0 || value > 1) {
         callback(new Error("该值必须在0-1之间的数字"));
       } else {
         callback();
