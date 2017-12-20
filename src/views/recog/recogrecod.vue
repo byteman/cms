@@ -124,13 +124,13 @@
        <img class="show-dilog-avatar" :src="show_reg_src" />
         <p class="show-dilog-score">{{ this.show_score }}</p>
         <ul class="buttion-ul">
-          <li class="button-li1"><el-button  icon="el-icon-edit" @click="specialcontroll(1,0x12030)"></el-button></li>
-          <li class="button-li2"><el-button  icon="el-icon-edit" @click="specialcontroll(2,0x12030)"></el-button></li>
-          <li class="button-li3"><el-button  icon="el-icon-edit" @click="specialcontroll(3,0x12030)"></el-button></li>
-          <li class="button-li4"><el-button  icon="el-icon-edit" @click="specialcontroll(1,0x12017)"></el-button></li>
-          <li class="button-li5"><el-button  icon="el-icon-edit" @click="specialcontroll(2,0x12017)"></el-button></li>
-          <li class="button-li6"><el-button  icon="el-icon-edit" @click="specialcontroll(3,0x12017)"></el-button></li>
-          <li class="button-li7"><el-button  icon="el-icon-edit" @click="specialcontroll(1,0x12014)"></el-button></li>
+          <li class="button-li1"><el-button  icon="el-icon-arrow-left" @click="specialcontroll(1,0x12030)"></el-button></li>
+          <li class="button-li2"><el-button  icon="el-icon-arrow-right" @click="specialcontroll(2,0x12030)"></el-button></li>
+          <li class="button-li3"><el-button  icon="el-icon-refresh" @click="specialcontroll(3,0x12030)"></el-button></li>
+          <li class="button-li4"><el-button  icon="el-icon-arrow-up" @click="specialcontroll(1,0x12017)"></el-button></li>
+          <li class="button-li5"><el-button  icon="el-icon-arrow-down" @click="specialcontroll(2,0x12017)"></el-button></li>
+          <li class="button-li6"><el-button  icon="el-icon-circle-close-outline" @click="specialcontroll(3,0x12017)"></el-button></li>
+          <li class="button-li7"><el-button  icon="el-icon-check" @click="specialcontroll(1,0x12014)"></el-button></li>
         </ul>
         <div class="clearfix"></div>
       </div>
