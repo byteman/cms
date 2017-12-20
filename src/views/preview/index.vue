@@ -333,8 +333,14 @@ export default {
   }
 };
 </script>
+<style scoped>
+.el-input {
+  width: 280px;
+  margin: 10px 20px;
+}
+</style>
 
-<style>
+<style >
 .preview-content {
   width: 1480px;
   height: 730px;
@@ -346,10 +352,6 @@ export default {
   height: 500px;
   float: left;
   background: #f8f8f8;
-}
-.el-input {
-  width: 280px;
-  margin: 10px 20px;
 }
 .el-tree {
   background: #f8f8f8;
