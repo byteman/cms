@@ -16,18 +16,10 @@ const dashboard = _import('dashboard/index')
 const Err404 = _import('404')
 
 /* demo page */
-const Form = _import('page/form')
-const Service = _import('service/index')
-const Device = _import('device/index')
-const Param = _import('param/index')
-const GBPlatform = _import('gbplatform/index')
-const GBDevice = _import('gbdevice/index')
-const HardInfo = _import('hardinfo/index')
+const Preview = _import('preview/index')
 const Algo = _import('algo/index')
 const SysConfig = _import('sysconfig/index')
-const NetConfig = _import('netconfig/index')
-const CameraConfig = _import('cameraconfig/index');
-const Monitor = _import('monitor/index');
+
 
 Vue.use(Router)
 
@@ -44,7 +36,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/preview',
     name: 'Home',
     hidden: true,
     children: [{ path: 'dashboard', component: dashboard }]
@@ -58,16 +50,16 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: 'noredirect',
-  //   name: 'Example',
-  //   icon: 'zujian',
-  //   children: [
-  //     { path: 'index', component: Form, name: 'Form', icon: 'zonghe' }
-  //   ]
-  // },
+ {
+    path: '/preview',
+    component: Layout,
+    redirect: '/preview/index',
+    icon: 'service',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: Preview, name: '实时预览', meta: { role: ['admin'] }}
+    ]
+  },
 
   {
     path: '/algo',

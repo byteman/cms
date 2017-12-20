@@ -9,6 +9,15 @@ export default {
   name: 'app',
   mounted() {
     console.log('App mounted')
+    var role = {
+      role: 'admin',
+      name: 'admin',
+      avatar: '/logo.gif'
+    }
+    const roles = role
+    // this.$store.dispatch('GenerateRoutes', { roles }).then(() => {
+    //   this.$router.addRoutes(this.$store.getters.addRouters)
+    // })
   }
 }
 </script>
