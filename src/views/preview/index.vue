@@ -56,6 +56,7 @@
 </template>
 
 <script>
+
 import { postCameraPreview, getRtspUrl, getTree } from "@/api/preview";
 import BrowserDetect from "@/utils/detect";
 import ReconnectingWebSocket from "@/utils/reconnectwebsocketclient";
