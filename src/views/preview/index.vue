@@ -56,6 +56,7 @@
 </template>
 
 <script>
+
 import { postCameraPreview, getRtspUrl, getTree } from "@/api/preview";
 import BrowserDetect from "@/utils/detect";
 import ReconnectingWebSocket from "@/utils/reconnectwebsocketclient";
@@ -338,6 +339,9 @@ export default {
   width: 280px;
   margin: 10px 20px;
 }
+.el-tree {
+  background: #f8f8f8;
+}
 </style>
 
 <style >
@@ -353,9 +357,7 @@ export default {
   float: left;
   background: #f8f8f8;
 }
-.el-tree {
-  background: #f8f8f8;
-}
+
 .video-content {
   width: 780px;
   height: 500px;
