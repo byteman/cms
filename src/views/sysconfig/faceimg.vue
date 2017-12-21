@@ -26,14 +26,15 @@
 
       <el-table :data="list" v-loading="loading" element-loading-text="加载中,请等待">
 
-        <el-table-column type="selection" width="55">
+        <el-table-column prop="name" label="姓名"></el-table-column>
+        <el-table-column prop="aligndata" label="头像" align='center'>
+          <template slot-scope="scope">
+            <img class="avatar" :src="scope.row.aligndata"/>
+          </template>
         </el-table-column>
-
-        <el-table-column prop="id" label="姓名"></el-table-column>
-        <el-table-column prop="name" label="头像"></el-table-column>
-        <el-table-column prop="createtime" label="性别"></el-table-column>
-        <el-table-column prop="group_type" label="生日"></el-table-column>
-        <el-table-column prop="group_type" label="所在底库"></el-table-column>
+        <el-table-column prop="gender" label="性别"></el-table-column>
+        <el-table-column prop="birthday" label="生日"></el-table-column>
+        <el-table-column prop="staticDBId" label="所在底库"></el-table-column>
 
         <el-table-column label="操作" width="300" align='center'>
           <template slot-scope="scope">
@@ -91,7 +92,7 @@
             <el-input v-model="face.name"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-input v-model="face.male"></el-input>
+            <el-input v-model="face.gender"></el-input>
           </el-form-item>
           <el-form-item label="生日">
             <el-input v-model="face.birthday"></el-input>
@@ -101,16 +102,9 @@
 
         <el-col :span="11">
 
-          <el-form-item>
-            <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload">
-              <img v-if="imageUrl" :src="face_image_url" class="face.avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+          <el-form-item label="头像">
+            <input ref="file" type="file" @change="handleFileChange"/>
+            <img class="face-avatar" :src="face.avatar"/>
           </el-form-item>
 
         </el-col>
@@ -127,10 +121,23 @@
 
 <script>
   import {
-    GetGroup
-  } from "@/api/sysconfig";
+    GetGroup,
+    QueryFaceList
+  } from "@/api/sysconfig"
+  import {
+    Base64ToImage
+  } from '@/api/snap'
+  import {
+    VueImgInputer
+  } from 'vue-img-inputer'
+  import ElInput from "element-ui/packages/input/src/input";
 
   export default {
+    name: 'app',
+    components: {
+      ElInput,
+      VueImgInputer
+    },
     data() {
       return {
         loading: false,
@@ -148,7 +155,9 @@
         face_show: false,
         face: {},
         face_dlg_btn_name: '',
-        face_image_url: ''
+        face_image_url: '',
+        face_image_visible: false,
+        file: ''
       }
     },
     created() {
@@ -173,26 +182,37 @@
     },
     methods: {
       onRefresh() {
+        let starttime = null
+        let endtime = null
+        let staticDBId = null
+        let userId = null
+
+        if (this.selectdb !== 0) {
+          staticDBId = this.selectdb
+        }
+
         this.loading = true
-        this.total = 20
-        this.currentPage = 1
-        this.list = [
-          {
-            id: "0001",
-            name: "公司门口",
-            createtime: "2017-11-23",
-            group_type: "白名单"
-          },
-          {
-            id: "0001",
-            name: "公司门口",
-            createtime: "2017-11-23",
-            group_type: "白名单"
-          }]
-        this.loading = false
+        QueryFaceList(this.currentPage.toString(), '10', starttime, endtime, staticDBId, userId)
+          .then(response => {
+            this.list = []
+            this.total = 0
+            const tmpList = response.data.data.list
+            tmpList.forEach(function (item) {
+              item.aligndata = Base64ToImage(item.img)
+            })
+            this.list = tmpList
+            this.total = parseInt(response.data.data.total)
+            this.loading = false
+            console.log(this.list)
+          })
+          .catch(() => {
+            this.list = []
+            this.total = 0
+            this.loading = false
+            console.log('error')
+          })
       },
       handleSelectDbChange() {
-        this.$message('handleSelectDbChange')
         this.onRefresh()
       },
       handleCurrentChange(val) {
@@ -236,7 +256,11 @@
       handleEdit(row) {
         this.face_title = '底库修改人脸'
         this.face_show = true
-        this.face = {}
+        this.face.name = row.name
+        this.face.gender = row.gender
+        this.face.birthday = row.birthday
+        this.face.avatar = row.aligndata
+        this.face_image_visible = true
         this.face_dlg_btn_name = '修 改'
       },
       handleBeforeUpload(file) {
@@ -248,22 +272,17 @@
         }
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
       },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+      handleFileChange(event) {
+        console.log(this.$refs.file.files)
+        let files = this.$refs.file.files
+        const data = new FormData();
+        data.append('logo', files[0]);
+        console.log(data.get());
       },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'
-        const isLt2M = file.size / 1024 / 1024 < 2
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!')
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!')
-        }
-        return isJPG && isLt2M
+      handleRemove(file, fileList) {
+        console.log(file, fileList)
       },
       onFaceBtnClick() {
       }
@@ -328,9 +347,14 @@
     text-align: center;
   }
 
-  .face .avatar {
-    width: 178px;
-    height: 178px;
+  .face-avatar {
+    height: 120px;
     display: block;
   }
+
+  .avatar {
+    height: 88px
+  }
+
+
 </style>

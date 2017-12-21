@@ -29,7 +29,7 @@ export function GetStatus() {
     method: 'get'
   })
 }
-//{"requestdata":{"token":"1","bcode":"0x12008"}}:
+
 export function GetVideoDebug() {
   return fetch({
     url: '/channel/query',
@@ -138,6 +138,25 @@ export function RemoveGroup(id) {
         token: 1,
         bcode: '80002',
         group_id: id
+      }
+    }
+  })
+}
+
+export function QueryFaceList(index, pagesize, starttime, endtime, staticDBId, userId) {
+  return fetch({
+    url: '/snap/manage/page',
+    method: 'post',
+    data: {
+      'requestdata': {
+        token: '1',
+        bcode: '80006',
+        index: index,
+        pagesize: pagesize,
+        starttime: starttime,
+        endtime: endtime,
+        staticDBId: staticDBId,
+        userId: userId
       }
     }
   })
