@@ -232,6 +232,7 @@ export default {
         list: []
       };
       this.getResult();
+      this.$refs.myform.resetFields();
     },
     moreSpecial(value) {
   
