@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="header">
+    <!-- <div class="header">
       <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="查询条件">
           <el-input v-model="formInline.name" placeholder="请输入底库名称"></el-input>
@@ -13,16 +13,16 @@
           <el-button type="primary" @click="onReset">重置</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </div> -->
 
     <div class="content">
       <el-form :inline="true" class="button-oper">
         <el-form-item>
-          <el-button plain @click="onAdd">新增</el-button>
+          <el-button type="primary"  @click="onAdd">新增</el-button>
         </el-form-item>
-        <el-form-item>
+        <!-- <el-form-item>
           <el-button plain @click="onRemove">批量删除</el-button>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <el-table :data="list">
 

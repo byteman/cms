@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="header">
+    <!-- <div class="header">
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="相机名称">
         <el-input v-model="formInline.cameraName" placeholder="请输入相机名称"></el-input>
@@ -16,15 +16,15 @@
         <el-button plain @click="onReset">重置</el-button>
         </el-form-item>
         </el-form>
-    </div>
+    </div> -->
   
     <div class="content">
        <el-form :inline="true" class="button-oper">      
         <el-form-item>
-        <el-button plain @click="onAddCamera">新增</el-button>
+        <el-button type="primary"  @click="onAddCamera">新增</el-button>
         </el-form-item>
        <el-form-item>
-        <el-button plain @click="onPreviewConfig">预览地址配置</el-button>
+        <el-button type="primary"  @click="onPreviewConfig">预览地址配置</el-button>
         </el-form-item>
       </el-form>
       <el-table :data="list" >
@@ -51,19 +51,19 @@
         <el-button type="text" size="small" @click="handleSnap(scope.row)">抓拍设置</el-button>
         <el-button type="text" size="small" @click="handlePreview(scope.row)">预览设置</el-button>
         <el-button type="text" size="small" @click="handleChannel(scope.row)">{{scope.row.cameraState | filterChannelStatus}}</el-button>
-        <el-button type="text" size="small"  @click="handleROI(scope.row)" >ROI设置</el-button>
+        <!-- <el-button type="text" size="small"  @click="handleROI(scope.row)" >ROI设置</el-button> -->
       </template>
       </el-table-column>
   
       </el-table>
 
-      <div class="footer">
+      <!-- <div class="footer">
         <div class="block">
           <el-pagination layout="prev, pager, next" @size-change="handleSizeChange" @current-change="handleCurrentChange" :total="total">
           </el-pagination>
         </div>
-      </div>
-    </div>
+      </div> -->
+    </div> 
  
 
    <el-dialog :title="title" :visible.sync="showChannel" width="50%" center >   
@@ -270,8 +270,8 @@
 </template>
 
 <script>
-import { CommQuery, CommPost, OperChannel } from '@/api/sysconfig'
-import Channel from './channel'
+import { CommQuery, CommPost, OperChannel } from "@/api/sysconfig";
+import Channel from "./channel";
 export default {
   components: {
     Channel
@@ -288,54 +288,54 @@ export default {
       cameraDialogState: 3, // 0 添加 1 详情 2 编辑.
       camera: {},
       vms: {
-        host: '127.0.0.1',
+        host: "127.0.0.1",
         port: 554
       },
-      title: '相机详情',
+      title: "相机详情",
       list: [],
       formInline: {
-        name: ''
+        name: ""
       },
       imgOptions: [
         {
-          value: '1',
-          label: '原始大小'
+          value: "1",
+          label: "原始大小"
         },
         {
-          value: '2',
-          label: '640x480'
+          value: "2",
+          label: "640x480"
         },
         {
-          value: '3',
-          label: '1280x720'
+          value: "3",
+          label: "1280x720"
         },
         {
-          value: '4',
-          label: '1920x1080'
+          value: "4",
+          label: "1920x1080"
         }
       ],
       vqOptions: [
         {
-          value: '1',
-          label: '标清'
+          value: "1",
+          label: "标清"
         },
         {
-          value: '2',
-          label: '高清'
+          value: "2",
+          label: "高清"
         },
         {
-          value: '3',
-          label: '超清'
+          value: "3",
+          label: "超清"
         }
       ],
       cameraTypeOptions: [
         {
-          value: 'rtsp',
-          label: 'RTSP'
+          value: "rtsp",
+          label: "RTSP"
         },
         {
-          value: 'hikcap',
-          label: '海康抓拍相机'
+          value: "hikcap",
+          label: "海康抓拍相机"
         }
       ],
       calcOptions: [
@@ -361,31 +361,34 @@ export default {
         }
       ],
       facedbs: [],
-      cameraStatusFilters: [{ text: '离线', value: '-1' }, { text: '在线11', value: '0' }, { text: '禁用11', value: '1' }]
-    }
+      cameraStatusFilters: [
+        { text: "离线", value: "-1" },
+        { text: "在线11", value: "0" },
+        { text: "禁用11", value: "1" }
+      ]
+    };
   },
   created() {
-    console.log('camera created')
+    console.log("camera created");
   },
   mounted() {
-    this.onRefresh()
+    this.onRefresh();
     CommQuery(80001)
       .then(response => {
-        this.facedbs = response.data.data.group_ids
+        this.facedbs = response.data.data.group_ids;
       })
-      .catch(() => {})
+      .catch(() => {});
   },
-  
-  filters: {  
-    filterChannelStatus: function (value) {  
-      switch (value)
-      {
+
+  filters: {
+    filterChannelStatus: function(value) {
+      switch (value) {
         case 1:
-          return '启用通道'
+          return "启用通道";
         case -1:
-          return '禁用通道'
+          return "禁用通道";
         case 0:
-          return '禁用通道'
+          return "禁用通道";
       }
     }
   },
@@ -393,51 +396,48 @@ export default {
     // 计算属性的 getter
     cameraDlgBtnName() {
       // `this` 指向 vm 实例
-      if (this.cameraDialogState === 1) return '关闭'
-      else return '保存'
+      if (this.cameraDialogState === 1) return "关闭";
+      else return "保存";
     },
     onCameraBtnClick() {
-      if (this.cameraDialogState === 1) return this.closeDlg
-      else if(this.cameraDialogState === 0) return this.handleSaveCamera
-      else return this.handleEditCamera
+      if (this.cameraDialogState === 1) return this.closeDlg;
+      else if (this.cameraDialogState === 0) return this.handleSaveCamera;
+      else return this.handleEditCamera;
     },
     filedEnable(name) {
-      console.log("field =", this.cameraDialogState)
+      console.log("field =", this.cameraDialogState);
       // 详情，全部禁用
-      if (this.cameraDialogState === 1) return true
-      // 添加,全部启用
-      else if(this.cameraDialogState === 0) return false
-
-      // 编辑， ID启用
+      if (this.cameraDialogState === 1) return true;
+      else if (this.cameraDialogState === 0)
+        // 添加,全部启用
+        return false;
       else {
-        if (name !== undefined)
-        {
-          if (name === 'id') return true
+        // 编辑， ID启用
+        if (name !== undefined) {
+          if (name === "id") return true;
         }
-        return false
+        return false;
       }
     }
   },
   methods: {
-    onSubmit: function() {
-      
-    },
-    
+    onSubmit: function() {},
+
     closeDlg() {
-      console.log('close')
-      this.showChannel = false
+      console.log("close");
+      this.showChannel = false;
     },
     onReset: function() {},
     onAddCamera: function() {
-      this.cameraDialogState = 0
-      this.showChannel = true
-      this.camera = {}
+      this.cameraDialogState = 0;
+      this.showChannel = true;
+      this.camera = {};
     },
     onRefresh() {
       CommQuery(0x12003)
         .then(response => {
-          this.list = response.data.data.channels
-          console.log(this.list)
+          this.list = response.data.data.channels;
+          console.log(this.list);
         })
         .catch(() => {});
     },
@@ -445,75 +445,71 @@ export default {
     onPreviewConfig: function() {
       CommQuery(0x10314)
         .then(response => {
-          var rtsp = response.data.data.rtspurl
-          var rtsps = rtsp.split(':')
-          this.vms.host = rtsps[0]
-          this.vms.port = rtsps[1]
-          console.log(rtsp)
-          
-          this.showVms = true
+          var rtsp = response.data.data.rtspurl;
+          var rtsps = rtsp.split(":");
+          this.vms.host = rtsps[0];
+          this.vms.port = rtsps[1];
+          console.log(rtsp);
+
+          this.showVms = true;
         })
-        .catch(() => {
-        
-        });
+        .catch(() => {});
     },
     handleSaveSnap() {
-      console.log('edit camera')
-      var chan = this.snap.id
+      console.log("edit camera");
+      var chan = this.snap.id;
       var data = {
         requestdata: {
           token: 1,
-          bcode: '0x12004',
+          bcode: "0x12004",
           channel: chan
         }
-      }
+      };
       var snap = {
         snap: this.snap
-      }
-      console.log(snap)
-      data.requestdata[chan] = snap
-      console.log(data)
-      var msg = '保存成功'
+      };
+      console.log(snap);
+      data.requestdata[chan] = snap;
+      console.log(data);
+      var msg = "保存成功";
       CommPost(data)
-        .then(response => {        
-          
-        })
+        .then(response => {})
         .catch(() => {
-          msg = '保存失败'
-        })
-      this.$message(msg)
-      this.showSnap = false
+          msg = "保存失败";
+        });
+      this.$message(msg);
+      this.showSnap = false;
     },
     handleSaveVms() {
       var data = {
         requestdata: {
           token: 1,
-          bcode: '0x10315',
-          rtspurl: this.vms.host + ':' + this.vms.port
+          bcode: "0x10315",
+          rtspurl: this.vms.host + ":" + this.vms.port
         }
-      }
+      };
 
       CommPost(data)
         .then(response => {
-          this.$message('保存成功')
-          this.showVms = false
+          this.$message("保存成功");
+          this.showVms = false;
         })
         .catch(() => {
-          this.$message('保存失败')
-        })
+          this.$message("保存失败");
+        });
     },
     handleRemove(row) {
-      this.$confirm('确认删除该设备, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
+      this.$confirm("确认删除该设备, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
         .then(() => {
           OperChannel(0x12001, row.id)
             .then(response => {
-              this.onRefresh()
+              this.onRefresh();
             })
-            .catch(() => {})         
+            .catch(() => {});
         })
         .catch(() => {
           this.$message({
@@ -523,37 +519,34 @@ export default {
         });
     },
     str2json(jsonstr) {
-      return eval("(" + jsonstr + ")")
+      return eval("(" + jsonstr + ")");
     },
     handleChannel(row) {
-      var state = 1
-      console.log('camerestate=',row.cameraState)
-      if (row.cameraState === 0)
-      {
+      var state = 1;
+      console.log("camerestate=", row.cameraState);
+      if (row.cameraState === 0) {
         ///已经禁用
-        state = 0
+        state = 0;
       }
-      
-      console.log('state=', state)
+
+      console.log("state=", state);
       var data = {
         requestdata: {
           token: 1,
-          bcode: '0x12007',
+          bcode: "0x12007",
           channel: row.id,
           enable: state
         }
-      }
+      };
 
       CommPost(data)
         .then(response => {
-          this.showVms = false
-          this.onRefresh()
+          this.showVms = false;
+          this.onRefresh();
         })
-        .catch(() => {})
+        .catch(() => {});
     },
-    handleROI(row){
-
-    },
+    handleROI(row) {},
     handleClose: function() {},
     handleSizeChange: function() {},
     handleCurrentChange: function() {},
@@ -562,10 +555,10 @@ export default {
         .then(response => {
           var tmp = this.str2json(response.data.data);
 
-          this.snap = tmp.snap
-          this.snap.id = row.id
-          console.log(this.camera)
-          this.showSnap = true
+          this.snap = tmp.snap;
+          this.snap.id = row.id;
+          console.log(this.camera);
+          this.showSnap = true;
         })
         .catch(() => {});
     },
@@ -574,15 +567,15 @@ export default {
         .then(response => {
           var tmp = this.str2json(response.data.data);
 
-          this.prew = tmp.preview
-          this.prew.id = row.id
-          console.log(this.camera)
-          this.showPrew = true
+          this.prew = tmp.preview;
+          this.prew.id = row.id;
+          console.log(this.camera);
+          this.showPrew = true;
         })
         .catch(() => {});
     },
     handleDetail(row) {
-      this.cameraDialogState = 1
+      this.cameraDialogState = 1;
       OperChannel(0x12000, row.id)
         .then(response => {
           var tmp = this.str2json(response.data.data);
@@ -594,144 +587,141 @@ export default {
         .catch(() => {});
     },
     handleEdit(row) {
-      this.cameraDialogState = 2
+      this.cameraDialogState = 2;
       OperChannel(0x12000, row.id)
         .then(response => {
-          var tmp = this.str2json(response.data.data)
+          var tmp = this.str2json(response.data.data);
 
-          this.camera = tmp.ags
-          console.log(this.camera)
-          this.showChannel = true
+          this.camera = tmp.ags;
+          console.log(this.camera);
+          this.showChannel = true;
         })
         .catch(() => {});
     },
     handleEditCamera() {
-      console.log('edit camera')
-      var chan = this.camera.cameraId
+      console.log("edit camera");
+      var chan = this.camera.cameraId;
       var data = {
         requestdata: {
           token: 1,
-          bcode: '0x12004',
+          bcode: "0x12004",
           channel: chan
         }
-      }
+      };
       var ags = {
         ags: this.camera
-      }
-      delete ags.ags.enable
-      console.log(ags)
+      };
+      delete ags.ags.enable;
+      console.log(ags);
       if (ags.enable) {
-        ags.ags.enable = 1
+        ags.ags.enable = 1;
       } else {
-        ags.ags.enable = 0
+        ags.ags.enable = 0;
       }
-      console.log(ags)
-      data.requestdata[chan] = ags
-      console.log(data)
+      console.log(ags);
+      data.requestdata[chan] = ags;
+      console.log(data);
 
       CommPost(data)
         .then(response => {
-          this.showChannel = false
-          this.onRefresh()
+          this.showChannel = false;
+          this.onRefresh();
         })
         .catch(() => {
-          this.$message('保存失败')
-        })
-      this.showChannel = false
-    },   
+          this.$message("保存失败");
+        });
+      this.showChannel = false;
+    },
     handleSaveCamera() {
-      console.log('save camera')
-      
-      var chan = this.camera.cameraId
+      console.log("save camera");
+
+      var chan = this.camera.cameraId;
       var data = {
         requestdata: {
           token: 1,
-          bcode: '0x12002',
+          bcode: "0x12002",
           channel: chan
         }
-      }
+      };
       var ags = {
         ags: this.camera
-      }
-      delete ags.ags.enable
-      console.log(ags)
+      };
+      delete ags.ags.enable;
+      console.log(ags);
       if (ags.enable) {
-        ags.ags.enable = 1
+        ags.ags.enable = 1;
       } else {
-        ags.ags.enable = 0
+        ags.ags.enable = 0;
       }
-      console.log(ags)
-      data.requestdata[chan] = ags
-      console.log(data)
+      console.log(ags);
+      data.requestdata[chan] = ags;
+      console.log(data);
 
       CommPost(data)
         .then(response => {
-          this.showChannel = false
-          this.onRefresh()
+          this.showChannel = false;
+          this.onRefresh();
         })
         .catch(() => {
-          this.$message('保存失败')
-        })
-      this.showChannel = false
-      
+          this.$message("保存失败");
+        });
+      this.showChannel = false;
     },
     handleSavePrew() {
-      console.log('edit prew')
-      var chan = this.prew.id
+      console.log("edit prew");
+      var chan = this.prew.id;
       var data = {
         requestdata: {
           token: 1,
-          bcode: '0x12004',
+          bcode: "0x12004",
           channel: chan
         }
-      }
+      };
       var preview = {
         preview: this.prew
-      }
-     
-      console.log(preview)
-      data.requestdata[chan] = preview
-      console.log(data)
+      };
+
+      console.log(preview);
+      data.requestdata[chan] = preview;
+      console.log(data);
 
       CommPost(data)
         .then(response => {
-            this.$message('保存成功')
+          this.$message("保存成功");
         })
         .catch(() => {
-          this.$message('保存失败')
-        })
-      this.showPrew = false
+          this.$message("保存失败");
+        });
+      this.showPrew = false;
     },
-    handleEnableChannel(enable) {
+    handleEnableChannel(enable) {},
 
-    },
-    
     filterCameraStatus(value, row) {
-      console.log(value, row.cameraState)
-      return value === row.cameraState
+      console.log(value, row.cameraState);
+      return value === row.cameraState;
     },
     formatType(row, column, cellValue) {
-      console.log(cellValue)
+      console.log(cellValue);
       // 离线 0 在线 1 未启动 2
-      if (row.cameraType === 'file') {
-        return '视频文件'
+      if (row.cameraType === "file") {
+        return "视频文件";
       } else {
-        return '其他'
+        return "其他";
       }
     },
     formatStatus(row, column, cellValue) {
-      console.log('-----------------',cellValue)
+      console.log("-----------------", cellValue);
       // 离线 0 在线 1 未启动 2
       if (row.cameraState === 0) {
-        return '在线'
-      } else if(row.cameraState === -1) {
-        return '离线'
-      } else if(row.cameraState === 1) {
-        return '禁用'
+        return "在线";
+      } else if (row.cameraState === -1) {
+        return "离线";
+      } else if (row.cameraState === 1) {
+        return "禁用";
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
