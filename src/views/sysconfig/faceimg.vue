@@ -83,7 +83,7 @@
     </el-dialog>
 
     <el-dialog :title="face_title" :visible.sync="face_show" width="50%" center>
-      <el-form ref="form" :model="face" label-width="100px" :rules="rules">
+      <el-form ref="devform" :model="face" label-width="100px" :rules="rules">
 
         <el-col :span="11">
 
@@ -147,6 +147,8 @@
         console.log(re.test(value))
         if (!re.test(value)) {
           callback(new Error('日期必须为正确日期，如：2012-01-30'))
+        } else {
+          callback()
         }
       }
 
@@ -321,10 +323,13 @@
         console.log(file, fileList)
       },
       onFaceBtnClick() {
+        console.log('aa')
         if (this.face_dlg_btn_name === '新 增') {
-          this.$refs.form.validate(valid => {
+          console.log('bb')
+          this.$refs.devform.validate(valid => {
+            console.log('cc')
             if (valid) {
-              console.log('')
+              console.log('kk')
               let mStaticDBId = null
               let mImg = null
               let mBirthday = null
@@ -360,6 +365,8 @@
                   })
                 })
               this.face_show = false
+            } else {
+              console.log('gg')
             }
           })
         }
