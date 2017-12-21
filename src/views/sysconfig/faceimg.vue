@@ -38,7 +38,6 @@
 
         <el-table-column label="操作" width="300" align='center'>
           <template slot-scope="scope">
-            <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
             <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
@@ -84,37 +83,35 @@
     </el-dialog>
 
     <el-dialog :title="face_title" :visible.sync="face_show" width="50%" center>
-      <el-form ref="form" :model="face" label-width="100px">
+      <el-form ref="form" :model="face" label-width="100px" :rules="rules">
 
         <el-col :span="11">
 
           <el-form-item label="姓名">
-            <el-input v-model="face.name"></el-input>
+            <el-input v-model="face.name" :maxlength="20"></el-input>
           </el-form-item>
           <el-form-item label="性别">
-            <el-input v-model="face.gender"></el-input>
+            <el-input v-model="face.gender" :maxlength="10"></el-input>
           </el-form-item>
-          <el-form-item label="生日">
-            <el-input v-model="face.birthday"></el-input>
+          <el-form-item label="生日" prop="birthday">
+            <el-input v-model="face.birthday"  :maxlength="10"></el-input>
           </el-form-item>
 
         </el-col>
 
         <el-col :span="11">
 
-          <el-form-item label="">
+          <el-form-item label="头像">
             <el-upload
-              class="upload-demo"
+              class="drag-avatar-upload"
+              action=""
               drag
               :before-upload="beforeUpload"
-              :on-change="changeFile"
-              action=""
-              >
-              <img id="giftImg" v-bind:src="imageUrl" class="avatar1">
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              :on-change="changeFile">
+              <img id="giftImg" v-bind:src="face_avatar_url" class="avatar1">
+              <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
             </el-upload>
           </el-form-item>
-
         </el-col>
 
       </el-form>
@@ -128,257 +125,303 @@
 </template>
 
 <script>
-import { GetGroup, QueryFaceList } from "@/api/sysconfig";
-import { Base64ToImage } from "@/api/snap";
-import { VueImgInputer } from "vue-img-inputer";
-import ElInput from "element-ui/packages/input/src/input";
+  import {
+    GetGroup,
+    QueryFaceList,
+    AddFace,
+    DeleteFace
+  } from "@/api/sysconfig"
+  import {
+    Base64ToImage
+  } from "@/api/snap"
+  import ElInput from "element-ui/packages/input/src/input"
 
-export default {
-  name: "app",
-  components: {
-    ElInput,
-    VueImgInputer
-  },
-  data() {
-    return {
-      imageUrl: "",
-      loading: false,
-      total: 50,
-      currentPage: 1,
-      selectdb: "",
-      dboptions: [],
-      list: [],
-      upload_show: false,
-      upload_file_list: [],
-      upload_form: {},
-      upload_url: "",
-      upload_message: "",
-      face_title: "",
-      face_show: false,
-      face: {},
-      face_dlg_btn_name: "",
-      face_image_url: "",
-      face_image_visible: false,
-      file: ""
-    };
-  },
-  created() {
-    console.log("face image page created");
-  },
-  mounted() {
-    this.loading = true;
-    this.upload_url = process.env.BASE_API + "/system/increaseLib";
-    GetGroup(80001)
-      .then(response => {
-        const tmpList = response.data.data.group_ids;
-        tmpList.forEach(function(item) {
-          item.value = item.id;
-          item.label = item.id + "(" + item.group_name + ")";
-        });
-        this.dboptions = tmpList;
-        console.log(this.dboptions);
-      })
-      .catch(() => {});
-    this.onRefresh();
-  },
-  methods: {
-    beforeUpload(file) {
-      return false;
+  export default {
+    components: {
+      ElInput
     },
-    changeFile(file, fileList) {
-      var This = this;
-      var reader = new FileReader();
-      reader.readAsDataURL(file.raw);
-      reader.onload = function(e) {
-        this.result;
-        This.imageUrl = this.result;
-      };
-    },
-    onRefresh() {
-      let starttime = null;
-      let endtime = null;
-      let staticDBId = null;
-      let userId = null;
-
-      if (this.selectdb !== 0) {
-        staticDBId = this.selectdb;
+    data() {
+      var birthday_validator = (rule, value, callback) => {
+        var re = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/
+        console.log(value)
+        console.log(re.test(value))
+        if (!re.test(value)) {
+          callback(new Error('日期必须为正确日期，如：2012-01-30'))
+        }
       }
 
-      this.loading = true;
-      QueryFaceList(
-        this.currentPage.toString(),
-        "10",
-        starttime,
-        endtime,
-        staticDBId,
-        userId
-      )
+      return {
+        loading: false,
+        total: 50,
+        currentPage: 1,
+        selectdb: '',
+        dboptions: [],
+        list: [],
+        upload_show: false,
+        upload_file_list: [],
+        upload_form: {},
+        upload_url: '',
+        upload_message: '',
+        face_title: '',
+        face_show: false,
+        face: {},
+        face_avatar_url: '',
+        face_dlg_btn_name: '',
+
+        rules: {
+          birthday: [{validator: birthday_validator, trigger: 'blur'}]
+        }
+      }
+    },
+    created() {
+      console.log('face image page created')
+    },
+    mounted() {
+      this.loading = true
+      this.upload_url = process.env.BASE_API + '/system/increaseLib'
+      GetGroup(80001)
         .then(response => {
-          this.list = [];
-          this.total = 0;
-          const tmpList = response.data.data.list;
-          tmpList.forEach(function(item) {
-            item.aligndata = Base64ToImage(item.img);
-          });
-          this.list = tmpList;
-          this.total = parseInt(response.data.data.total);
-          this.loading = false;
-          console.log(this.list);
+          const tmpList = response.data.data.group_ids
+          tmpList.forEach(function (item) {
+            item.value = item.id
+            item.label = item.id + '(' + item.group_name + ')'
+          })
+          this.dboptions = tmpList
+          console.log(this.dboptions)
         })
         .catch(() => {
-          this.list = [];
-          this.total = 0;
-          this.loading = false;
-          console.log("error");
-        });
+        })
+      this.onRefresh()
     },
-    handleSelectDbChange() {
-      this.onRefresh();
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.onRefresh();
-    },
-    onAdd() {
-      if (this.selectdb !== "") {
-        this.face_title = "底库新增人脸";
-        this.face_show = true;
-        this.face = {};
-        this.face_dlg_btn_name = "新 增";
-      } else {
-        this.$message("底库为空，请选择底库后重试");
-      }
-    },
-    onImport() {
-      if (this.selectdb !== "") {
-        this.upload_show = true;
-        this.upload_form.group_id = this.selectdb;
-        this.upload_file_list = [];
-      } else {
-        this.$message("底库为空，请选择底库后重试");
-      }
-    },
-    handleDelete(row) {
-      this.$confirm("确认删除该设备, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {})
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
-    },
-    handleEdit(row) {
-      this.face_title = "底库修改人脸";
-      this.face_show = true;
-      this.face.name = row.name;
-      this.face.gender = row.gender;
-      this.face.birthday = row.birthday;
-      this.face.avatar = row.aligndata;
-      this.face_image_visible = true;
-      this.face_dlg_btn_name = "修 改";
-    },
-    handleBeforeUpload(file) {
-      this.upload_message = "";
-    },
-    handleSuccess(res, file, fileList) {
-      if (res.status !== 0) {
-        this.upload_message = "失败反馈:" + JSON.stringify(res);
-      }
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length +
+    methods: {
+      beforeUpload(file) {
+        return false
+      },
+      changeFile(file, fileList) {
+        var This = this
+        var reader = new FileReader()
+        reader.readAsDataURL(file.raw)
+        reader.onload = function (e) {
+          This.face_avatar_url = this.result
+        }
+      },
+      onRefresh() {
+        let starttime = null
+        let endtime = null
+        let staticDBId = null
+        let userId = null
+
+        if (this.selectdb !== 0) {
+          staticDBId = this.selectdb
+        }
+
+        this.loading = true
+        QueryFaceList(
+          this.currentPage.toString(),
+          '10',
+          starttime,
+          endtime,
+          staticDBId,
+          userId
+        )
+          .then(response => {
+            this.list = []
+            this.total = 0
+            const tmpList = response.data.data.list
+            tmpList.forEach(function (item) {
+              item.aligndata = Base64ToImage(item.img)
+            })
+            this.list = tmpList
+            this.total = parseInt(response.data.data.total)
+            this.loading = false
+            console.log(this.list)
+          })
+          .catch(() => {
+            this.list = []
+            this.total = 0
+            this.loading = false
+            console.log('error')
+          })
+      },
+      handleSelectDbChange() {
+        this.onRefresh()
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val
+        this.onRefresh()
+      },
+      onAdd() {
+        if (this.selectdb !== '') {
+          console.log(this.selectdb)
+          this.face_title = '底库新增人脸'
+          this.face_show = true
+          this.face = {}
+          this.face.staticDBId = this.selectdb
+          this.face_avatar_url = ''
+          this.face_dlg_btn_name = '新 增'
+        } else {
+          this.$message('底库为空，请选择底库后重试')
+        }
+        console.log(this.selectdb)
+      },
+      onImport() {
+        if (this.selectdb !== '') {
+          this.upload_show = true
+          this.upload_form.group_id = this.selectdb
+          this.upload_file_list = []
+        } else {
+          this.$message('底库为空，请选择底库后重试')
+        }
+      },
+      handleDelete(row) {
+        this.$confirm('确认删除该设备, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+          .then(() => {
+            console.log(row.staticDBId, row.id)
+            DeleteFace(row.staticDBId, row.id)
+              .then(response => {
+                this.$message({
+                  type: 'info',
+                  message: '删除人脸结果:' + response.data.info
+                })
+                this.onRefresh()
+              })
+              .catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '删除人脸异常'
+                })
+              })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
+      },
+      handleBeforeUpload(file) {
+        this.upload_message = ''
+      },
+      handleSuccess(res, file, fileList) {
+        if (res.status !== 0) {
+          this.upload_message = '失败反馈:' + JSON.stringify(res)
+        }
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(
+          `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length +
           fileList.length} 个文件`
-      );
-    },
-    handleFileChange(event) {
-      console.log(this.$refs.file.files);
-      let files = this.$refs.file.files;
-      const data = new FormData();
-      data.append("logo", files[0]);
-      console.log(data.get());
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    onFaceBtnClick() {}
+        )
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList)
+      },
+      onFaceBtnClick() {
+        if (this.face_dlg_btn_name === '新 增') {
+          this.$refs.form.validate(valid => {
+            if (valid) {
+              console.log('')
+              let mStaticDBId = null
+              let mImg = null
+              let mBirthday = null
+              let mGender = null
+              let mName = null
+              if (this.face.staticDBId !== null && this.face.staticDBId.length > 0) {
+                mStaticDBId = this.face.staticDBId
+              }
+              if (this.face_avatar_url !== null && this.face_avatar_url.length > 0) {
+                mImg = this.face_avatar_url.substring(23)
+              }
+              if (this.face.birthday !== null && this.face.birthday.length > 0) {
+                mBirthday = this.face.birthday
+              }
+              if (this.face.gender !== null && this.face.gender.length > 0) {
+                mGender = this.face.gender
+              }
+              if (this.face.name !== null && this.face.name.length > 0) {
+                mName = this.face.name
+              }
+              AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
+                .then(response => {
+                  this.$message({
+                    type: 'info',
+                    message: '新增人脸结果:' + response.data.info
+                  })
+                  this.onRefresh()
+                })
+                .catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '新增人脸异常'
+                  })
+                })
+              this.face_show = false
+            }
+          })
+        }
+      }
+    }
   }
-};
 </script>
 
 <style scoped>
-.avatar1 {
-  margin-top: 20px;
-  width: 120px;
-  height: 90px;
-  border:none;
-}
+  .avatar1 {
+    margin-top: 20px;
+    width: 120px;
+    height: 90px;
+    border: none;
+  }
 
-.container {
-  width: 99%;
-  margin: 0 auto;
-  border: 1px solid #dfe6ec;
-  min-height: 600px;
-}
+  .container {
+    width: 99%;
+    margin: 0 auto;
+    border: 1px solid #dfe6ec;
+    min-height: 600px;
+  }
 
-.el-form {
-  overflow: hidden;
-}
+  .el-form {
+    overflow: hidden;
+  }
 
-.content {
-  width: 97%;
-  margin: 0px auto;
-}
+  .content {
+    width: 97%;
+    margin: 0px auto;
+  }
 
-.header {
-  /* margin-top:10px;
-     line-height:50px;
-    margin-bottom: 10px; */
-  padding: 24px;
+  .header {
+    /* margin-top:10px;
+       line-height:50px;
+      margin-bottom: 10px; */
+    padding: 24px;
 
-  background-color: rgb(248, 249, 248);
-  height: 80px;
-}
+    background-color: rgb(248, 249, 248);
+    height: 80px;
+  }
 
-.footer {
-  height: 50px;
-  margin-top: 10px;
-  margin-right: 90px;
-  text-align: right;
-}
+  .footer {
+    height: 50px;
+    margin-top: 10px;
+    margin-right: 90px;
+    text-align: right;
+  }
 
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
 
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
 
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-
-.face-avatar {
-  height: 120px;
-  display: block;
-}
-
-.avatar {
-  height: 88px;
-}
+  .avatar {
+    height: 88px;
+  }
 </style>

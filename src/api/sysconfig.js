@@ -55,6 +55,7 @@ export function CommQuery(bcode) {
     }
   })
 }
+
 export function QueryChannel(chan) {
   return fetch({
     url: '/channel/query',
@@ -68,6 +69,7 @@ export function QueryChannel(chan) {
     }
   })
 }
+
 export function OperChannel(code, chan) {
   return fetch({
     url: '/channel/query',
@@ -81,6 +83,7 @@ export function OperChannel(code, chan) {
     }
   })
 }
+
 export function CommPost(para) {
   return fetch({
     url: '/channel/query',
@@ -129,6 +132,7 @@ export function GetGroup(code) {
     }
   })
 }
+
 export function RemoveGroup(id) {
   return fetch({
     url: '/test/abc',
@@ -158,6 +162,32 @@ export function QueryFaceList(index, pagesize, starttime, endtime, staticDBId, u
         staticDBId: staticDBId,
         userId: userId
       }
+    }
+  })
+}
+
+export function DeleteFace(staticDBId, id) {
+  return fetch({
+    url: '/v1/platform/staticdb/ext/removeFace',
+    method: 'post',
+    data: {
+      staticDBId: staticDBId,
+      id: id
+    }
+  })
+}
+
+export function AddFace(staticDBId, img, birthday, gender, name) {
+  return fetch({
+    url: '/v1/platform/staticdb/ext/addFace',
+    method: 'post',
+    data: {
+      staticDBId: staticDBId,
+      img: img,
+      birthday: birthday,
+      gender: gender,
+      name: name,
+      userId: '.jpg'
     }
   })
 }
