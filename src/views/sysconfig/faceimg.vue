@@ -3,7 +3,7 @@
     <div class="header">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="底库选择">
-          <el-select v-model="selectdb" placeholder="请输入相机编号">
+          <el-select v-model="selectdb" placeholder="请输入相机编号" @change="handleSelectDbChange">
             <el-option
               v-for="item in dboptions"
               :key="item.value"
@@ -191,15 +191,23 @@
           }]
         this.loading = false
       },
+      handleSelectDbChange() {
+        this.$message('handleSelectDbChange')
+        this.onRefresh()
+      },
       handleCurrentChange(val) {
         this.currentPage = val
         this.onRefresh()
       },
       onAdd() {
-        this.face_title = '底库新增人脸'
-        this.face_show = true
-        this.face = {}
-        this.face_dlg_btn_name = '新 增'
+        if (this.selectdb !== '') {
+          this.face_title = '底库新增人脸'
+          this.face_show = true
+          this.face = {}
+          this.face_dlg_btn_name = '新 增'
+        } else {
+          this.$message('底库为空，请选择底库后重试')
+        }
       },
       onImport() {
         if (this.selectdb !== '') {
@@ -298,6 +306,7 @@
     margin-right: 90px;
     text-align: right;
   }
+
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

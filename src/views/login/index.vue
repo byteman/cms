@@ -95,12 +95,14 @@ export default {
 $dark_gray: #889aa4;
 $light_gray: #000;
 .login-container {
-  @include relative;
-  background-image: url("../../assets/login_images/login_pg.png");
-  background-size: 100%;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  height: 100vh;
+  position: fixed;
+  top:0;
+  bottom:0;
+  right:0;
+  left:0;
+  margin: auto;
+  background: url("../../assets/login_images/login_pg.png") no-repeat center;
+  background-size: cover;
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
     -webkit-text-fill-color: #fff !important;
@@ -141,14 +143,15 @@ $light_gray: #000;
   .form-center {
     position: absolute;
     width: 850px;
-    height: 460px;
-    top: 50%;
-    left: 50%;
-    margin-left: -425px;
-    margin-top: -230px;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-image: url("../../assets/login_images/form_pg.png");
+    height: 440px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    background: url("../../assets/login_images/form_pg.png") no-repeat top;
+    background-size: cover;
+
   }
   .el-row {
     height: 100%;
