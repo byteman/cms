@@ -17,19 +17,17 @@
         <el-form-item label="状态维持时间(秒)" prop="statusKeepTimes">
           <el-input v-model="param.statusKeepTimes" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="AppId" prop="AppId">
+        <!-- <el-form-item label="AppId" prop="AppId">
           <el-input v-model="param.AppId" type="number"></el-input>
         </el-form-item>
           <el-form-item label="AppSecret" prop="AppSecret">
           <el-input v-model="param.AppSecret" type="number"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="danger" @click="restoreSettings">一键还原出厂设置</el-button>
-          <el-button type="info" @click="checkPlatFormStatus">校验后台在线状态</el-button>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="onSubmit">设 置</el-button>
+          <el-button type="info" @click="checkPlatFormStatus">校验后台在线状态</el-button>
         </el-form-item>
+     
       </el-col>
     </el-form>
   </el-card>
@@ -178,9 +176,9 @@ export default {
 }
 
 .box-card {
-  width: 800px;
+  width: 40%;
   margin: 30px auto;
-  height: 700px;
+  /* height: 700px; */
 }
 
 </style>

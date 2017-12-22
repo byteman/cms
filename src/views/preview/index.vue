@@ -29,14 +29,15 @@
           <div class="recog-info">
             <div class="recog-image">
               <img v-bind:src="value.img1"/>
-              <p>vs</p>
-              <img v-bind:src="value.img2"/>
+              <!-- <p>vs</p>
+              <img v-bind:src="value.img2"/> -->
             </div>
             <div class="recog-text">
-              <p class="recog-score">{{value.score}}</p>
-              <p></p>
-              <p>{{value.time}}</p>
+              <p class="recog-score">相似度:{{value.score}}</p>
+              <p>识别时间:{{value.time}}ms</p>
+              
             </div>
+            <p>用户编号:{{value.userId}}</p>
           </div>
         </li>
       </ul>
@@ -196,7 +197,7 @@ export default {
         this.cwEventNotifyEvt
       );
       cloudwalkobj.cwSetFramCash(3);
-      cloudwalkobj.cwSetWndCount(4);
+      cloudwalkobj.cwSetWndCount(1);
       cloudwalkobj.cwSetShowOSD(0);
       cloudwalkobj.cwSetConnectWay(1);
     },
@@ -238,9 +239,12 @@ export default {
             this.data2[0].children[t].isOpen = 1;
           }
         }
+        console.log('begin websocket')
         this.SnapWebSocket(
           channelId,
-          function fnSuc() {},
+          function fnSuc() {
+            console.log('snap web socket succ')
+          },
           function fnClosed() {},
           function fnNoSurrpot() {
             alert("This browser does not support WebSockets.");
@@ -264,15 +268,21 @@ export default {
       var wsJsonObj = this.wsJsonObj;
       var captureObjs = this.captureObjs;
       var recogObjs = this.recogObjs;
+      console.log('enter snapwebsocket')
       if ("WebSocket" in window) {
+        
         if (wsJsonObj[cameraId] != undefined) {
+          
           wsJsonObj[cameraId].close();
           delete wsJsonObj[cameraId];
           wsJsonObj[cameraId] = null;
         }
-
+        
+        var url = 'ws://192.168.40.176:8000/' + cameraId
+        
+        console.log(url)
         var wsc = new ReconnectingWebSocket(
-          "ws://" + HTTP_HOST + "/" + cameraId,
+          url,
           null,
           { debug: false, reconnectInterval: 4000 }
         );
@@ -282,29 +292,35 @@ export default {
           console.log("WebSocketClient connected:", e);
         };
         wsc.onmessage = function(evt) {
+          console.log('snap result')
           var msg = eval("(" + evt.data + ")");
           if (msg.top_scores != undefined) {
             var live_id = msg.live_id;
             var channel_id = msg.channel_id;
+            var user_id = msg.register_id;
+            var time = msg.time
+            console.log('userid=',user_id)
             var live_face = "data:image/jpg;base64," + msg.live_face;
             var registered_face =
               "data:image/jpg;base64," + msg.registered_face_0;
             var top_scores = parseInt(msg.top_scores * 100) + "%";
             for (var t in recogObjs) {
               if (recogObjs[t].liveId == live_id) {
-                recogObjs[t].time = "通道：" + channel_id;
+                recogObjs[t].time =  time;
                 recogObjs[t].img1 = live_face;
                 recogObjs[t].img2 = registered_face;
                 recogObjs[t].score = top_scores;
+                recogObjs[t].userId = user_id;
                 return;
               }
             }
             var recogObj = new Object();
             recogObj.liveId = live_id;
-            recogObj.time = "通道：" + channel_id;
+            recogObj.time = time;
             recogObj.img1 = live_face;
             recogObj.img2 = registered_face;
             recogObj.score = top_scores;
+            recogObj.userId = user_id;
             if (recogObjs.length == 3) {
               recogObjs.shift();
             }
@@ -338,6 +354,7 @@ export default {
           //fnClosed()
         };
       } else {
+        console.log('not support')
         fnNoSurrport();
       }
     }
@@ -399,8 +416,10 @@ export default {
 }
 .recog-info {
   width: 357px;
-  height: 150px;
+  height: 170px;
   padding: 5px 0;
+  margin-top:5px;
+  border: 0 0 1 0;
 }
 .recog-image {
   width: 217px;
