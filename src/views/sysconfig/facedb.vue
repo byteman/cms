@@ -90,13 +90,13 @@ export default {
       var re2 = /^[1-9]+[0-9]*]*$/;
       if (!re.test(value)) {
         callback(new Error("组ID必须是0-1000之间的整数1"));
-        this.$message("组ID必须是0-1000之间的整数1");
+        this.$message("组ID必须是0-1000之间的整数");
       } else if (value < 0 || value > 1000) {
         callback(new Error("组ID必须是0-1000之间的整数2"));
-        this.$message("组ID必须是0-1000之间的整数2");
+        this.$message("组ID必须是0-1000之间的整数");
       } else if (!re2.test(value)) {
         callback(new Error("组ID必须是0-1000之间的整数3"));
-        this.$message("组ID必须是0-1000之间的整数3");
+        this.$message("组ID必须是0-1000之间的整数");
       }
     };
     var threshold_validator = (rule, value, callback) => {
