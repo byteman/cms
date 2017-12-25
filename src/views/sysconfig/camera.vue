@@ -237,7 +237,7 @@
 </template>
 
 <script>
-  import {CommQuery, CommPost, OperChannel} from "@/api/sysconfig";
+  import {CommQuery, CommPost, Modify, OperChannel} from "@/api/sysconfig";
   import Channel from "./channel";
 
   export default {
@@ -548,6 +548,7 @@
         OperChannel(0x12000, row.id)
           .then(response => {
             var tmp = this.str2json(response.data.data)
+            console.log('tmp')
             console.log(tmp)
             this.prew = tmp.preview
             if (tmp.preview.enableDrawFace === '1') {
@@ -573,8 +574,8 @@
               tmp.ags.enable = false
             }
             this.camera = tmp.ags
-            console.log(this.camera);
-            this.showChannel = true;
+            console.log(this.camera)
+            this.showChannel = true
           })
           .catch(() => {
           });
@@ -677,7 +678,7 @@
           }
         }
         var tmp = this.prew
-        if (this.prew === true) {
+        if (this.prew.enableDrawFace === true) {
           tmp.enableDrawFace = 1
         } else {
           tmp.enableDrawFace = 0
@@ -686,17 +687,17 @@
           preview: tmp
         }
 
-        console.log(preview);
-        data.requestdata[chan] = preview;
-        console.log(data);
+        console.log(preview)
+        data.requestdata[chan] = preview
+        console.log(data)
 
-        CommPost(data)
+        Modify(data)
           .then(response => {
-            this.$message("保存成功");
+            this.$message('保存结果：' + response.data.message)
           })
           .catch(() => {
-            this.$message("保存失败");
-          });
+            this.$message('保存失败')
+          })
         this.showPrew = false;
       },
       handleEnableChannel(enable) {
