@@ -552,8 +552,16 @@
             console.log(tmp)
             this.prew = tmp.preview
             if (tmp.preview.enableDrawFace === '1') {
+              console.log('a')
               this.prew.enableDrawFace = true
-            } else {
+            } else if (tmp.preview.enableDrawFace === '0') {
+              console.log('b')
+              this.prew.enableDrawFace = false
+            } else if (tmp.preview.enableDrawFace === 1) {
+              console.log('a')
+              this.prew.enableDrawFace = true
+            } else if (tmp.preview.enableDrawFace === 0) {
+              console.log('b')
               this.prew.enableDrawFace = false
             }
             this.prew.id = row.id
@@ -568,26 +576,42 @@
         OperChannel(0x12000, row.id)
           .then(response => {
             var tmp = this.str2json(response.data.data)
-            if (tmp.ags.enable === 1) {
+            if (tmp.ags.enable === '1') {
+              console.log('a')
               tmp.ags.enable = true
-            } else {
+            } else if (tmp.ags.enable === '0') {
+              console.log('b')
+              tmp.ags.enable = false
+            } else if (tmp.ags.enable === 1) {
+              console.log('a')
+              tmp.ags.enable = true
+            } else if (tmp.ags.enable === 0) {
+              console.log('b')
               tmp.ags.enable = false
             }
             this.camera = tmp.ags
-            console.log(this.camera)
             this.showChannel = true
           })
           .catch(() => {
-          });
+          })
       },
       handleEdit(row) {
         this.cameraDialogState = 2
         OperChannel(0x12000, row.id)
           .then(response => {
             var tmp = this.str2json(response.data.data)
-            if (tmp.ags.enable === 1) {
+            console.log(tmp)
+            if (tmp.ags.enable === '1') {
+              console.log('a')
               tmp.ags.enable = true
-            } else {
+            } else if (tmp.ags.enable === '0') {
+              console.log('b')
+              tmp.ags.enable = false
+            } else if (tmp.ags.enable === 1) {
+              console.log('a')
+              tmp.ags.enable = true
+            } else if (tmp.ags.enable === 0) {
+              console.log('b')
               tmp.ags.enable = false
             }
             this.camera = tmp.ags
