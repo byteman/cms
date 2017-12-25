@@ -169,7 +169,9 @@ export default {
   data() {
     var threshold_validator = (rule, value, callback) => {
       var re = /^\d+(\.\d+)?$/;
-      if (!re.test(value)) {
+      if (value === "") {
+        callback();
+      } else if (!re.test(value)) {
         callback(new Error("该值必须在0-1之间的数字"));
       } else if (value < 0 || value > 1) {
         callback(new Error("该值必须在0-1之间的数字"));
@@ -235,7 +237,6 @@ export default {
       this.$refs.myform.resetFields();
     },
     moreSpecial(value) {
-  
       this.show = value.flg;
       this.show_reg_src = value.regFaceData;
       this.show_live_id = this.selectedlive_id;
