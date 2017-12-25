@@ -20,7 +20,13 @@
       </el-tree>
     </div>
     <div class="video-content">
-      <div id="cloudwalkwebobj" style=" margin: 0 auto;" align="center"></div>
+      <div id="cloudwalkwebobj" style=" margin: 0 auto;" align="center">
+      </div>
+      <div style="margin-top:-200px;margin-left:280px;">
+        <span style="font-size:25px;">点击</span>
+        <a style="font-size:25px;color:red;text-decoration:underline;" href="static/ieCloudWalkSetup1.0.1.20171206.exe">这里</a>
+        <span style="font-size:25px;">下载插件</span>
+      </div>
     </div>
     <div class="recog-content">
       <p>比对记录</p>
@@ -50,13 +56,13 @@
         </li>
       </ul>
     </div>
+
   </div>
 </div>
 
 </template>
 
 <script>
-
 import { postCameraPreview, getRtspUrl, getTree } from "@/api/preview";
 import BrowserDetect from "@/utils/detect";
 import ReconnectingWebSocket from "@/utils/reconnectwebsocketclient";
@@ -185,6 +191,17 @@ export default {
         "cwEventNotify",
         this.cwEventNotifyEvt
       );
+
+      if (cloudwalkobj.valid == undefined && !cloudwalkobj.valid) {
+        alert("插件不支持！请更换浏览器！");
+        return false;
+      }
+
+      if (cloudwalkobj.cwGetVersions() != '1.0.1.20171206') {
+        alert("插件版本不匹配！安装时请关闭浏览器！");
+        return false;
+      }
+
       cloudwalkobj.cwSetFramCash(3);
       cloudwalkobj.cwSetWndCount(4);
       cloudwalkobj.cwSetShowOSD(0);
