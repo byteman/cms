@@ -80,9 +80,9 @@ export default {
     toExport() {
       Export().then(resp => {
         if (resp.data.status + "" === "0") {
-          alert("导出成功");
+          alert("导出至后台成功");
         } else {
-          alert("导出失败");
+          alert("导出至后台失败");
         }
       });
     },
@@ -93,12 +93,12 @@ export default {
         list[i] = row.liveArray[i].id;
       }
       HiddenOrCancel(row.liveArray.length, list, 0).then(resp => {
-        if (resp.status + "" === "200") {
-          this.getResult();
-          alert("屏蔽成功");
-        } else {
-          alert("屏蔽失败");
-        }
+        // if (resp.status + "" === "200") {
+        //   this.getResult();
+        //   alert("屏蔽成功");
+        // } else {
+        //   alert("屏蔽失败");
+        // }
       });
     },
     toCancel(row) {
@@ -107,12 +107,12 @@ export default {
         list[i] = row.liveArray[i].id;
       }
       HiddenOrCancel(row.liveArray.length, list, 1).then(resp => {
-        if (resp.status + "" === "200") {
-          this.getResult();
-          alert("取消屏蔽成功");
-        } else {
-          alert("取消屏蔽失败");
-        }
+        // if (resp.status + "" === "200") {
+        //   this.getResult();
+        //   alert("取消屏蔽成功");
+        // } else {
+        //   alert("取消屏蔽失败");
+        // }
       });
     },
     getResult() {
