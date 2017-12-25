@@ -141,6 +141,14 @@ export function GetGroup(code) {
   })
 }
 
+export function NewDB(para) {
+  return fetch({
+    url: '/test/abc',
+    method: 'post',
+    data: para
+  })
+}
+
 export function RemoveGroup(id) {
   return fetch({
     url: '/test/abc',
