@@ -683,6 +683,7 @@
         CommPost(data)
           .then(response => {
             this.showChannel = false;
+            this.$message('保存结果:' + response.data.message)
             this.onRefresh()
           })
           .catch(() => {
