@@ -359,6 +359,14 @@ export default {
 .el-tree {
   background: #f8f8f8;
 }
+.navbar {
+  min-width:1500px;
+}
+.container{
+  width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
 </style>
 
 <style >

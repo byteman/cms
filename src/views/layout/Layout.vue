@@ -90,5 +90,9 @@
       background-repeat: no-repeat;
       background-image: url("../../assets/common_search/logo.png");
     }
+    .app-main{
+      width:100%;
+      overflow:hidden;
+    }
   }
 </style>

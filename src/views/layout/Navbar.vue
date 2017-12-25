@@ -94,6 +94,7 @@ export default {
     height: 60px;
     float: left;
     margin-left: 20px;
+    min-width:420px;
   }
   .navba-middle-info > span {
     color: #fff;
