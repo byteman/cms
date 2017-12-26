@@ -92,6 +92,14 @@ export function CommPost(para) {
   })
 }
 
+export function Modify(para) {
+  return fetch({
+    url: '/channel/modify',
+    method: 'post',
+    data: para
+  })
+}
+
 export function PortSave(bcode, code) {
   return fetch({
     url: '/port/save',
@@ -130,6 +138,14 @@ export function GetGroup(code) {
         bcode: '' + code
       }
     }
+  })
+}
+
+export function NewDB(para) {
+  return fetch({
+    url: '/test/abc',
+    method: 'post',
+    data: para
   })
 }
 

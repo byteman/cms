@@ -1,28 +1,10 @@
 <template>
   <div class="container">
-    <!-- <div class="header">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
-        <el-form-item label="查询条件">
-          <el-input v-model="formInline.name" placeholder="请输入底库名称"></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onReset">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
-
     <div class="content">
-      <el-form :inline="true"  class="button-oper" >
+      <el-form :inline="true" class="button-oper">
         <el-form-item>
-          <el-button type="primary"  @click="onAdd">新增</el-button>
+          <el-button type="primary" @click="onAdd">新增</el-button>
         </el-form-item>
-        <!-- <el-form-item>
-          <el-button plain @click="onRemove">批量删除</el-button>
-        </el-form-item> -->
       </el-form>
       <el-table :data="list">
 
@@ -57,9 +39,9 @@
     </div>
 
     <el-dialog :title="group_dialog_title" :visible.sync="group_show" width="30%" center>
-      <el-form ref="form" :model="group" :rules="rules" label-width="100px" >
+      <el-form ref="form" :model="group" :rules="rules" label-width="100px">
         <el-form-item label="组ID" prop="group_id">
-          <el-input :disabled="isEdited" v-model="group.group_id" ></el-input>
+          <el-input :disabled="isEdited" v-model="group.group_id"></el-input>
         </el-form-item>
         <el-form-item label="底库名称">
           <el-input v-model="group.group_name"></el-input>
@@ -81,174 +63,197 @@
 </template>
 
 <script>
-import { GetGroup, RemoveGroup, CommPost } from "@/api/sysconfig";
+  import {
+    NewDB,
+    GetGroup,
+    RemoveGroup,
+    CommPost } from "@/api/sysconfig";
 
-export default {
-  data() {
-    var groupId_validator = (rule, value, callback) => {
-      var re = /^\d+(\.\d+)?$/;
-      var re2 = /^[1-9]+[0-9]*]*$/;
-      if (!re.test(value)) {
-        callback(new Error("组ID必须是0-1000之间的整数1"));
-        this.$message("组ID必须是0-1000之间的整数1");
-      } else if (value < 0 || value > 1000) {
-        callback(new Error("组ID必须是0-1000之间的整数2"));
-        this.$message("组ID必须是0-1000之间的整数2");
-      } else if (!re2.test(value)) {
-        callback(new Error("组ID必须是0-1000之间的整数3"));
-        this.$message("组ID必须是0-1000之间的整数3");
-      }
-    };
-    var threshold_validator = (rule, value, callback) => {
-      var re = /^\d+(\.\d+)?$/;
-      if (!re.test(value)) {
-        callback(new Error("该值必须在0-1之间的数字"));
-        this.$message("该值必须在0-1之间的数字");
-      } else if (value.length > 7) {
-        callback(new Error("该值必须在0-1之间的数字,只支持小数点后5位"));
-        this.$message("该值必须在0-1之间的数字,只支持小数点后5位");
-      } else if (value < 0 || value > 1) {
-        callback(new Error("该值必须在0-1之间的数字"));
-        this.$message("该值必须在0-1之间的数字");
-      } else {
-        callback();
-      }
-    };
-    return {
-      total: 1,
-      group_dialog_title: "相机详情",
-      group_show: false,
-      group: {},
-      list: [],
-      isEdited: false,
-      formInline: {
-        name: ""
-      },
-      rules: {
-        group_id: [{ validator: groupId_validator, trigger: "blur" }],
-        group_threshold: [{ validator: threshold_validator, trigger: "blur" }]
-      }
-    };
-  },
-  created() {
-    console.log("video debug created");
-  },
-  mounted() {
-    this.onRefresh();
-  },
-  methods: {
-    onRefresh() {
-      GetGroup(80001)
-        .then(response => {
-          this.list = response.data.data.group_ids;
-          console.log(this.list);
-        })
-        .catch(() => {});
-    },
-    onSubmit: function() {},
-    onReset: function() {},
-    onAdd: function() {
-      if (this.$refs.form) {
-        this.$refs.form.resetFields();
-      }
-      this.isEdited = false;
-      this.group_dialog_title = "新增底库";
-      this.group_show = true;
-      this.group = {};
-    },
-    onRemove: function() {},
-    handleEdit(row) {
-      console.log(row);
-      this.isEdited = true;
-      this.group_dialog_title = "编辑底库";
-      this.group = row;
-      this.group.group_id = row.id;
-      this.group_show = true;
-    },
-    handleRemove(row) {
-      this.$confirm("确认删除该底库, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        RemoveGroup(row.id)
-          .then(response => {
-            this.onRefresh();
-          })
-          .catch(() => {});
-      });
-    },
-    handleSizeChange: function() {},
-    handleCurrentChange: function() {},
-    handleSaveFaceDB() {
-      if (this.$refs.form) {
-        this.$refs.form.resetFields();
-      }
-      var bcode0 = this.isEdited ? "80003" : "80000";
-      var data = {
-        requestdata: {
-          token: 1,
-          bcode: bcode0,
-          group_id: this.group.group_id,
-          data: this.group
+  export default {
+    data() {
+      var groupId_validator = (rule, value, callback) => {
+        var re = /^\d+(\.\d+)?$/;
+        var re2 = /^[1-9]+[0-9]*]*$/;
+        if (!re.test(value)) {
+          callback(new Error("组ID必须是0-1000之间的整数1"));
+          this.$message("组ID必须是0-1000之间的整数");
+        } else if (value < 0 || value > 1000) {
+          callback(new Error("组ID必须是0-1000之间的整数2"));
+          this.$message("组ID必须是0-1000之间的整数");
+        } else if (!re2.test(value)) {
+          callback(new Error("组ID必须是0-1000之间的整数3"));
+          this.$message("组ID必须是0-1000之间的整数");
         }
       };
-      CommPost(data)
-        .then(response => {
-          this.group_show = false;
-          this.onRefresh();
-        })
-        .catch(() => {
-          this.$message("保存失败");
+      var threshold_validator = (rule, value, callback) => {
+        var re = /^\d+(\.\d+)?$/;
+        if (!re.test(value)) {
+          callback(new Error("该值必须在0-1之间的数字"));
+          this.$message("该值必须在0-1之间的数字");
+        } else if (value.length > 7) {
+          callback(new Error("该值必须在0-1之间的数字,只支持小数点后5位"));
+          this.$message("该值必须在0-1之间的数字,只支持小数点后5位");
+        } else if (value < 0 || value > 1) {
+          callback(new Error("该值必须在0-1之间的数字"));
+          this.$message("该值必须在0-1之间的数字");
+        } else {
+          callback();
+        }
+      };
+      return {
+        total: 1,
+        group_dialog_title: "相机详情",
+        group_show: false,
+        group: {},
+        list: [],
+        isEdited: false,
+        formInline: {
+          name: ""
+        },
+        rules: {
+          group_id: [{validator: groupId_validator, trigger: "blur"}],
+          group_threshold: [{validator: threshold_validator, trigger: "blur"}]
+        }
+      };
+    },
+    created() {
+      console.log("video debug created");
+    },
+    mounted() {
+      this.onRefresh();
+    },
+    methods: {
+      onRefresh() {
+        GetGroup(80001)
+          .then(response => {
+            this.list = response.data.data.group_ids;
+            console.log(this.list);
+          })
+          .catch(() => {
+          });
+      },
+      onSubmit: function () {
+      },
+      onReset: function () {
+      },
+      onAdd: function () {
+        if (this.$refs.form) {
+          this.$refs.form.resetFields();
+        }
+        this.isEdited = false;
+        this.group_dialog_title = "新增底库";
+        this.group_show = true;
+        this.group = {};
+      },
+      onRemove: function () {
+      },
+      handleEdit(row) {
+        console.log(row);
+        this.isEdited = true;
+        this.group_dialog_title = "编辑底库";
+        this.group = row;
+        this.group.group_id = row.id;
+        this.group_show = true;
+      },
+      handleRemove(row) {
+        this.$confirm("确认删除该底库, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          RemoveGroup(row.id)
+            .then(response => {
+              this.onRefresh();
+            })
+            .catch(() => {
+            });
         });
+      },
+      handleSizeChange: function () {
+      },
+      handleCurrentChange: function () {
+      },
+      handleSaveFaceDB() {
+        var bcode0 = this.isEdited ? '80003' : '80000'
+
+        var data = {
+          requestdata: {
+            token: 1,
+            bcode: bcode0,
+            group_id: this.group.group_id,
+            data: this.group
+          }
+        }
+        console.log(this.group)
+        if (bcode0 === '80003') {
+          CommPost(data)
+            .then(response => {
+              this.group_show = false
+              this.$message('保存结果:' + response.data.message)
+              this.onRefresh()
+            })
+            .catch(() => {
+              this.$message('保存失败')
+            })
+        } else {
+          NewDB(data)
+            .then(response => {
+              this.group_show = false
+              this.$message('新建结果:' + response.data.message)
+              this.onRefresh()
+            })
+            .catch(() => {
+              this.$message('新建失败')
+            })
+        }
+      }
     }
-  }
-};
+  };
 </script>
 
 <style scoped>
-.container {
-  width: 99%;
-  margin: 0 auto;
-  border: 1px solid #dfe6ec;
-  min-height: 600px;
-}
+  .container {
+    width: 99%;
+    margin: 0 auto;
+    border: 1px solid #dfe6ec;
+    min-height: 600px;
+  }
 
-.button-oper {
-}
+  .button-oper {
+  }
 
-.el-form-item {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
+  .el-form-item {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
 
-.content {
-  width: 97%;
-  margin: 0px auto;
-}
+  .content {
+    width: 97%;
+    margin: 0px auto;
+  }
 
-.header {
-  /* margin-top:10px;
-     line-height:50px;
-    margin-bottom: 10px; */
-  padding: 24px;
+  .header {
+    /* margin-top:10px;
+       line-height:50px;
+      margin-bottom: 10px; */
+    padding: 24px;
 
-  background-color: rgb(248, 249, 248);
-  height: 80px;
-}
+    background-color: rgb(248, 249, 248);
+    height: 80px;
+  }
 
-.footer {
-  height: 50px;
-  margin-top: 10px;
-  margin-right: 90px;
-  text-align: right;
-}
+  .footer {
+    height: 50px;
+    margin-top: 10px;
+    margin-right: 90px;
+    text-align: right;
+  }
 
-.el-card__header {
-  padding: 1px 2px;
-}
+  .el-card__header {
+    padding: 1px 2px;
+  }
 
-.tree {
-  height: 1000px;
-}
+  .tree {
+    height: 1000px;
+  }
 </style>
