@@ -1,13 +1,13 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
     <el-row>
-      <el-col :span="12">
-        <div class="navba-middle-info">
+      <el-col :span="0">
+        <!-- <div class="navba-middle-info">
           <div class="navbar-header-notice">公告</div> 
           <span>&nbsp;恭贺FaceGo-Smart正式上线，欢迎使用...</span>
-        </div>
+        </div> -->
       </el-col>
-      <el-col :span="12">
+      <el-col :span="24">
         <el-button type="text" class="cw-menu-item" @click="logout">
           <img src="../../assets/common_search/sign-out.png" class="pull-left">
           <p>安全退出</p>
