@@ -3,7 +3,7 @@
     <div class="header">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="底库选择">
-          <el-select v-model="selectdb" placeholder="请输入相机编号" @change="handleSelectDbChange">
+          <el-select v-model="selectdb" placeholder="请选择底库编号" @change="handleSelectDbChange">
             <el-option
               v-for="item in dboptions"
               :key="item.value"
@@ -339,7 +339,7 @@
                 mStaticDBId = this.face.staticDBId
               }
               if (this.face_avatar_url !== null && this.face_avatar_url.length > 0) {
-                mImg = this.face_avatar_url.substring(23)
+                mImg = this.face_avatar_url.substring(this.face_avatar_url.indexOf(',') + 1)
               }
               if (this.face.birthday !== null && this.face.birthday.length > 0) {
                 mBirthday = this.face.birthday
