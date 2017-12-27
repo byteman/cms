@@ -7,15 +7,23 @@ import router from './router'
 import store from './store'
 import '@/icons' // icon
 import '@/permission' // 权限
-
+import * as filters from './filters' // global filter
 import echarts from 'echarts'
 Vue.use(ElementUI, { locale })
 //Vue.directive('tooltip', VTooltip)
 
 Vue.prototype.$echarts = echarts	// 注册echarts
 
-Vue.config.productionTip = false
 
+
+// Vue.use(Element, {
+//   i18n: (key, value) => i18n.t(key, value)
+// })
+
+// register global utility filters.
+// Object.keys(filters).forEach(key => {
+//   Vue.filter(key, filters[key])
+// })
 new Vue({
   el: '#app',
   router,

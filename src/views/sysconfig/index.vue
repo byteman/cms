@@ -34,86 +34,76 @@
 </template>
 
 <script>
-
-import { GetStatus,Restore, GetSysConfigParam, SetSysConfigParam} from '@/api/sysconfig'
+import {
+  GetStatus,
+  Restore,
+  GetSysConfigParam,
+  SetSysConfigParam
+} from "@/api/sysconfig";
 
 export default {
-
-  props: ['data', 'title', 'btnName', 'type'],
+  props: ["data", "title", "btnName", "type"],
 
   data() {
     return {
-      param:{
-          cameraId: '1',
-          platformURL: '',
-          socketPort: 3000,
-          statusKeepTimes: 0,
-          AppId: '',
-          AppSecret: ''
+      param: {
+        cameraId: "1",
+        platformURL: "",
+        socketPort: 3000,
+        statusKeepTimes: 0,
+        AppId: "",
+        AppSecret: ""
       },
       rules: {
-        cameraId: [
-          { required: false, message: '请输入相机编号'}
-        ],
-        platformURL: [
-          { required: true, message: '请输入管理平台地址'}
-        ],
-        socketPort: [
-          { required: true, message: '请输入Socket端口号'}
-        ],
-        statusKeepTimes: [
-          { required: true, message: '请输入状态维持时间'}
-        ],
-        AppId: [
-          { required: true, message: '请输入唯一编号'}
-        ],
-        AppSecret: [
-          { required: true, message: '请输入安全密码'}
-        ]
+        cameraId: [{ required: false, message: "请输入相机编号" }],
+        platformURL: [{ required: true, message: "请输入管理平台地址" }],
+        socketPort: [{ required: true, message: "请输入Socket端口号" }],
+        statusKeepTimes: [{ required: true, message: "请输入状态维持时间" }],
+        AppId: [{ required: true, message: "请输入唯一编号" }],
+        AppSecret: [{ required: true, message: "请输入安全密码" }]
       }
-    }
+    };
   },
   methods: {
     fetchSysConfig() {
-       GetSysConfigParam().then(response => {
-         this.param = response.data
-         this.listLoading = false
-      })
-    },  
+      GetSysConfigParam().then(response => {
+        this.param = response.data;
+        this.listLoading = false;
+      });
+    },
     onSubmit() {
-      this.$refs.devform.validate((valid) => {
+      this.$refs.devform.validate(valid => {
         if (valid) {
-          console.log('*******', this.param);
+          console.log("*******", this.param);
           SetSysConfigParam(this.param).then(response => {
-              this.$message({
-                type: 'info',
-                showClose: true,
-                message: '保存成功'
-              })
-          })
+            this.$message({
+              type: "info",
+              showClose: true,
+              message: "保存成功"
+            });
+          });
         } else {
-          
-           this.$message({
-                type: 'error',
-                showClose: true,
-                message: '保存失败'
-              })
+          this.$message({
+            type: "error",
+            showClose: true,
+            message: "保存失败"
+          });
         }
-      })
+      });
     },
     onCancel() {
-      console.log('onCancel')
-      this.$emit('success', false)
+      console.log("onCancel");
+      this.$emit("success", false);
     },
-    restoreSettings(){
-        var param={type:'all'}
-         Restore(param).then(response => {
-              this.$message({
-                type: 'info',
-                showClose: true,
-                message: '还原成功'
-              })
-          })
+    restoreSettings() {
+      var param = { type: "all" };
+      Restore(param).then(response => {
+        this.$message({
+          type: 'info',
+          showClose: true,
+          message: '还原成功'
+        })
+      })
       console.log('restoreSettings')
     },
     checkPlatFormStatus() {
@@ -121,29 +111,28 @@ export default {
         console.log(response.data)
         var state = response.data
         var msg = '通讯正常'
-        if(state.connected === false){
-           msg = "未连接"
-        }else if(state.registed === false){
+        if (state.connected === false) {
+          msg = '未连接'
+        } else if (state.registed === false) {
           msg = '未注册'
-        }else if(state.authed === false){
-           msg = "未认证"
+        } else if (state.authed === false) {
+          msg = '未认证'
         }
 
         this.$message({
           type: 'info',
           showClose: true,
           message: msg
-        })
-      })
-      console.log('checkPlatFormStatus')
+        });
+      });
+      console.log("checkPlatFormStatus");
     }
   },
   mounted() {
-    console.log('edit mounted')
-    this.fetchSysConfig()
+    console.log("edit mounted");
+    this.fetchSysConfig();
   }
-
-}
+};
 </script>
 
 <style scoped>
@@ -167,7 +156,7 @@ export default {
 }
 
 .clearfix:after {
-  clear: both
+  clear: both;
 }
 
 .button {
@@ -180,5 +169,4 @@ export default {
   margin: 30px auto;
   /* height: 700px; */
 }
-
 </style>

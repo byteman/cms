@@ -35,15 +35,16 @@
             <div class="recog-text">
               <p class="recog-score">相似度:{{value.score}}</p>
               <p>识别时间:{{value.time}}ms</p>
-              
+              <p>识别结果:{{value.stranger|recog}}</p>
             </div>
-            <p>用户编号:{{value.userId}}</p>
+            
           </div>
+          <p class="recog-id" v-if="value.stranger===0">用户编号:{{value.userId}}</p>
         </li>
       </ul>
     </div>
     <div class="capture-content">
-      <p>实时抓拍人像</p>
+      <p></p>
       <ul>
         <li v-for="value in captureObjs">
           <img v-bind:src="value.img"/>
@@ -81,13 +82,7 @@ export default {
           id: 1,
           label: "中华人民共和国",
           isOpen: 0,
-          children: [{
-            id : "1001",
-            label : "test",
-            status :"1",
-            url : "rtsp://192.168.10.31:8554/test-ShmmemTest.sdp",
-            isOpen: 0
-          }]
+          children: []
         }
       ],
       defaultProps: {
@@ -96,9 +91,17 @@ export default {
       }
     };
   },
+  filters: {
+      recog: function (value) {
+        console.log('value=',value)
+        if(value===1) return '陌生人'
+        else return '已匹配'
+      }
+  },
   created() {},
   mounted() {
     BrowserDetect.init();
+    getTree()
     getTree()
       .then(response => {
         var json = response.data;
@@ -298,6 +301,7 @@ export default {
             var live_id = msg.live_id;
             var channel_id = msg.channel_id;
             var user_id = msg.register_id;
+            var stranger = msg.stranger;
             var time = msg.time
             console.log('userid=',user_id)
             var live_face = "data:image/jpg;base64," + msg.live_face;
@@ -311,6 +315,8 @@ export default {
                 recogObjs[t].img2 = registered_face;
                 recogObjs[t].score = top_scores;
                 recogObjs[t].userId = user_id;
+                recogObjs[t].stranger = stranger;
+                
                 return;
               }
             }
@@ -320,6 +326,7 @@ export default {
             recogObj.img1 = live_face;
             recogObj.img2 = registered_face;
             recogObj.score = top_scores;
+            recogObj.stranger = stranger;
             recogObj.userId = user_id;
             if (recogObjs.length == 3) {
               recogObjs.shift();
@@ -362,7 +369,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .preview-content {
   width: 1480px;
   height: 730px;
@@ -409,17 +416,21 @@ export default {
   list-style: none;
 }
 .recog-content > ul > li {
-  height: 150px;
+  height: 170px;
   width: 357px;
   display: block;
   margin: 0;
 }
 .recog-info {
   width: 357px;
-  height: 170px;
+  height: 150px;
   padding: 5px 0;
   margin-top:5px;
   border: 0 0 1 0;
+}
+.recog-id{
+  margin-top:0px;
+  margin-bottom: 0px;
 }
 .recog-image {
   width: 217px;

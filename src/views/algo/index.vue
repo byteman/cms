@@ -18,12 +18,12 @@
         <el-form-item label="质量分阀值" prop="qualityScore">
           <el-input v-model="param.qualityScore" type="number"></el-input>
         </el-form-item>
-        <!-- <el-form-item label="识别阀值" prop="compareScore">
+        <el-form-item label="识别阀值" prop="compareScore">
           <el-input v-model="param.compareScore" type="number"></el-input>
         </el-form-item>
         <el-form-item label="陌生人开关" prop="isAllOutPut">
           <el-checkbox v-model="param.isAllOutPut">陌生人开启</el-checkbox>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">设 置</el-button>
         </el-form-item>
@@ -43,9 +43,9 @@
           <el-input v-model="param.side" type="number"></el-input>
         </el-form-item>
         -->
-        <!-- <el-form-item label="陌生人阀值" prop="strangerThreshold">
+        <el-form-item label="陌生人阀值" prop="strangerThreshold">
           <el-input v-model="param.strangerThreshold" type="number"></el-input>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item label="识别间隔(毫秒)" prop="regcoInterval">
           <el-input v-model="param.regcoInterval" type="number"></el-input>
         </el-form-item>
@@ -194,7 +194,6 @@ export default {
 .box-card {
   width: 800px;
   margin: 30px auto;
-  height: 700px;
 }
 
 </style>

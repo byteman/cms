@@ -19,7 +19,7 @@ const Err404 = _import('404')
 const Preview = _import('preview/index')
 const Algo = _import('algo/index')
 const SysConfig = _import('sysconfig/index')
-
+const ISPConfig = _import('isp/index')
 
 Vue.use(Router)
 
@@ -39,7 +39,7 @@ export const constantRouterMap = [
     redirect: '/preview',
     name: 'Home',
     hidden: true,
-    children: [{ path: 'dashboard', component: dashboard }]
+    children: [{ path: 'preview', component: Preview }]
   }
 ]
 
@@ -81,16 +81,16 @@ export const asyncRouterMap = [
       { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
     ]
   },
-  // {
-  //   path: '/netconfig',
-  //   component: Layout,
-  //   redirect: '/netconfig/index',
-  //   icon: 'network36',
-  //   noDropdown: true,
-  //   children: [
-  //     { path: 'index', component: NetConfig, name: '网络设置', meta: { role: ['admin'] }},
-  //   ]
-  // },
+  {
+    path: '/isp',
+    component: Layout,
+    redirect: '/isp/index',
+    icon: 'network36',
+    noDropdown: true,
+    children: [
+      { path: 'index', component: ISPConfig, name: '图像设置', meta: { role: ['admin'] }},
+    ]
+  },
   // {
   //   path: '/cameraconfig',
   //   component: Layout,
