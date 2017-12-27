@@ -223,17 +223,21 @@ export default {
       this.getResult();
     },
     onRest() {
-      this.param = {
-        total: 0,
-        currrent: 1,
-        size: 10,
-        datetime: [],
-        live_id: "",
-        channel_id: "",
-        top1_scoreMin: "",
-        list: []
-      };
-      this.getResult();
+      // this.param = {
+      //   total: 0,
+      //   currrent: 1,
+      //   size: 10,
+      //   datetime: [],
+      //   live_id: "",
+      //   channel_id: "",
+      //   top1_scoreMin: "",
+      //   list: []
+      // };
+      // this.getResult();
+      this.param.datetime = [];
+      this.param.live_id = "";
+      this.param.channel_id = "";
+      this.param.top1_scoreMin = "";
       this.$refs.myform.resetFields();
     },
     moreSpecial(value) {
