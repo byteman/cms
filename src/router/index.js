@@ -69,8 +69,6 @@ export const asyncRouterMap = [
     // name: '实时预览',
     children: [
       {path: 'index', component: Preview, name: '实时预览', meta: {role: ['admin']}}
-    //   // {path: 'securityHorizontal', component: SecurityHorizontal, name: '金融-横屏', meta: {role: ['admin']}},
-    //   // {path: 'securityVertical', component: SecurityVertical, name: '金融-竖屏', meta: {role: ['admin']}}
     ]
   },
   {
