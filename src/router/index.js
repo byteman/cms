@@ -17,8 +17,6 @@ const Err404 = _import('404');
 
 /* demo page */
 const Preview = _import('preview/index');
-const SecurityHorizontal = _import('preview/securityHorizontal');
-const SecurityVertical = _import('preview/securityVertical');
 
 const VideoDebug = _import('sysconfig/index');
 const SysConfig = _import('sysconfig/sysconfig');

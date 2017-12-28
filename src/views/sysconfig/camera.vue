@@ -4,10 +4,10 @@
     <div class="content">
       <el-form :inline="true" class="button-oper">
         <el-form-item>
-          <el-button type="primary" @click="onAddCamera">新增</el-button>
+          <el-button type="primary" @click="onAddCamera" plain>新增</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onPreviewConfig">预览地址配置</el-button>
+          <el-button type="success" @click="onPreviewConfig" plain>预览地址配置</el-button>
         </el-form-item>
       </el-form>
       <el-table :data="list">
@@ -758,12 +758,14 @@
 
 <style scoped>
   .container {
-    width: 99%;
-    margin: 0 auto;
+    width: 100%;
+    /*margin: 10px auto;*/
     border: 1px solid #dfe6ec;
     min-height: 600px;
   }
-
+.button-oper{
+  margin: 20px 0;
+}
   .el-form-item {
     margin-top: 5px;
     margin-bottom: 5px;
