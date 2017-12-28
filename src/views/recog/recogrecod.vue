@@ -1,5 +1,5 @@
 <template>
-  
+
     <div class="container">
     <div class="header">
     <el-form :inline="true" :model="param" :rules="rules" ref="myform">
@@ -10,8 +10,7 @@
             type="datetimerange"
             range-separator="至"
             start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          >
+            end-placeholder="结束日期">
           </el-date-picker>
         </div>
       </el-form-item>
@@ -92,7 +91,7 @@
         </template>
       </el-table-column>
 
-        
+
       <el-table-column label="操作" >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="more(scope.row)" >详情</el-button>
@@ -153,7 +152,7 @@
               <p class="more-dialog-right-li-top">注册ID:{{ value.registerId }}</p>
               <img class="more-dialog-right-src" v-bind:src="value.regFaceData" @click="moreSpecial(value)"/>
               <p class="more-dialog-right-li-bottum">性别:{{ value.sex }} 年龄:{{ value.age }}</p>
-            </div>                
+            </div>
           </li>
         </ul>
       <div class="clearfix"></div>
@@ -417,7 +416,7 @@ export default {
 </script>
 <style scoped>
 .container {
-  width: 99%;
+  width:100%;
   margin: 0 auto;
   border: 1px solid #dfe6ec;
   min-height: 600px;

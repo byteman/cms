@@ -193,7 +193,7 @@ export function DeleteFace(staticDBId, id) {
   })
 }
 
-export function AddFace(staticDBId, img, birthday, gender, name) {
+export function AddFace(staticDBId ,img, birthday, gender, name) {
   return fetch({
     url: '/v1/platform/staticdb/ext/addFace',
     method: 'post',

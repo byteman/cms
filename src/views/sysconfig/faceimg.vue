@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item label="底库选择">
+        <el-form-item label="选择查询底库">
           <el-select v-model="selectdb" placeholder="请选择底库编号" @change="handleSelectDbChange">
             <el-option
               v-for="item in dboptions"
@@ -14,17 +14,17 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button plain @click="onAdd">新增人脸</el-button>
+          <el-button plain @click="onAdd" type="primary">新增人脸</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button plain @click="onImport">批量导入</el-button>
+          <el-button plain @click="onImport" type="success">批量导入</el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <div class="content">
 
-      <el-table :data="list" v-loading="loading" element-loading-text="加载中,请等待">
+      <el-table :data="list" v-loading="loading" element-loading-text="努力加载中。。。,请稍等！">
 
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="aligndata" label="头像" align='center'>
@@ -56,10 +56,19 @@
       </div>
     </div>
 
-    <el-dialog title='底库批量导入人脸' :visible.sync="upload_show" width="30%" center>
+    <!--底库批量导入人脸-->
+    <el-dialog title='批量导入人脸进底库' :visible.sync="upload_show" width="25%" center>
       <el-form ref="form" label-width="100px">
-        <el-form-item label="底库编号">
-          <el-input v-model="upload_form.group_id" readonly="readonly"></el-input>
+        <el-form-item label="底库">
+          <el-select v-model="selectdb" placeholder="请选择底库" @change="handleSelectDbChange" :maxlength="10"
+                     class="database-num2">
+            <el-option
+              v-for="item in dboptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="图片压缩包">
           <el-upload
@@ -72,8 +81,10 @@
             :on-success='handleSuccess'
             :on-exceed="handleExceed"
             :file-list="upload_file_list">
-            <el-button size="small" type="primary">选择上传（仅支持zip文件）</el-button>
+            <el-button size="large" type="primary" class="btn-distance database-num2">选择上传（仅支持zip文件）</el-button>
             <div slot="tip" class="el-upload__tip">{{ upload_message }}</div>
+            <div slot="tip" class="el-upload__tip">图片命名格式: <span class="redTip">姓名-用户id</span>-部门-性别-民族-籍贯-生日</div>
+            <div slot="tip" class="el-upload__tip">红色部分为必选，图片仅支持jpg/png/bmp格式</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -82,33 +93,46 @@
       </span>
     </el-dialog>
 
+    <!--底裤新增人脸-->
     <el-dialog :title="face_title" :visible.sync="face_show" width="50%" center>
-      <el-form ref="devform" :model="face" label-width="100px" :rules="rules">
-
+      <el-form ref="devform" :model="devform" label-width="100px" :rules="rules">
         <el-col :span="11">
-
-          <el-form-item label="姓名">
-            <el-input v-model="face.name" :maxlength="20"></el-input>
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="devform.name" placeholder="请输入姓名" :maxlength="20"></el-input>
           </el-form-item>
-          <el-form-item label="性别">
-            <el-input v-model="face.gender" :maxlength="10"></el-input>
+          <el-form-item label="性别" prop="gender">
+            <el-radio v-model="devform.gender" label="男">男</el-radio>
+            <el-radio v-model="devform.gender" label="女">女</el-radio>
           </el-form-item>
-          <el-form-item label="生日" prop="birthday">
-            <el-input v-model="face.birthday"  :maxlength="10"></el-input>
+          <el-form-item label="生日" prop="birthday" >
+            <el-date-picker
+              v-model="devform.birthday"
+              type="date"
+              placeholder="请选择出生年月" class="date-seletor">
+            </el-date-picker>
           </el-form-item>
-
+          <el-form-item label="底库" prop="selectdb">
+            <el-select v-model="devform.selectdb" placeholder="请选择底库" @change="handleSelectDbChange" :maxlength="10"
+                       class="database-num1">
+              <el-option
+                v-for="item in dboptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
         </el-col>
 
         <el-col :span="11">
-
-          <el-form-item label="头像">
+          <el-form-item label="头像" prop="face_avatar_url">
             <el-upload
               class="drag-avatar-upload"
-              action=""
               drag
+              action=""
               :before-upload="beforeUpload"
               :on-change="changeFile">
-              <img id="giftImg" v-bind:src="face_avatar_url" class="avatar1">
+              <img id="giftImg" v-bind:src="devform.face_avatar_url" class="avatar1">
               <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
             </el-upload>
           </el-form-item>
@@ -117,7 +141,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="face_show = false">取 消</el-button>
-        <el-button type="primary" @click="onFaceBtnClick">{{face_dlg_btn_name}}</el-button>
+        <el-button type="primary" @click="submitForm('devform')">{{face_dlg_btn_name}}</el-button>
       </span>
     </el-dialog>
 
@@ -143,15 +167,44 @@
     data() {
       var birthday_validator = (rule, value, callback) => {
         var re = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/
-        console.log(value)
-        console.log(re.test(value))
         if (!re.test(value)) {
-          callback(new Error('日期必须为正确日期，如：2012-01-30'))
+          callback(new Error('日期不能为空'))
         } else {
           callback()
         }
-      }
+      };
 
+      var name_validator = (rule, value, callback) => {
+        // console.log(value);
+        if (value === '') {
+          callback(new Error('姓名不能为空'));
+        } else {
+          callback();
+        }
+      };
+      var sex_validator = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择性别'));
+        } else {
+          callback();
+        }
+      };
+
+      var dk_validator = (rule, value, callback) => {
+        // console.log(value);
+        if (value === '') {
+          callback(new Error('底库不能为空'));
+        } else {
+          callback();
+        }
+      };
+      var pic_validator = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('图片不能为空'));
+        } else {
+          callback();
+        }
+      };
       return {
         loading: false,
         total: 50,
@@ -169,9 +222,23 @@
         face: {},
         face_avatar_url: '',
         face_dlg_btn_name: '',
-
+        // 表单验证
+        devform: {
+          name: '',  // 姓名
+          birthday: '',  // 生日
+          gender: '男',  // 性别
+          selectdb: '',   // 底库
+          face_avatar_url: ''  // url
+        },
         rules: {
-          birthday: [{validator: birthday_validator, trigger: 'blur'}]
+          birthday: [{required: true, validator: birthday_validator, trigger: 'blur'}],
+          name: [
+            {required: true, validator: name_validator, trigger: 'blur'},
+            {min: 3, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
+          ],
+          gender: [{required: true, validator: sex_validator, trigger: 'blur'}],
+          selectdb: [{required: true, validator: dk_validator, trigger: 'blur'}],
+          face_avatar_url: [{required: true,validator: pic_validator, trigger: 'blur'}]
         }
       }
     },
@@ -196,15 +263,15 @@
       this.onRefresh()
     },
     methods: {
-      beforeUpload(file) {
-        return false
-      },
+      // beforeUpload(file) {
+      //   return false
+      // },
       changeFile(file, fileList) {
         var This = this
         var reader = new FileReader()
         reader.readAsDataURL(file.raw)
         reader.onload = function (e) {
-          This.face_avatar_url = this.result
+          This.devform.face_avatar_url = this.result
         }
       },
       onRefresh() {
@@ -236,13 +303,13 @@
             this.list = tmpList
             this.total = parseInt(response.data.data.total)
             this.loading = false
-            console.log(this.list)
+            // console.log(this.list)
           })
           .catch(() => {
             this.list = []
             this.total = 0
             this.loading = false
-            console.log('error')
+            // console.log('error')
           })
       },
       handleSelectDbChange() {
@@ -252,28 +319,19 @@
         this.currentPage = val
         this.onRefresh()
       },
+      // 新增人脸
       onAdd() {
-        if (this.selectdb !== '') {
-          console.log(this.selectdb)
-          this.face_title = '底库新增人脸'
-          this.face_show = true
-          this.face = {}
-          this.face.staticDBId = this.selectdb
-          this.face_avatar_url = ''
-          this.face_dlg_btn_name = '新 增'
-        } else {
-          this.$message('底库为空，请选择底库后重试')
-        }
-        console.log(this.selectdb)
+        this.face_title = '底库新增人脸'
+        this.face_show = true
+        // this.face = {}
+        this.devform.selectdb = this.selectdb
+        // this.face_avatar_url = ''
+        this.face_dlg_btn_name = '新 增'
       },
       onImport() {
-        if (this.selectdb !== '') {
-          this.upload_show = true
-          this.upload_form.group_id = this.selectdb
-          this.upload_file_list = []
-        } else {
-          this.$message('底库为空，请选择底库后重试')
-        }
+        this.upload_show = true
+        this.upload_form.group_id = this.selectdb
+        this.upload_file_list = []
       },
       handleDelete(row) {
         this.$confirm('确认删除该设备, 是否继续?', '提示', {
@@ -306,6 +364,17 @@
           })
       },
       handleBeforeUpload(file) {
+        if (!this.selectdb) {
+          this.$message('底库为空，请选择底库后重试');
+          return false;
+        }
+        var zipReg = /^\S+\.zip$/;
+        if (!zipReg.test(file.name)) {
+          this.$message('请上传后缀为.zip的压缩包文件！');
+          return false
+        } else {
+          return true
+        }
         this.upload_message = ''
       },
       handleSuccess(res, file, fileList) {
@@ -322,54 +391,62 @@
       handleRemove(file, fileList) {
         console.log(file, fileList)
       },
-      onFaceBtnClick() {
-        console.log('aa')
-        if (this.face_dlg_btn_name === '新 增') {
-          console.log('bb')
-          this.$refs.devform.validate(valid => {
-            console.log('cc')
-            if (valid) {
-              console.log('kk')
-              let mStaticDBId = null
-              let mImg = null
-              let mBirthday = null
-              let mGender = null
-              let mName = null
-              if (this.face.staticDBId !== null && this.face.staticDBId.length > 0) {
-                mStaticDBId = this.face.staticDBId
-              }
-              if (this.face_avatar_url !== null && this.face_avatar_url.length > 0) {
-                mImg = this.face_avatar_url.substring(this.face_avatar_url.indexOf(',') + 1)
-              }
-              if (this.face.birthday !== null && this.face.birthday.length > 0) {
-                mBirthday = this.face.birthday
-              }
-              if (this.face.gender !== null && this.face.gender.length > 0) {
-                mGender = this.face.gender
-              }
-              if (this.face.name !== null && this.face.name.length > 0) {
-                mName = this.face.name
-              }
-              AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
-                .then(response => {
-                  this.$message({
-                    type: 'info',
-                    message: '新增人脸结果:' + response.data.info
-                  })
-                  this.onRefresh()
-                })
-                .catch(() => {
-                  this.$message({
-                    type: 'info',
-                    message: '新增人脸异常'
-                  })
-                })
-              this.face_show = false
-            } else {
-              console.log('gg')
+
+      submitForm(formName) {
+        // console.log(formName);
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.devform.birthday);
+            console.log(this.devform.face_avatar_url);
+            console.log(this.devform.gender);
+            console.log(this.devform.name);
+            console.log(this.devform.selectdb);
+
+            let mStaticDBId = null
+            let mImg = null
+            let mBirthday = null
+            let mGender = null
+            let mName = null
+
+            if (this.devform.selectdb) {
+              mStaticDBId = this.devform.selectdb
             }
-          })
-        }
+
+            if (this.devform.face_avatar_url) {
+              mImg = this.devform.face_avatar_url.substring(this.devform.face_avatar_url.indexOf(',') + 1)
+            }
+            if (this.devform.birthday) {
+              mBirthday = this.devform.birthday
+            }
+            if (this.devform.gender) {
+              mGender = this.devform.gender
+            }
+            if (this.devform.name) {
+              mName = this.devform.name
+            }
+
+            AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
+              .then(response => {
+                this.$message({
+                  type: 'info',
+                  message: '新增人脸结果成功'
+                })
+                this.onRefresh()
+              })
+              .catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '新增人脸异常'
+                })
+              })
+            this.face_show = false
+          } else {
+            this.$message({
+              message: '请正确填写信息！'
+            })
+            return false;
+          }
+        })
       }
     }
   }
@@ -382,12 +459,32 @@
     height: 90px;
     border: none;
   }
+.date-seletor{
+  width: 310px;
+}
+  .redTip {
+    color: #F56C6C;
+    font-weight: bold;
+  }
 
   .container {
-    width: 99%;
+    width: 100%;
     margin: 0 auto;
     border: 1px solid #dfe6ec;
     min-height: 600px;
+    background: #fff;
+  }
+
+  .el-dialog__body {
+    padding: 25px 25px 0 !important;
+  }
+
+  .database-num1 {
+    width: 310px;
+  }
+
+  .database-num2 {
+    width: 250px;
   }
 
   .el-form {
@@ -397,6 +494,15 @@
   .content {
     width: 97%;
     margin: 0px auto;
+  }
+
+  .el-upload__tip {
+    margin: 0;
+    line-height: 20px;
+  }
+
+  .btn-distance {
+    margin-bottom: 20px;
   }
 
   .header {
@@ -409,6 +515,9 @@
     height: 80px;
   }
 
+  /*.drag-avatar-upload{*/
+  /*height: 225px!important;*/
+  /*}*/
   .footer {
     height: 50px;
     margin-top: 10px;
