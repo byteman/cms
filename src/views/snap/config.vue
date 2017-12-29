@@ -41,23 +41,23 @@ export default {
     return {
       snap_thread_num_options: [
         {
-          value: "选项1",
+          value: "1",
           label: "1"
         },
         {
-          value: "选项2",
+          value: "2",
           label: "2"
         },
         {
-          value: "选项3",
+          value: "4",
           label: "4"
         },
         {
-          value: "选项4",
+          value: "6",
           label: "6"
         },
         {
-          value: "选项5",
+          value: "8",
           label: "8"
         }
       ],
