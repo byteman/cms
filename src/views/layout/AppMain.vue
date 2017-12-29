@@ -19,3 +19,13 @@ export default {
   }
 }
 </script>
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .app-main{
+    background: #fff;
+    padding: 20px;
+    height: 100%;
+    /*min-height: 800px;*/
+    width: 100%;
+    /*overflow: hidden;*/
+  }
+</style>

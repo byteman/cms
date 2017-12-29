@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="0">
         <!-- <div class="navba-middle-info">
-          <div class="navbar-header-notice">公告</div> 
+          <div class="navbar-header-notice">公告</div>
           <span>&nbsp;恭贺FaceGo-Smart正式上线，欢迎使用...</span>
         </div> -->
       </el-col>
@@ -16,7 +16,7 @@
         <div class="pull-right logininfo">
           <img src="../../assets/common_search/tx.png" class="pull-left">
           <div class="pull-left">
-            <p>欢迎您，超级管理员</p> 
+            <p>欢迎您，超级管理员</p>
             <p>{{time}}</p>
           </div>
         </div>
@@ -70,6 +70,9 @@ export default {
   background: #6486cd;
   border: 0;
   border-radius: 0px !important;
+  /*position: fixed;*/
+  /*width: 100%;*/
+  /*margin-bottom: 60px;*/
   .hamburger-container {
     line-height: 58px;
     height: 60px;

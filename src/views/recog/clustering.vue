@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="head">
-      <el-button class="topbutton" type="primary" @click="toExport" >导出</el-button>
+      <el-button class="topbutton" type="primary" plain @click="toExport" >导出</el-button>
     </div>
     <div class="content">
       <el-table :data="param.list" v-loading="param.loading" element-loading-text="加载中,请等待">
@@ -23,13 +23,13 @@
         <el-table-column prop="liveArray" label="抓拍照" align="center">
           <template slot-scope="scope">
             <ul class="recog-ul" >
-              <li class="recog-li" v-for="value in scope.row.liveArray">                
+              <li class="recog-li" v-for="value in scope.row.liveArray">
                 <img class="avatar-recog" v-bind:src="value.src"/>
               </li>
             </ul>
           </template>
         </el-table-column>
-          
+
         <el-table-column label="操作" width="100">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="toHidden(scope.row)">屏蔽</el-button>
@@ -152,13 +152,11 @@ export default {
 </script>
 <style scoped>
 .container {
-  width: 99%;
-  margin: 0 auto;
+  width: 100%;
   border: 1px solid #dfe6ec;
   min-height: 600px;
 }
 .header {
-  padding: 24px;
   background-color: rgb(248, 249, 248);
   height: 90px;
 }
@@ -186,7 +184,7 @@ export default {
   width: 100%;
 }
 .topbutton {
-  margin-left: 10px;
-  margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
    <div class="content">
-  <el-button type="primary" @click="OnSave1" >清空识别记录</el-button>
-  <el-button type="primary" @click="OnSave2" >重新加载</el-button>
-  <el-button  type="primary" @click="OnSave3" >加载特征优化</el-button>
-  <el-button type="primary" @click="OnSave4" >增量建模</el-button>
-  <el-button type="primary"  @click="OnSave5" >本地序列化</el-button>
-  <el-button type="primary" @click="OnSave6" >充值正负值</el-button>
-  <el-button type="primary" @click="OnSave7" >新建特征模型</el-button>
-  <el-button type="primary" @click="OnSave8" >重启系统</el-button>
+  <el-button type="primary" @click="OnSave1" plain>清空识别记录</el-button>
+  <el-button type="primary" @click="OnSave2" plain>重新加载</el-button>
+  <el-button  type="primary" @click="OnSave3" plain>加载特征优化</el-button>
+  <el-button type="primary" @click="OnSave4" plain>增量建模</el-button>
+  <el-button type="primary"  @click="OnSave5" plain>本地序列化</el-button>
+  <el-button type="primary" @click="OnSave6" plain>充值正负值</el-button>
+  <el-button type="primary" @click="OnSave7" plain>新建特征模型</el-button>
+  <el-button type="primary" @click="OnSave8" plain>重启系统</el-button>
 </div>
 </template>
 
