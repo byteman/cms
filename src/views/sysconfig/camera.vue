@@ -665,20 +665,19 @@
             bcode: "0x12002",
             channel: chan
           }
-        };
+        }
         var ags = {
           ags: this.camera
-        };
-        delete ags.ags.enable;
-        console.log(ags);
-        if (ags.enable) {
-          ags.ags.enable = 1;
-        } else {
-          ags.ags.enable = 0;
         }
-        console.log(ags);
-        data.requestdata[chan] = ags;
-        console.log(data);
+        console.log(ags)
+        if (this.camera.enable) {
+          ags.ags.enable = 1
+        } else {
+          ags.ags.enable = 0
+        }
+        console.log(ags)
+        data.requestdata[chan] = ags
+        console.log(data)
 
         CommPost(data)
           .then(response => {
