@@ -174,9 +174,8 @@
       handleCurrentChange: function () {
       },
       handleSaveFaceDB() {
-        var bcode0 = this.isEdited ? '80003' : '80000'
-
-        var data = {
+        var bcode0 = this.isEdited ? '80003' : '80000' ;     //  80003 编辑   80000 新建
+        var infor = {
           requestdata: {
             token: 1,
             bcode: bcode0,
@@ -186,29 +185,37 @@
         }
         console.log(this.group)
         if (bcode0 === '80003') {
-          CommPost(data)
+          if(!infor.requestdata.data.group_id && !infor.requestdata.data.group_threshold){
+            this.$message('请填写完整底库信息！')
+            return ;
+          }
+          CommPost(infor)
             .then(response => {
               this.group_show = false
-              this.$message('保存结果:' + response.data.message)
+              this.$message('保存底库成功！')
               this.onRefresh()
             })
             .catch(() => {
-              this.$message('保存失败')
+              this.$message('保存底库失败！')
             })
         } else {
-          NewDB(data)
+          if(!infor.requestdata.data.group_id && !infor.requestdata.data.group_threshold){
+            this.$message('请填写完整底库信息！')
+            return ;
+          }
+          NewDB(infor)
             .then(response => {
               this.group_show = false
-              this.$message('新建结果:' + response.data.message)
+              this.$message('新建底库成功！')
               this.onRefresh()
             })
             .catch(() => {
-              this.$message('新建失败')
+              this.$message('新建底库失败，请重新新建！')
             })
         }
       }
     }
-  };
+  }
 </script>
 
 <style scoped>
@@ -225,12 +232,12 @@
 
   .el-form-item {
     margin-top: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
   }
 
   .content {
     width: 97%;
-    margin: 0px auto;
+    margin: 0 auto;
   }
 
   .header {
@@ -238,7 +245,6 @@
        line-height:50px;
       margin-bottom: 10px; */
     padding: 24px;
-
     background-color: rgb(248, 249, 248);
     height: 80px;
   }
