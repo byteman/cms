@@ -374,7 +374,7 @@ export default {
   width: 1480px;
   height: 730px;
   border: 1px solid #e4e4e4;
-  margin: 20px 0 0 15px;
+  /*margin: 20px 0 0 15px;*/
 }
 .tree-content {
   width: 320px;
