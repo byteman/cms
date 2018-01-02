@@ -12,13 +12,13 @@
                       <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
                 </el-popover>
                 <el-input placeholder="请选择" v-model="orgName" ref="org" icon="caret-bottom" readonly v-popover:popover4>
-                  
+
                 </el-input>
             </el-form-item>
         </el-form>
 
       </div>
-      
+
       <el-table :data="list" style="width: 100%">
 
         <el-table-column prop="gbcode" label="设备编码" min-width="120px">
@@ -114,7 +114,7 @@ export default {
   methods: {
     fetchData(page_index, page_size, org) {
       this.listLoading = true
-      
+
       getDevices(page_index, page_size, org).then(response => {
         this.list = response.data.data
         this.page_num = response.data.current_page
@@ -140,7 +140,6 @@ export default {
       // console.log(value, row)
     },
     formatVendor(row, column, cellValue) {
-      // console.log(row, column, cellValue)
       if (cellValue === 'hik') {
         return '海康'
       } else if (cellValue === 'dahua') {
@@ -154,7 +153,7 @@ export default {
         return '离线'
       } else if (cellValue === 'ON') {
         return '在线'
-      } 
+      }
     },
     handleEdit(index, row) {
       // 深度拷贝row对象，否则在子组件中会修改到row的内容.
