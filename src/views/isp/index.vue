@@ -1,35 +1,9 @@
 <template>
   <el-card class="box-card">
 
-    <el-form ref="form"  label-width="200px">
+    <el-form :model="form" :rules="rules" ref="validform" label-width="200px">
 
-      <el-form-item label="亮度设置">
-        <el-slider @change="onBrightnessChange()" v-model="form.brightness" style="margin-left:10px"></el-slider>
-      </el-form-item>
-
-      <el-form-item label="动态范围模式">
-        <el-select v-model="form.wdr_mode" placeholder="请选择动态范围模式" style="width:100%;">
-            <el-option
-              v-for="item in wdr_mode_options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="动态范围强度">
-        <el-select v-model="form.wdr_level" placeholder="请选择动态强度" style="width:100%;">
-            <el-option
-              v-for="item in wdr_level_options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="AE(曝光模式)">
+      <el-form-item label="AE曝光模式">
         <el-select v-model="form.AE_Shutter_Mode" placeholder="请选择曝光模式" style="width:100%">
           <el-option
             v-for="item in ae_mode_options"
@@ -49,24 +23,45 @@
           </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="ExposureTime(微秒)" title="手动模式最大曝光时间,取值范围32-1000000">
+    <el-form-item label="Exposuretime(微秒)" prop="Exposuretime" title="手动模式最大曝光时间,取值范围32-1000000">
        <el-input v-model="form.Exposuretime" placeholder="取值范围32-1000000"></el-input>
     </el-form-item>
-    <el-form-item label="MaxET(微秒)" title="手动模式下最大增益,取值范围32-1000000">
+    <el-form-item label="MaxET(微秒)" prop="MaxET" title="自动曝光模式自定义最大曝光时间,取值范围32-1000000">
        <el-input v-model="form.MaxET" placeholder="手动模式下最大增益"></el-input>
     </el-form-item>
-    <el-form-item label="MaxDGain" title="自动曝光模式下的最大增益,取值范围1-255">
+    <el-form-item label="MaxDGain" prop="MaxDGain" title="自动曝光模式下的最大增益,取值范围1-255">
        <el-input v-model="form.MaxDGain" placeholder="自动曝光模式下的最大增益"></el-input>
     </el-form-item>
   
 
-    <el-form-item label="DGain" title="手动模式增益整数部分,取值范围1-255">   
-        <el-input v-model="form.DGain" placeholder="手动模式增益整数部分" suffix-icon="el-icon-question"></el-input>
+    <el-form-item label="DGain" prop="DGain" title="手动模式增益整数部分,取值范围1-255">   
+        <el-input v-model="form.DGain" placeholder="手动模式增益整数部分"></el-input>
+    </el-form-item>
+
+    <el-form-item label="DGainDeci" title="手动模式增益小数部分,取值范围0-0.9">
+        <el-select v-model="form.DGainDeci" placeholder="请选择手动模式增益小数部分" style="width:100%">
+          <el-option
+            v-for="item in DGainDeci_options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="AWB白平衡模式">
+        <el-select v-model="form.AWB_Mode" placeholder="请选择白平衡模式" style="width:100%">
+          <el-option
+            v-for="item in awb_mode_options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+      </el-select>
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" @click='onSave'>保存</el-button>
-      <el-button  @click='onReset'>重置</el-button>
+      <el-button class="button" type="primary" @click='onSave'>保存</el-button>
     </el-form-item>
 
   </el-form>
@@ -81,27 +76,88 @@ import { GetISP, SetISP } from '@/api/isp'
 export default {
 
   data() {
-    return {
-      form: {
-        brightness: 50,
-        wdr_mode: 16,
-        wdr_level: 1, 
+    var threshold_validator_Time = (rule, value, callback) => {
+      console.log(value)
+      console.log(rule)
+   //   var re = /^\d+(\.\d+)?$/;
+      var re = /^[1-9]+[0-9]*]*$/;
+      if (value === "") {
+        callback();
+      } else if (!re.test(value)) {
+        callback(new Error("该值必须在32-1000000之间的数字"));
+      } else if (value < 32 || value > 1000000) {
+        callback(new Error("该值必须在32-1000000之间的数字"));
+      } else {
+        callback();
+      }
+    };
 
+    var threshold_validator_Gain = (rule, value, callback) => {
+      var re = /^[1-9]+[0-9]*]*$/;
+      if (value === "") {
+        callback();
+      } else if (!re.test(value)) {
+        callback(new Error("该值必须在1-255之间的数字"));
+      } else if (value < 1 || value > 255) {
+        callback(new Error("该值必须在1-255之间的数字"));
+      } else {
+        callback();
+      }
+    };
+
+    return {   
+      form: {
         AE_Shutter_Mode:0,
         AE_MaxET_Mode:2,
         Exposuretime: 32,
         MaxET: 32,
         DGain: 1,
-        AGain: 0,
         MaxDGain: 255,
-        MaxAGain: 0,
         DGainDeci: 0,
-        AGainDeci: 0,
+        AWB_Mode:0,
 
+        isp_type:1,
         etus:0,
-        gainValue:0,
-        gainFormat:0
       },
+      rules:{
+        Exposuretime: [{ validator: threshold_validator_Time, trigger: "blur" }],
+        MaxET: [{ validator: threshold_validator_Time, trigger: "blur" }],
+        MaxDGain: [{ validator: threshold_validator_Gain, trigger: "blur" }],
+        DGain: [{ validator: threshold_validator_Gain, trigger: "blur" }],
+      },
+       DGainDeci_options: [
+        {
+          value: 0,
+          label: '0'
+        }, {
+          value: 0.1,
+          label: '0.1'
+        }, {
+          value: 0.2,
+          label: '0.2'
+        }, {
+          value: 0.3,
+          label: '0.3'
+        }, {
+          value: 0.4,
+          label: '0.4'
+        }, {
+          value: 0.5,
+          label: '0.5'
+        }, {
+          value: 0.6,
+          label: '0.6'
+        }, {
+          value: 0.7,
+          label: '0.7'
+        }, {
+          value: 0.8,
+          label: '0.8'
+        }, {
+          value: 0.9,
+          label: '0.9'
+        }
+      ],
       wdr_mode_options: [
         {
           value: 1,
@@ -165,6 +221,33 @@ export default {
           label: '手动曝光'
         }
       ],
+      awb_mode_options: [
+        {
+          value: 0,
+          label: 'AWB_AUTO'
+        }, {
+          value: 0x10,
+          label: 'AWB_FLUORESCENT_LAMP'
+        }, {
+          value: 0x11,
+          label: 'AWB_INCANDESCENT_LAMP'
+        }, {
+          value: 0x12,
+          label: 'AWB_OUTDOOR_SUN'
+        }, {
+          value: 0x13,
+          label: 'AWB_OUTDOOR_CLOUDY'
+        }, {
+          value: 0x14,
+          label: 'AWB_OUTDOOR_DUSK'
+        }, {
+          value: 0x15,
+          label: 'AWB_INDOOR_OFFICE'
+        }, {
+          value: 0x1f,
+          label: 'AWB_DISABLE'
+        }
+      ],
       max_et_options: [
         {
           value: 0,
@@ -220,23 +303,28 @@ export default {
     }
   },
   methods: {   
+    ResetVal() {
+      this.form.AE_Shutter_Mode =0; 
+      this.form.AE_MaxET_Mode=2;
+      this.form.Exposuretime=32;
+      this.form.MaxET=32;
+      this.form.DGain=1;
+      this.form.MaxDGain=255;
+      this.form. DGainDeci=0;
+      this.form.AWB_Mode=0;
+    },
     onSave() {
-      this.setISP()
-    },
-    onBrightnessChange(){
-      console.log(this.form.brightness)
-    },
-    onReset() {
-      console.log('onCancel')
-      this.$emit('success', false)
+      this.$refs.validform.validate(valid => {
+        if (valid) {
+          this.setISP()
+        }
+      })   
     },
     getISP() {
       GetISP().then(response => {
         console.log('get isp')
         console.log(response.data)
-        this.form.etus = response.data.gain.etus
-        this.form.gainValue = response.data.gain.value
-        this.form.gainFormat = response.data.gain.format   
+        this.form.etus = response.data.gain.etus 
       })
     },
     setISP() {
@@ -273,18 +361,16 @@ export default {
 }
 
 .clearfix:after {
-  clear: both
+  clear: both;
 }
 
 .button {
-  padding: 0;
-  float: right;
+  margin-left: 90px;
 }
 
 .box-card {
-  width: 40%;
+  width: 90%;
   margin: 30px auto;
   /* height: 700px; */
 }
-
 </style>

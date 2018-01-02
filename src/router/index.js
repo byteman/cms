@@ -19,7 +19,7 @@ const Err404 = _import('404')
 const Preview = _import('preview/index')
 const Algo = _import('algo/index')
 const SysConfig = _import('sysconfig/index')
-const ISPConfig = _import('isp/index')
+const ISPConfig = _import('isp/sysconfig')
 
 Vue.use(Router)
 
@@ -84,7 +84,7 @@ export const asyncRouterMap = [
   {
     path: '/isp',
     component: Layout,
-    redirect: '/isp/index',
+    redirect: '/isp/sysconfig',
     icon: 'network36',
     noDropdown: true,
     children: [
