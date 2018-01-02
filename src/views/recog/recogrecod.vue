@@ -240,8 +240,7 @@ export default {
       this.$refs.myform.resetFields();
     },
     moreSpecial(value) {
-      // this.show = value.flg;    // 弹窗是否显示
-      this.show = false;
+      this.show = value.flg;
       this.show_reg_src = value.regFaceData;
       this.show_live_id = this.selectedlive_id;
       this.show_reg_id = value.registerId;
@@ -264,7 +263,7 @@ export default {
       });
     },
     specialClick(row, index) {
-      this.show = false;    // 弹窗是否显示
+      this.show = true;
       switch (index + "") {
         case "1":
           this.show_reg_src = row.top1;

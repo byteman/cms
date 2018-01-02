@@ -66,7 +66,7 @@ export const asyncRouterMap = [
     noDropdown: true,
     // name: '实时预览',
     children: [
-      {path: 'index', component: Preview,  name: '实时预览', meta: {role: ['admin']}}
+      {path: 'index', component: Preview, name: '实时预览', meta: {role: ['admin']}}
     ]
   },
   {
@@ -91,7 +91,7 @@ export const asyncRouterMap = [
     name: '抓拍配置',
     children: [
       {path: 'record', component: SnapRecord, name: '抓拍记录', meta: {role: ['admin']}},
-      // {path: 'config', component: SnapConfig, name: '抓拍设置', meta: {role: ['admin']}}
+      {path: 'config', component: SnapConfig, name: '抓拍设置', meta: {role: ['admin']}}
     ]
   },
   {
@@ -102,9 +102,9 @@ export const asyncRouterMap = [
     name: '识别配置',
     children: [
       {path: 'recog_recod', component: RecogRecod, name: '识别记录', meta: {role: ['admin']}},
-      // {path: 'clustering', component: Clustering, name: '频次分析', meta: {role: ['admin']}},
-      // {path: 'engine_settings', component: Engine_Settings, name: '引擎设置', meta: {role: ['admin']}},
-      // {path: 'engine_system_settings', component: Engine_System_Settings, name: '引擎系统操作', meta: {role: ['admin']}}
+      {path: 'clustering', component: Clustering, name: '频次分析', meta: {role: ['admin']}},
+      {path: 'engine_settings', component: Engine_Settings, name: '引擎设置', meta: {role: ['admin']}},
+      {path: 'engine_system_settings', component: Engine_System_Settings, name: '引擎系统操作', meta: {role: ['admin']}}
     ]
   },
   {path: '*', redirect: '/404', hidden: true}
