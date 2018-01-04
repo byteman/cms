@@ -44,31 +44,43 @@
     methods: {       
       onReset() {
          console.log('onReset')
-         this.$refs.basicch.ResetVal()
-         this.$refs.paramch.ResetVal()
-         this.$refs.statusch.ResetVal()
-         SetISP("").then(response => {
-           this.$message('重置成功')
-           })
-         
+         SetISP({'isp_type': 0}).then(response => {
+           console.log(response);
+           if (response.data.status == 0) {
+             switch (tab.name) {
+               case 'basic':
+               this.$refs.basicch.ResetVal()
+               break
+               case 'param':
+               this.$refs.paramch.ResetVal()
+               break
+               case 'status':
+               this.$refs.statusch.ResetVal()
+               break
+               default:
+               break
+              }
+              this.$message('重置成功')
+            } else {
+              alert("重置失败，错误信息：" + response.data.status);
+            }       
+           })       
  //     this.$emit('success', false)
     },
       handleClick(tab, event) {
         console.log(tab.name)
-        console.log(event.type)
         switch (tab.name) {
           case 'basic':
-            console.log(this.$refs.basicch)
-            this.$refs.basicch.reload()
+            this.$refs.basicch.getISP()
             break
           case 'param':
-            console.log(this.$refs.paramch)
-            this.$refs.paramch.reload()
+            this.$refs.paramch.getISP()
             break
           case 'status':
-            this.$refs.statusch.reload()
+            this.$refs.statusch.getISP()
             break
           default:
+            break
         }
       }
     }

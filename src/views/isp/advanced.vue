@@ -156,7 +156,6 @@ export default {
         defog: 0,
 
         isp_type:3,
-        etus:0,
       },
       wdr_mode_options: [
         {
@@ -327,15 +326,31 @@ export default {
       console.log(this.form.ircut_th)
     },
     getISP() {
-      GetISP().then(response => {
-        console.log('get isp')
+      console.log('advanced get isp')
+      SetISP({'isp_type': 6}).then(response => { 
         console.log(response.data)
-        this.form.etus = response.data.gain.etus 
+        this.form.flipmirror =response.data.flipmirror
+        this.form.iris=response.data.iris
+        this.form.ircut=response.data.ircut
+        this.form.ircut_th=response.data.ircut_th
+        this.form.colorblack=response.data.colorblack
+        this.form.wdr_mode=response.data.wdr_mode
+        this.form.wdr_level=response.data.wdr_level
+        this.form.color_type=response.data.color_type
+        this.form.denoise=response.data.denoise
+        this.form.denoise_level=response.data.denoise_level
+        this.form.eis=response.data.eis
+        this.form.defog=response.data.defog
       })
     },
     setISP() {
       SetISP(this.form).then(response => {
+        console.log(response);
+        if (response.data.status == 0) {
         this.$message('保存成功')
+        } else {
+          alert("保存失败，错误信息：" + response.data.status);
+          }      
       })
     }
   },

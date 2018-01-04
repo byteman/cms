@@ -77,8 +77,6 @@ export default {
 
   data() {
     var threshold_validator_Time = (rule, value, callback) => {
-      console.log(value)
-      console.log(rule)
    //   var re = /^\d+(\.\d+)?$/;
       var re = /^[1-9]+[0-9]*]*$/;
       if (value === "") {
@@ -117,7 +115,6 @@ export default {
         AWB_Mode:0,
 
         isp_type:1,
-        etus:0,
       },
       rules:{
         Exposuretime: [{ validator: threshold_validator_Time, trigger: "blur" }],
@@ -310,7 +307,7 @@ export default {
       this.form.MaxET=32;
       this.form.DGain=1;
       this.form.MaxDGain=255;
-      this.form. DGainDeci=0;
+      this.form.DGainDeci=0;
       this.form.AWB_Mode=0;
     },
     onSave() {
@@ -321,15 +318,27 @@ export default {
       })   
     },
     getISP() {
-      GetISP().then(response => {
-        console.log('get isp')
+      console.log('AE get isp')
+      SetISP({'isp_type': 4}).then(response => { 
         console.log(response.data)
-        this.form.etus = response.data.gain.etus 
+        this.form.AE_Shutter_Mode =response.data.AE_Shutter_Mode
+        this.form.AE_MaxET_Mode=response.data.AE_MaxET_Mode
+        this.form.Exposuretime=response.data.Exposuretime
+        this.form.MaxET=response.data.MaxET
+        this.form.DGain=response.data.DGain
+        this.form.MaxDGain=response.data.MaxDGain
+        this.form.DGainDeci=response.data.DGainDeci
+        this.form.AWB_Mode=response.data.AWB_Mode
       })
     },
     setISP() {
       SetISP(this.form).then(response => {
-        this.$message('保存成功')
+        console.log(response);
+        if (response.data.status == 0) {
+          this.$message('保存成功')
+          } else {
+            alert("保存失败，错误信息：" + response.data.status);
+            }       
       })
     }
   },

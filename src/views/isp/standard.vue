@@ -48,7 +48,6 @@ export default {
         sharpness: 50,
 
         isp_type:2,
-        etus:0,
       },
     }
   },
@@ -83,15 +82,24 @@ export default {
       this.$emit('success', false)
     },
     getISP() {
-      GetISP().then(response => {
-        console.log('get isp')
+      console.log('standard get isp')
+      SetISP({'isp_type': 5}).then(response => {      
         console.log(response.data)
-        this.form.etus = response.data.gain.etus
+        this.form.brightness = response.data.brightness
+        this.form.contrast = response.data.contrast
+        this.form.saturation = response.data.saturation
+        this.form.hue = response.data.hue
+        this.form.sharpness = response.data.sharpness
       })
     },
     setISP() {
       SetISP(this.form).then(response => {
+        console.log(response);
+        if (response.data.status == 0) {
         this.$message('保存成功')
+        } else {
+          alert("保存失败，错误信息：" + response.data.status);
+          }      
       })
     }
   },
