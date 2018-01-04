@@ -127,7 +127,7 @@
         GetGroup(80001)
           .then(response => {
             this.list = response.data.data.group_ids;
-            console.log(this.list);
+            // console.log(this.list);
           })
           .catch(() => {
           });
@@ -185,7 +185,7 @@
         }
         console.log(this.group)
         if (bcode0 === '80003') {
-          if(!infor.requestdata.data.group_id && !infor.requestdata.data.group_threshold){
+          if(!infor.requestdata.group_id || !infor.requestdata.data.group_threshold){
             this.$message('请填写完整底库信息！')
             return ;
           }
@@ -199,7 +199,7 @@
               this.$message('保存底库失败！')
             })
         } else {
-          if(!infor.requestdata.data.group_id && !infor.requestdata.data.group_threshold){
+          if(!infor.requestdata.group_id || !infor.requestdata.data.group_threshold){
             this.$message('请填写完整底库信息！')
             return ;
           }
