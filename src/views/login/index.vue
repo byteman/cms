@@ -1,28 +1,38 @@
 <template>
   <div class="login-container">
-    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
-      class="card-box login-form">
-      <h3 class="title">系统登录</h3>
-       <el-form-item prop="username">
-        <span class="svg-container svg-container_login">
-          <icon-svg icon-class="yonghuming" />
-        </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="邮箱" />
-      </el-form-item>
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <icon-svg icon-class="mima" ></icon-svg>
-        </span>
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
-          登录
-        </el-button>
-      </el-form-item>
-      <div class='tips'>账号:admin 密码:admin</div>
-    </el-form>
+    <el-row  type="flex">
+      <el-col :push="13" :xs="10" :sm="8" :md="7" :lg="5" :xl="5">
+        <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0"  class="card-box login-form">
+          <el-form-item>
+            <img src="../../../src/assets/walkcloud_logo.png" alt="">
+          </el-form-item>
+          <el-form-item prop="username">
+          <span class="svg-container svg-container_login">
+            <icon-svg icon-class="username" />
+          </span>
+            <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
+          </el-form-item>
+          <el-form-item prop="password">
+            <span class="svg-container">
+              <icon-svg icon-class="password" ></icon-svg>
+            </span>
+            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+                      placeholder="请输入密码"></el-input>
+          </el-form-item>
+          <el-form-item class="remberPassword">
+            <div class="rember-right">
+              <label>记住密码</label>
+              <el-switch v-model="delivery"></el-switch>
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" class="loginBtn" :loading="loading" @click.native.prevent="handleLogin">
+              登录
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -45,12 +55,13 @@ export default {
       } else {
         callback()
       }
-    }
+    };
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: ''
       },
+      delivery: false,
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
@@ -88,23 +99,23 @@ export default {
   .login-container {
     @include relative;
     height: 100vh;
-    background-color: $bg;
+    background:url("../../../src/assets/login_bg.jpg") no-repeat center center;
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+      -webkit-box-shadow: 0 0 0 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
     }
     input {
       background: transparent;
-      border: 0px;
+      border: 0;
       -webkit-appearance: none;
-      border-radius: 0px;
+      border-radius: 0;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
+      color: $dark_gray;
+      height: 44px;
     }
     .el-input {
       display: inline-block;
-      height: 47px;
+      height: 44px;
       width: 85%;
     }
     .tips {
@@ -113,35 +124,59 @@ export default {
       margin-bottom: 10px;
     }
     .svg-container {
-      padding: 6px 5px 6px 15px;
+      padding: 0px 5px 0px 15px;
       color: $dark_gray;
-      vertical-align: middle;
+      vertical-align: top;
       width: 30px;
       display: inline-block;
       &_login {
         font-size: 20px;
       }
     }
+    .rember-right{
+      float: right;
+      color: #cdcdcd;
+    }
+    .remberPassword{
+      border: none!important;
+    }
+    .loginBtn{
+      font-size: 24px;
+      width: 100%;
+      border-radius: 10px;
+    }
     .title {
       font-size: 26px;
-      font-weight: 400;
+      /*font-weight: 400;*/
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0 auto 40px auto;
       text-align: center;
       font-weight: bold;
     }
     .login-form {
-      position: absolute;
-      left: 0;
-      right: 0;
-      width: 400px;
-      padding: 35px 35px 15px 35px;
-      margin: 120px auto;
+      min-width: 300px;
+      padding: 34px;
+      margin-top: 64%;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 8px 6px rgba(0,0,0,0.6);
+    }
+    .el-form-item:first-child{
+      border: none;
+      margin-bottom: 60px;
+    }
+    .el-form-item:last-child{
+      border: none;
+    }
+    .el-form-item img{
+     margin: 0 auto;
+      display: flex;
+      width: 50%;
     }
     .el-form-item {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 5px;
+      border: 1px solid rgba(188, 188, 188, 0.9);
+      background: none;
+      border-radius: 10px;
       color: #454545;
     }
     .show-pwd {
