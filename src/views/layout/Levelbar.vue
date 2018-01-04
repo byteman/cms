@@ -39,11 +39,19 @@ export default {
 .app-levelbar.el-breadcrumb {
   display: inline-block;
   font-size: 14px;
-  line-height: 50px;
+  line-height: 60px;
   margin-left: 10px;
+  outline: none;
   .no-redirect {
-    color: #97a8be;
+    color: #3e95df;
     cursor: text;
+  }
+
+  .el-breadcrumb__inner a{
+    color: #7a8897;
+  }
+  .el-breadcrumb__inner a:hover{
+    color: #3e95df;
   }
 }
 </style>

@@ -41,7 +41,7 @@ export default {
         width: 100%;
         &.hideSidebar {
             .sidebar-wrapper {
-                transform: translate(-140px, 0);
+                transform: translate(-220px, 0);
                 .sidebar-container {
                     transform: translate(132px, 0);
                 }
@@ -53,11 +53,11 @@ export default {
                 }
             }
             .main-container {
-                margin-left: 40px;
+                margin-left: 0;
             }
         }
         .sidebar-wrapper {
-            width: 180px;
+            width: 220px;
             position: fixed;
             top: 0;
             bottom: 0;
@@ -66,6 +66,7 @@ export default {
             overflow: hidden;
             transition: all .28s ease-out;
         }
+
         .sidebar-container {
             transition: all .28s ease-out;
             position: absolute;
@@ -78,7 +79,8 @@ export default {
         .main-container {
             min-height: 100%;
             transition: all .28s ease-out;
-            margin-left: 180px;
+            margin-left: 220px;
+
         }
     }
 </style>

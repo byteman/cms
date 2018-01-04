@@ -54,7 +54,7 @@ export const asyncRouterMap = [
     path: '/preview',
     component: Layout,
     redirect: '/preview/index',
-    icon: 'service',
+    icon: 'watchAnyTime',
     noDropdown: true,
     children: [
       { path: 'index', component: Preview, name: '实时预览', meta: { role: ['admin'] }}
@@ -65,7 +65,7 @@ export const asyncRouterMap = [
     path: '/algo',
     component: Layout,
     redirect: '/algo/index',
-    icon: 'service',
+    icon: 'calSetting',
     noDropdown: true,
     children: [
       { path: 'index', component: Algo, name: '算法参数', meta: { role: ['admin'] }},
@@ -75,7 +75,7 @@ export const asyncRouterMap = [
     path: '/sysconfig',
     component: Layout,
     redirect: '/sysconfig/index',
-    icon: 'config',
+    icon: 'sysSetting',
     noDropdown: true,
     children: [
       { path: 'index', component: SysConfig, name: '系统设置', meta: { role: ['admin'] }},
@@ -85,7 +85,7 @@ export const asyncRouterMap = [
     path: '/isp',
     component: Layout,
     redirect: '/isp/index',
-    icon: 'network36',
+    icon: 'picSetting',
     noDropdown: true,
     children: [
       { path: 'index', component: ISPConfig, name: '图像设置', meta: { role: ['admin'] }},

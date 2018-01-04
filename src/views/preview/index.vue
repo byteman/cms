@@ -37,7 +37,7 @@
               <p>识别时间:{{value.time}}ms</p>
               <p>识别结果:{{value.stranger|recog}}</p>
             </div>
-            
+
           </div>
           <p class="recog-id" v-if="value.stranger===0">用户编号:{{value.userId}}</p>
         </li>
@@ -109,7 +109,7 @@ export default {
         if (json != undefined && json.status == 0) {
           console.log("channle = ",json.data.channels.length)
           for (var i = 0; i < json.data.channels.length; i++) {
-            
+
             var channelId = json.data.channels[i].id;
             var channelName = json.data.channels[i].name;
             console.log(channelId, channelName)
@@ -117,7 +117,7 @@ export default {
               .then(response => {
                 var res = response.data;
                 if (res != undefined && res.status == 0) {
-                  
+
                   var rtspUrl = res.url;
                   var Device = new Object();
                   Device.id = res.cameraId;
@@ -273,16 +273,16 @@ export default {
       var recogObjs = this.recogObjs;
       console.log('enter snapwebsocket')
       if ("WebSocket" in window) {
-        
+
         if (wsJsonObj[cameraId] != undefined) {
-          
+
           wsJsonObj[cameraId].close();
           delete wsJsonObj[cameraId];
           wsJsonObj[cameraId] = null;
         }
-        
+
         var url = 'ws://192.168.40.176:8000/' + cameraId
-        
+
         console.log(url)
         var wsc = new ReconnectingWebSocket(
           url,
@@ -316,7 +316,7 @@ export default {
                 recogObjs[t].score = top_scores;
                 recogObjs[t].userId = user_id;
                 recogObjs[t].stranger = stranger;
-                
+
                 return;
               }
             }
@@ -371,10 +371,11 @@ export default {
 
 <style scoped>
 .preview-content {
-  width: 1480px;
-  height: 730px;
-  border: 1px solid #e4e4e4;
-  margin: 20px 0 0 15px;
+  width: 100%;
+  min-height: 730px;
+  border: 1px solid rgba(255,255,255,.1);
+  margin: 0;
+  border-radius: 10px;
 }
 .tree-content {
   width: 320px;

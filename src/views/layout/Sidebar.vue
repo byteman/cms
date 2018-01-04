@@ -1,5 +1,5 @@
 <template>
-  <el-menu mode="vertical" theme="dark" :default-active="$route.path">
+  <el-menu mode="vertical" theme="dark" :default-active="$route.path" class="sidebar_theme">
     <sidebar-item :routes='permission_routers'></sidebar-item>
   </el-menu>
 </template>
@@ -18,7 +18,12 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .sidebar_theme{
+    background: #2a3037;
+    box-shadow: 20px 0 3px 3px rgba(0,0,0,.2);
+  }
 .el-menu {
   min-height: 100%;
+  border-right: none;
 }
 </style>
