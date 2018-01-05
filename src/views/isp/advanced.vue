@@ -83,26 +83,13 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="图像降噪模式">
-        <el-select v-model="form.denoise" placeholder="请选择图像降噪模式" style="width:100%;">
-            <el-option
-              v-for="item in denoise_options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-        </el-select>
+      <el-form-item label="2D降噪级别">
+        <el-slider @change="onDenoise_2dChange()" v-model="form.denoise_2d" max="32" style="margin-left:10px"></el-slider>
       </el-form-item>
       <el-form-item label="3D降噪级别">
-        <el-select v-model="form.denoise_level" placeholder="请选择3D降噪级别" style="width:100%;">
-            <el-option
-              v-for="item in denoise_level_options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-        </el-select>
+        <el-slider @change="onDenoise_3dChange()" v-model="form.denoise_3d" max="32" style="margin-left:10px"></el-slider>
       </el-form-item>
+
       <el-form-item label="电子防抖">
         <el-select v-model="form.eis" placeholder="请选择电子防抖模式" style="width:100%;">
             <el-option
@@ -150,8 +137,8 @@ export default {
         wdr_mode: 16,
         wdr_level: 0,
         color_type: 0,
-        denoise: 2,
-        denoise_level: 1,
+        denoise_2d: 16,
+        denoise_3d: 16,
         eis: 0,
         defog: 0,
 
@@ -310,8 +297,8 @@ export default {
       this.form.wdr_mode=16;
       this.form.wdr_level=0;
       this.form.color_type=0;
-      this.form.denoise=2;
-      this.form.denoise_level=1;
+      this.form.denoise_2d=16;
+      this.form.denoise_3d=16;
       this.form.eis=0;
       this.form.defog=0;
     },
@@ -325,22 +312,52 @@ export default {
     onIrCutThChange(){
       console.log(this.form.ircut_th)
     },
+    onDenoise_2dChange(){
+      console.log(this.form.denoise_2d)
+    },
+    onDenoise_3dChange(){
+      console.log(this.form.denoise_3d)
+    },  
     getISP() {
       console.log('advanced get isp')
       SetISP({'isp_type': 6}).then(response => { 
         console.log(response.data)
-        this.form.flipmirror =response.data.flipmirror
-        this.form.iris=response.data.iris
-        this.form.ircut=response.data.ircut
-        this.form.ircut_th=response.data.ircut_th
-        this.form.colorblack=response.data.colorblack
-        this.form.wdr_mode=response.data.wdr_mode
-        this.form.wdr_level=response.data.wdr_level
-        this.form.color_type=response.data.color_type
-        this.form.denoise=response.data.denoise
-        this.form.denoise_level=response.data.denoise_level
-        this.form.eis=response.data.eis
-        this.form.defog=response.data.defog
+        if (response.data.flipmirror) {
+          this.form.flipmirror =response.data.flipmirror
+        }
+        if (response.data.iris) {
+          this.form.iris=response.data.iris
+        }
+        if (response.data.ircut) {
+          this.form.ircut=response.data.ircut
+        }
+        if (response.data.ircut_th) {
+          this.form.ircut_th=response.data.ircut_th
+        }
+        if (response.data.colorblack) {
+          this.form.colorblack=response.data.colorblack
+        }
+        if (response.data.wdr_mode) {
+          this.form.wdr_mode=response.data.wdr_mode
+        }
+        if (response.data.wdr_level) {
+          this.form.wdr_level=response.data.wdr_level
+        }
+        if (response.data.color_type) {
+          this.form.color_type=response.data.color_type
+        }
+        if (response.data.denoise_2d) {
+          this.form.denoise_2d=response.data.denoise_2d
+        }
+        if (response.data.denoise_3d) {
+          this.form.denoise_3d=response.data.denoise_3d
+        }
+        if (response.data.eis) {
+          this.form.eis=response.data.eis
+        }
+        if (response.data.defog) {
+          this.form.defog=response.data.defog
+        }
       })
     },
     setISP() {
