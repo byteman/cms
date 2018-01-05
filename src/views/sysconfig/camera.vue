@@ -250,11 +250,11 @@ export default {
       var re2 = /^[1-9]+[0-9]*]*$/;
       console.log(re.test(value));
       if (!re.test(value)) {
-        callback(new Error("编号必须在0-65535之间的整数"));
+        callback(new Error("编号必须在1-65535之间的整数"));
       } else if (value < 0 || value > 65535) {
-        callback(new Error("编号必须在0-65535之间的整数"));
+        callback(new Error("编号必须在1-65535之间的整数"));
       } else if (!re2.test(value)) {
-        callback(new Error("编号必须在0-65535之间的整数"));
+        callback(new Error("编号必须在1-65535之间的整数"));
       } else {
         callback();
       }
