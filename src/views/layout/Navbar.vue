@@ -10,7 +10,7 @@
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <router-link class='inlineBlock' to="/">
           <el-dropdown-item>
-            Home
+            首页
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided><span @click="logout" style="display:block;">LogOut</span></el-dropdown-item>
@@ -50,14 +50,19 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
     .navbar {
-        height: 50px;
-        line-height: 50px;
-        border-radius: 0px !important;
+        height: 60px;
+        line-height: 60px;
+        border-radius: 0!important;
+        background: #313943;
+        box-shadow: 0 2px 4px 3px rgba(0,0,0,.2);
+        box-sizing: border-box;
+        border-bottom: 2px solid #ff4949;
         .hamburger-container {
-            line-height: 58px;
-            height: 50px;
+            height: 60px;
             float: left;
-            padding: 0 10px;
+            padding: 0 20px;
+            outline: none!important;
+            color: #7a8897;
         }
         .errLog-container {
             display: inline-block;

@@ -19,3 +19,14 @@ export default {
   }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .app-main{
+    width: 100%;
+    height: calc(100vh - 60px);
+    padding: 30px;
+    background: #22272d;
+    overflow-y: hidden;
+    box-sizing: border-box;
+  }
+</style>
