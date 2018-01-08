@@ -104,7 +104,7 @@
             <el-radio v-model="devform.gender" label="男">男</el-radio>
             <el-radio v-model="devform.gender" label="女">女</el-radio>
           </el-form-item>
-          <el-form-item label="生日" prop="birthday" >
+          <el-form-item label="生日">
             <el-date-picker
               v-model="devform.birthday"
               type="date"
@@ -149,395 +149,383 @@
 </template>
 
 <script>
-  import {
-    GetGroup,
-    QueryFaceList,
-    AddFace,
-    DeleteFace
-  } from "@/api/sysconfig"
-  import {
-    Base64ToImage
-  } from "@/api/snap"
-  import ElInput from "element-ui/packages/input/src/input"
+import { GetGroup, QueryFaceList, AddFace, DeleteFace } from "@/api/sysconfig";
+import { Base64ToImage } from "@/api/snap";
+import ElInput from "element-ui/packages/input/src/input";
 
-  export default {
-    components: {
-      ElInput
-    },
-    data() {
-      var birthday_validator = (rule, value, callback) => {
-        var re = /^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$/
-        if (!re.test(value)) {
-          callback(new Error('日期不能为空'))
-        } else {
-          callback()
-        }
-      };
-
-      var name_validator = (rule, value, callback) => {
-        // console.log(value);
-        if (value === '') {
-          callback(new Error('姓名不能为空'));
-        } else {
-          callback();
-        }
-      };
-      var sex_validator = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请选择性别'));
-        } else {
-          callback();
-        }
-      };
-
-      var dk_validator = (rule, value, callback) => {
-        // console.log(value);
-        if (value === '') {
-          callback(new Error('底库不能为空'));
-        } else {
-          callback();
-        }
-      };
-      var pic_validator = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('图片不能为空'));
-        } else {
-          callback();
-        }
-      };
-      return {
-        loading: false,
-        total: 50,
-        currentPage: 1,
-        selectdb: '',
-        dboptions: [],
-        list: [],
-        upload_show: false,
-        upload_file_list: [],
-        upload_form: {},
-        upload_url: '',
-        upload_message: '',
-        face_title: '',
-        face_show: false,
-        face: {},
-        face_avatar_url: '',
-        face_dlg_btn_name: '',
-        // 表单验证
-        devform: {
-          name: '',  // 姓名
-          birthday: '',  // 生日
-          gender: '男',  // 性别
-          selectdb: '',   // 底库
-          face_avatar_url: ''  // url
-        },
-        rules: {
-          birthday: [{required: true, validator: birthday_validator, trigger: 'blur'}],
-          name: [
-            {required: true, validator: name_validator, trigger: 'blur'},
-            {min: 3, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur'}
-          ],
-          gender: [{required: true, validator: sex_validator, trigger: 'blur'}],
-          selectdb: [{required: true, validator: dk_validator, trigger: 'blur'}],
-          face_avatar_url: [{required: true,validator: pic_validator, trigger: 'blur'}]
-        }
+export default {
+  components: {
+    ElInput
+  },
+  data() {
+    var name_validator = (rule, value, callback) => {
+      // console.log(value);
+      if (value === "") {
+        callback(new Error("姓名不能为空"));
+      } else {
+        callback();
       }
+    };
+    var sex_validator = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请选择性别"));
+      } else {
+        callback();
+      }
+    };
+
+    var dk_validator = (rule, value, callback) => {
+      // console.log(value);
+      if (value === "") {
+        callback(new Error("底库不能为空"));
+      } else {
+        callback();
+      }
+    };
+    var pic_validator = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("图片不能为空"));
+      } else {
+        callback();
+      }
+    };
+    return {
+      loading: false,
+      total: 50,
+      currentPage: 1,
+      selectdb: "",
+      dboptions: [],
+      list: [],
+      upload_show: false,
+      upload_file_list: [],
+      upload_form: {},
+      upload_url: "",
+      upload_message: "",
+      face_title: "",
+      face_show: false,
+      face: {},
+      face_avatar_url: "",
+      face_dlg_btn_name: "",
+      // 表单验证
+      devform: {
+        name: "", // 姓名
+        birthday: "", // 生日
+        gender: "男", // 性别
+        selectdb: "", // 底库
+        face_avatar_url: "" // url
+      },
+      rules: {
+        name: [
+          { required: true, validator: name_validator, trigger: "blur" },
+          { min: 2, max: 5, message: "长度在 2 到 5 个字符", trigger: "blur" }
+        ],
+        gender: [{ required: true, validator: sex_validator, trigger: "blur" }],
+        selectdb: [
+          { required: true, validator: dk_validator, trigger: "blur" }
+        ],
+        face_avatar_url: [
+          { required: true, validator: pic_validator, trigger: "blur" }
+        ]
+      }
+    };
+  },
+  created() {
+    console.log("face image page created");
+  },
+  mounted() {
+    this.loading = true;
+    this.upload_url = process.env.BASE_API + "/system/increaseLib";
+    GetGroup(80001)
+      .then(response => {
+        const tmpList = response.data.data.group_ids;
+        tmpList.forEach(function(item) {
+          item.value = item.id;
+          item.label = item.id + "(" + item.group_name + ")";
+        });
+        this.dboptions = tmpList;
+        console.log(this.dboptions);
+      })
+      .catch(() => {});
+    this.onRefresh();
+  },
+  methods: {
+    // beforeUpload(file) {
+    //   return false
+    // },
+    changeFile(file, fileList) {
+      var This = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(file.raw);
+      reader.onload = function(e) {
+        This.devform.face_avatar_url = this.result;
+      };
     },
-    created() {
-      console.log('face image page created')
-    },
-    mounted() {
-      this.loading = true
-      this.upload_url = process.env.BASE_API + '/system/increaseLib'
-      GetGroup(80001)
+    onRefresh() {
+      let starttime = null;
+      let endtime = null;
+      let staticDBId = null;
+      let userId = null;
+
+      if (this.selectdb !== 0) {
+        staticDBId = this.selectdb;
+      }
+
+      this.loading = true;
+      QueryFaceList(
+        this.currentPage.toString(),
+        "10",
+        starttime,
+        endtime,
+        staticDBId,
+        userId
+      )
         .then(response => {
-          const tmpList = response.data.data.group_ids
-          tmpList.forEach(function (item) {
-            item.value = item.id
-            item.label = item.id + '(' + item.group_name + ')'
-          })
-          this.dboptions = tmpList
-          console.log(this.dboptions)
+          this.list = [];
+          this.total = 0;
+          const tmpList = response.data.data.list;
+          tmpList.forEach(function(item) {
+            item.aligndata = Base64ToImage(item.img);
+          });
+          this.list = tmpList;
+          this.total = parseInt(response.data.data.total);
+          this.loading = false;
+          // console.log(this.list)
         })
         .catch(() => {
-        })
-      this.onRefresh()
+          this.list = [];
+          this.total = 0;
+          this.loading = false;
+          // console.log('error')
+        });
     },
-    methods: {
-      // beforeUpload(file) {
-      //   return false
-      // },
-      changeFile(file, fileList) {
-        var This = this
-        var reader = new FileReader()
-        reader.readAsDataURL(file.raw)
-        reader.onload = function (e) {
-          This.devform.face_avatar_url = this.result
-        }
-      },
-      onRefresh() {
-        let starttime = null
-        let endtime = null
-        let staticDBId = null
-        let userId = null
-
-        if (this.selectdb !== 0) {
-          staticDBId = this.selectdb
-        }
-
-        this.loading = true
-        QueryFaceList(
-          this.currentPage.toString(),
-          '10',
-          starttime,
-          endtime,
-          staticDBId,
-          userId
-        )
-          .then(response => {
-            this.list = []
-            this.total = 0
-            const tmpList = response.data.data.list
-            tmpList.forEach(function (item) {
-              item.aligndata = Base64ToImage(item.img)
+    handleSelectDbChange() {
+      this.onRefresh();
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.onRefresh();
+    },
+    // 新增人脸
+    onAdd() {
+      this.face_title = "底库新增人脸";
+      this.face_show = true;
+      // this.face = {}
+      this.devform.selectdb = this.selectdb;
+      // this.face_avatar_url = ''
+      this.face_dlg_btn_name = "新 增";
+    },
+    onImport() {
+      this.upload_show = true;
+      this.upload_form.group_id = this.selectdb;
+      this.upload_file_list = [];
+    },
+    handleDelete(row) {
+      this.$confirm("确认删除该设备, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          console.log(row.staticDBId, row.id);
+          DeleteFace(row.staticDBId, row.id)
+            .then(response => {
+              this.$message({
+                type: "info",
+                message: "删除人脸结果:" + response.data.info
+              });
+              this.onRefresh();
             })
-            this.list = tmpList
-            this.total = parseInt(response.data.data.total)
-            this.loading = false
-            // console.log(this.list)
-          })
-          .catch(() => {
-            this.list = []
-            this.total = 0
-            this.loading = false
-            // console.log('error')
-          })
-      },
-      handleSelectDbChange() {
-        this.onRefresh()
-      },
-      handleCurrentChange(val) {
-        this.currentPage = val
-        this.onRefresh()
-      },
-      // 新增人脸
-      onAdd() {
-        this.face_title = '底库新增人脸'
-        this.face_show = true
-        // this.face = {}
-        this.devform.selectdb = this.selectdb
-        // this.face_avatar_url = ''
-        this.face_dlg_btn_name = '新 增'
-      },
-      onImport() {
-        this.upload_show = true
-        this.upload_form.group_id = this.selectdb
-        this.upload_file_list = []
-      },
-      handleDelete(row) {
-        this.$confirm('确认删除该设备, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "删除人脸异常"
+              });
+            });
         })
-          .then(() => {
-            console.log(row.staticDBId, row.id)
-            DeleteFace(row.staticDBId, row.id)
-              .then(response => {
-                this.$message({
-                  type: 'info',
-                  message: '删除人脸结果:' + response.data.info
-                })
-                this.onRefresh()
-              })
-              .catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '删除人脸异常'
-                })
-              })
-          })
-          .catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    handleBeforeUpload(file) {
+      if (!this.selectdb) {
+        this.$message("底库为空，请选择底库后重试");
+        return false;
+      }
+      var zipReg = /^\S+\.zip$/;
+      if (!zipReg.test(file.name)) {
+        this.$message("请上传后缀为.zip的压缩包文件！");
+        return false;
+      } else {
+        return true;
+      }
+      this.upload_message = "";
+    },
+    handleSuccess(res, file, fileList) {
+      if (res.status !== 0) {
+        this.upload_message = "失败反馈:" + JSON.stringify(res);
+      }
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length +
+          fileList.length} 个文件`
+      );
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+
+    submitForm(formName) {
+      // console.log(formName);
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(this.devform.birthday);
+          console.log(this.devform.face_avatar_url);
+          console.log(this.devform.gender);
+          console.log(this.devform.name);
+          console.log(this.devform.selectdb);
+
+          let mStaticDBId = null;
+          let mImg = null;
+          let mBirthday = null;
+          let mGender = null;
+          let mName = null;
+
+          if (this.devform.selectdb) {
+            mStaticDBId = this.devform.selectdb;
+          }
+
+          if (this.devform.face_avatar_url) {
+            mImg = this.devform.face_avatar_url.substring(
+              this.devform.face_avatar_url.indexOf(",") + 1
+            );
+          }
+          if (this.devform.birthday) {
+            mBirthday = this.devform.birthday;
+          }
+          if (this.devform.gender) {
+            mGender = this.devform.gender;
+          }
+          if (this.devform.name) {
+            mName = this.devform.name;
+          }
+
+          AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
+            .then(response => {
+              this.$message({
+                type: "info",
+                message: "新增人脸结果成功"
+              });
+              this.onRefresh();
             })
-          })
-      },
-      handleBeforeUpload(file) {
-        if (!this.selectdb) {
-          this.$message('底库为空，请选择底库后重试');
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "新增人脸异常"
+              });
+            });
+          this.face_show = false;
+        } else {
+          this.$message({
+            message: "请正确填写信息！"
+          });
           return false;
         }
-        var zipReg = /^\S+\.zip$/;
-        if (!zipReg.test(file.name)) {
-          this.$message('请上传后缀为.zip的压缩包文件！');
-          return false
-        } else {
-          return true
-        }
-        this.upload_message = ''
-      },
-      handleSuccess(res, file, fileList) {
-        if (res.status !== 0) {
-          this.upload_message = '失败反馈:' + JSON.stringify(res)
-        }
-      },
-      handleExceed(files, fileList) {
-        this.$message.warning(
-          `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length +
-          fileList.length} 个文件`
-        )
-      },
-      handleRemove(file, fileList) {
-        console.log(file, fileList)
-      },
-
-      submitForm(formName) {
-        // console.log(formName);
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log(this.devform.birthday);
-            console.log(this.devform.face_avatar_url);
-            console.log(this.devform.gender);
-            console.log(this.devform.name);
-            console.log(this.devform.selectdb);
-
-            let mStaticDBId = null
-            let mImg = null
-            let mBirthday = null
-            let mGender = null
-            let mName = null
-
-            if (this.devform.selectdb) {
-              mStaticDBId = this.devform.selectdb
-            }
-
-            if (this.devform.face_avatar_url) {
-              mImg = this.devform.face_avatar_url.substring(this.devform.face_avatar_url.indexOf(',') + 1)
-            }
-            if (this.devform.birthday) {
-              mBirthday = this.devform.birthday
-            }
-            if (this.devform.gender) {
-              mGender = this.devform.gender
-            }
-            if (this.devform.name) {
-              mName = this.devform.name
-            }
-
-            AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
-              .then(response => {
-                this.$message({
-                  type: 'info',
-                  message: '新增人脸结果成功'
-                })
-                this.onRefresh()
-              })
-              .catch(() => {
-                this.$message({
-                  type: 'info',
-                  message: '新增人脸异常'
-                })
-              })
-            this.face_show = false
-          } else {
-            this.$message({
-              message: '请正确填写信息！'
-            })
-            return false;
-          }
-        })
-      }
+      });
     }
   }
+};
 </script>
 
 <style scoped>
-  .avatar1 {
-    margin-top: 20px;
-    width: 120px;
-    height: 90px;
-    border: none;
-  }
-.date-seletor{
+.avatar1 {
+  margin-top: 20px;
+  width: 120px;
+  height: 90px;
+  border: none;
+}
+.date-seletor {
   width: 310px;
 }
-  .redTip {
-    color: #F56C6C;
-    font-weight: bold;
-  }
+.redTip {
+  color: #f56c6c;
+  font-weight: bold;
+}
 
-  .container {
-    width: 100%;
-    margin: 0 auto;
-    border: 1px solid #dfe6ec;
-    min-height: 600px;
-    background: #fff;
-  }
+.container {
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid #dfe6ec;
+  min-height: 600px;
+  background: #fff;
+}
 
-  .el-dialog__body {
-    padding: 25px 25px 0 !important;
-  }
+.el-dialog__body {
+  padding: 25px 25px 0 !important;
+}
 
-  .database-num1 {
-    width: 310px;
-  }
+.database-num1 {
+  width: 310px;
+}
 
-  .database-num2 {
-    width: 250px;
-  }
+.database-num2 {
+  width: 250px;
+}
 
-  .el-form {
-    overflow: hidden;
-  }
+.el-form {
+  overflow: hidden;
+}
 
-  .content {
-    width: 97%;
-    margin: 0px auto;
-  }
+.content {
+  width: 97%;
+  margin: 0px auto;
+}
 
-  .el-upload__tip {
-    margin: 0;
-    line-height: 20px;
-  }
+.el-upload__tip {
+  margin: 0;
+  line-height: 20px;
+}
 
-  .btn-distance {
-    margin-bottom: 20px;
-  }
+.btn-distance {
+  margin-bottom: 20px;
+}
 
-  .header {
-    /* margin-top:10px;
+.header {
+  /* margin-top:10px;
        line-height:50px;
       margin-bottom: 10px; */
-    padding: 24px;
+  padding: 24px;
 
-    background-color: rgb(248, 249, 248);
-    height: 80px;
-  }
+  background-color: rgb(248, 249, 248);
+  height: 80px;
+}
 
-  /*.drag-avatar-upload{*/
-  /*height: 225px!important;*/
-  /*}*/
-  .footer {
-    height: 50px;
-    margin-top: 10px;
-    margin-right: 90px;
-    text-align: right;
-  }
+/*.drag-avatar-upload{*/
+/*height: 225px!important;*/
+/*}*/
+.footer {
+  height: 50px;
+  margin-top: 10px;
+  margin-right: 90px;
+  text-align: right;
+}
 
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
 
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
 
-  .avatar {
-    height: 88px;
-  }
+.avatar {
+  height: 88px;
+}
 </style>
