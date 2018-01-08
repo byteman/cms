@@ -75,11 +75,13 @@
             class="upload"
             :data="upload_form"
             :limit="1"
-            :action="upload_url"
-            accept=".zip"
+             :action="upload_url"
+             accept=".zip"
             :before-upload="handleBeforeUpload"
             :on-success='handleSuccess'
             :on-exceed="handleExceed"
+            :on-preview="handlePreview"
+            :auto-upload="true"
             :file-list="upload_file_list">
             <el-button size="large" type="primary" class="btn-distance database-num2">选择上传（仅支持zip文件）</el-button>
             <div slot="tip" class="el-upload__tip">{{ upload_message }}</div>
@@ -234,7 +236,8 @@ export default {
   },
   mounted() {
     this.loading = true;
-    this.upload_url = process.env.BASE_API + "/system/increaseLib";
+    // this.upload_url = process.env.BASE_API + "/system/increaseLib";
+    this.upload_url = 'http://' + location.hostname + ':8887'+ "/system/increaseLib";
     GetGroup(80001)
       .then(response => {
         const tmpList = response.data.data.group_ids;
@@ -249,9 +252,11 @@ export default {
     this.onRefresh();
   },
   methods: {
-    // beforeUpload(file) {
-    //   return false
-    // },
+    beforeUpload(file) {
+      return false
+    },
+    handlePreview(file){
+      console.log(file);},
     changeFile(file, fileList) {
       var This = this;
       var reader = new FileReader();
