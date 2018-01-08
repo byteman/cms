@@ -279,7 +279,8 @@ export default {
         }
 
         var wsc = new ReconnectingWebSocket(
-          "ws://" + process.env.SOCKET_API + "/" + cameraId,
+          "ws://" + location.hostname + ':9980' + "/" + cameraId,
+          //"ws://" + process.env.SOCKET_API + "/" + cameraId,
           null,
           { debug: false, reconnectInterval: 4000 }
         );
