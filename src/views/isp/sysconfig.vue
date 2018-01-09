@@ -47,7 +47,7 @@
          SetISP({'isp_type': 0}).then(response => {
            console.log(response);
            if (response.data.status == 0) {
-             switch (tab.name) {
+             switch (this.activeName) {
                case 'basic':
                this.$refs.basicch.ResetVal()
                break
