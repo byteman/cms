@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
-
-    <el-form :model="form" :rules="rules" ref="validform" label-width="200px">
+    <div class="cardheight">
+    <el-form :model="form" :rules="rules" ref="validform" label-width="140px"  class="formClass">
 
       <el-form-item label="AE曝光模式">
         <el-select v-model="form.AE_Shutter_Mode" placeholder="请选择曝光模式" style="width:100%">
@@ -65,7 +65,7 @@
     </el-form-item>
 
   </el-form>
-  
+  </div>
   </el-card>
 </template>
 
@@ -390,12 +390,18 @@ export default {
 }
 
 .button {
-  margin-left: 90px;
+  margin-left: 150px;
 }
 
 .box-card {
   width: 90%;
   margin: 30px auto;
   /* height: 700px; */
+}
+.cardheight {
+  height: auto;
+}
+.formClass{
+  margin-right: 10px
 }
 </style>

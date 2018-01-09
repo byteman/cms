@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
-
-    <el-form ref="form"  label-width="200px">
+    <div class="cardheight">
+    <el-form ref="form"  label-width="100px" class="form0">
 
       <el-form-item label="亮度设置">
         <el-slider @change="onBrightnessChange()" v-model="form.brightness" style="margin-left:10px"></el-slider>
@@ -28,7 +28,7 @@
     </el-form-item>
 
   </el-form>
-  
+  </div>
   </el-card>
 </template>
 
@@ -145,13 +145,20 @@ export default {
 }
 
 .button {
-  margin-left: 90px
+  margin-left: 190px
 }
 
 .box-card {
   width: 90%;
   margin: 30px auto;
   /* height: 700px; */
+}
+
+.cardheight {
+  height: auto;
+}
+.form0{
+  margin-right: 10px
 }
 
 </style>

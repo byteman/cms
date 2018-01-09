@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
-
-    <el-form ref="form"  label-width="200px">
+    <div class="test">
+    <el-form ref="form"  label-width="130px" class="form0">
 
       <el-form-item label="图像镜像和翻转">
         <el-select v-model="form.flipmirror" placeholder="请选择图像镜像翻转模式" style="width:100%;">
@@ -116,7 +116,7 @@
     </el-form-item>
 
   </el-form>
-  
+  </div>
   </el-card>
 </template>
 
@@ -403,13 +403,20 @@ export default {
 }
 
 .button {
-  margin-left: 90px;
+  margin-left: 160px;
 }
 
 .box-card {
   width: 90%;
   margin: 30px auto;
   /* height: 700px; */
+}
+.test {
+  height: 600px;
+  overflow-y:scroll;
+}
+.form0{
+  margin-right: 10px
 }
 
 </style>
