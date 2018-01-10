@@ -62,7 +62,7 @@ export const asyncRouterMap = [
     path: '/preview',
     component: Layout,
     redirect: '/preview/index',
-    icon: 'service',
+    icon: 'preview',
     noDropdown: true,
     // name: '实时预览',
     children: [
@@ -73,7 +73,7 @@ export const asyncRouterMap = [
     path: '/sysconfig',
     component: Layout,
     redirect: '/sysconfig/index',
-    icon: 'config',
+    icon: 'takeSet',
     name: '参数配置',
     children: [
       {path: 'index', component: VideoDebug, name: '抓拍诊断', meta: {role: ['admin']}},
@@ -87,7 +87,7 @@ export const asyncRouterMap = [
     path: '/snap',
     component: Layout,
     redirect: '/snap/record',
-    icon: 'camera',
+    icon: 'photoSet',
     name: '抓拍配置',
     children: [
       {path: 'record', component: SnapRecord, name: '抓拍记录', meta: {role: ['admin']}},
@@ -98,7 +98,7 @@ export const asyncRouterMap = [
     path: '/recognize',
     component: Layout,
     redirect: '/recognize/index',
-    icon: 'config',
+    icon: 'recognition',
     name: '识别配置',
     children: [
       {path: 'recog_recod', component: RecogRecod, name: '识别记录', meta: {role: ['admin']}},
