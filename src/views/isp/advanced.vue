@@ -1,7 +1,7 @@
 <template>
   <el-card class="box-card">
     <div class="test">
-    <el-form ref="form"  label-width="130px" class="form0">
+    <el-form ref="form"  label-width="130px" class="formClass">
 
       <el-form-item label="图像镜像和翻转">
         <el-select v-model="form.flipmirror" placeholder="请选择图像镜像翻转模式" style="width:100%;">
@@ -322,40 +322,40 @@ export default {
       console.log('advanced get isp')
       SetISP({'isp_type': 6}).then(response => { 
         console.log(response.data)
-        if (response.data.flipmirror) {
+        if (!Number.isNaN(response.data.flipmirror)) {
           this.form.flipmirror =response.data.flipmirror
         }
-        if (response.data.iris) {
+        if (!Number.isNaN(response.data.iris)) {
           this.form.iris=response.data.iris
         }
-        if (response.data.ircut) {
+        if (!Number.isNaN(response.data.ircut)) {
           this.form.ircut=response.data.ircut
         }
-        if (response.data.ircut_th) {
+        if (!Number.isNaN(response.data.ircut_th)) {
           this.form.ircut_th=response.data.ircut_th
         }
-        if (response.data.colorblack) {
+        if (!Number.isNaN(response.data.colorblack)) {
           this.form.colorblack=response.data.colorblack
         }
-        if (response.data.wdr_mode) {
+        if (!Number.isNaN(response.data.wdr_mode)) {
           this.form.wdr_mode=response.data.wdr_mode
         }
-        if (response.data.wdr_level) {
+        if (!Number.isNaN(response.data.wdr_level)) {
           this.form.wdr_level=response.data.wdr_level
         }
-        if (response.data.color_type) {
+        if (!Number.isNaN(response.data.color_type)) {
           this.form.color_type=response.data.color_type
         }
-        if (response.data.denoise_2d) {
+        if (!Number.isNaN(response.data.denoise_2d)) {
           this.form.denoise_2d=response.data.denoise_2d
         }
-        if (response.data.denoise_3d) {
+        if (!Number.isNaN(response.data.denoise_3d)) {
           this.form.denoise_3d=response.data.denoise_3d
         }
-        if (response.data.eis) {
+        if (!Number.isNaN(response.data.eis)) {
           this.form.eis=response.data.eis
         }
-        if (response.data.defog) {
+        if (!Number.isNaN(response.data.defog)) {
           this.form.defog=response.data.defog
         }
       })
@@ -415,7 +415,7 @@ export default {
   height: 600px;
   overflow-y:scroll;
 }
-.form0{
+.formClass{
   margin-right: 10px
 }
 

@@ -9,10 +9,9 @@
     <el-tab-pane label="高级设置" name="status" >
       <status ref="statusch"></status>
     </el-tab-pane>
-
-    <div class="buttom">
-      <el-button  type="warning" @click='onReset'>重置</el-button>
-    </div>
+    <el-tab-pane label="重置参数" name="resetparam" >
+      <ResetParam ref="resetparamch"></ResetParam>
+    </el-tab-pane>
 
   </el-tabs>
 
@@ -25,11 +24,13 @@
   import Basic from './index'
   import Paramx from './standard'
   import Status from './advanced'
+  import ResetParam from './reset'
   export default {
     components: {
       basic: Basic,
       Paramx,
-      Status
+      Status,
+      ResetParam,
     },
     data() {
       return {
@@ -42,31 +43,6 @@
     mounted() {
     },
     methods: {       
-      onReset() {
-         console.log('onReset')
-         SetISP({'isp_type': 0}).then(response => {
-           console.log(response);
-           if (response.data.status == 0) {
-             switch (this.activeName) {
-               case 'basic':
-               this.$refs.basicch.ResetVal()
-               break
-               case 'param':
-               this.$refs.paramch.ResetVal()
-               break
-               case 'status':
-               this.$refs.statusch.ResetVal()
-               break
-               default:
-               break
-              }
-              this.$message('重置成功')
-            } else {
-              alert("重置失败，错误信息：" + response.data.status);
-            }       
-           })       
- //     this.$emit('success', false)
-    },
       handleClick(tab, event) {
         console.log(tab.name)
         switch (tab.name) {
@@ -78,6 +54,8 @@
             break
           case 'status':
             this.$refs.statusch.getISP()
+            break
+          case 'resetparam':
             break
           default:
             break

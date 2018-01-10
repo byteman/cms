@@ -321,28 +321,28 @@ export default {
       console.log('AE get isp')
       SetISP({'isp_type': 4}).then(response => { 
         console.log(response.data)
-        if (response.data.AE_Shutter_Mode){
+        if (!Number.isNaN(response.data.AE_Shutter_Mode)) {
           this.form.AE_Shutter_Mode =response.data.AE_Shutter_Mode
         }
-        if (response.data.AE_MaxET_Mode) {
+        if (!Number.isNaN(response.data.AE_MaxET_Mode)) {
           this.form.AE_MaxET_Mode=response.data.AE_MaxET_Mode
         }
-        if (response.data.Exposuretime) {
+        if (!Number.isNaN(response.data.Exposuretime)) {
           this.form.Exposuretime=response.data.Exposuretime
         }
-        if (response.data.MaxET) {
+        if (!Number.isNaN(response.data.MaxET)) {
           this.form.MaxET=response.data.MaxET
         }
-        if (response.data.DGain) {
+        if (!Number.isNaN(response.data.DGain)) {
           this.form.DGain=response.data.DGain
         }
-        if (response.data.MaxDGain) {
+        if (!Number.isNaN(response.data.MaxDGain)) {
           this.form.MaxDGain=response.data.MaxDGain
         }
-        if (response.data.DGainDeci) {
+        if (!Number.isNaN(response.data.DGainDeci)) {
           this.form.DGainDeci=response.data.DGainDeci
         }
-        if (response.data.AWB_Mode) {
+        if (!Number.isNaN(response.data.AWB_Mode)) {
           this.form.AWB_Mode=response.data.AWB_Mode
         } 
       })

@@ -85,19 +85,19 @@ export default {
       console.log('standard get isp')
       SetISP({'isp_type': 5}).then(response => {      
         console.log(response.data)
-        if (response.data.brightness) {
+        if (!Number.isNaN(response.data.brightness)) {
            this.form.brightness = response.data.brightness
         }
-        if (response.data.contrast) {
+        if (!Number.isNaN(response.data.contrast)) {
           this.form.contrast = response.data.contrast
         }
-        if (response.data.saturation) {
+        if (!Number.isNaN(response.data.saturation)) {
           this.form.saturation = response.data.saturation
         }
-        if (response.data.hue) {
+        if (!Number.isNaN(response.data.hue)) {
           this.form.hue = response.data.hue
         }
-        if (response.data.sharpness) {
+        if (!Number.isNaN(response.data.sharpness)) {
           this.form.sharpness = response.data.sharpness
         }  
       })
