@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aside_bar">
     <template v-for="item in routes">
       <router-link v-if="!item.hidden&&item.noDropdown&&item.children.length>0" :to="item.path+'/'+item.children[0].path">
         <el-menu-item :index="item.path+'/'+item.children[0].path">
@@ -35,6 +35,9 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" >
+  .aside_bar{
+    width: 190px;
+  }
 .svg-icon {
   margin-right: 10px;
 }
@@ -46,8 +49,7 @@ export default {
   background: #edf1f9;
   color: #6699cc;
   font-size: 14px;
-  padding-left: 59px !important;
-  padding: 0;
+  padding: 0 0 0 60px!important;
 }
 .el-submenu .el-menu-item.is-active {
   background: #abbde1;
