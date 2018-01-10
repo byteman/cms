@@ -41,7 +41,7 @@
               <p>vs</p>
               <div class="catchPhoto">
                 <span class="small_infor">{{value.libName}}</span>
-                <img class="identifyPhoto" v-bind:src="value.img2"/>
+                <img v-bind:src="value.img2"/>
               </div>
             </div>
             <div class="recog-text">
