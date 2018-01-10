@@ -34,9 +34,15 @@
         <li v-for="value in recogObjs">
           <div class="recog-info">
             <div class="recog-image">
-              <img v-bind:src="value.img1"/>
+              <div class="catchPhoto">
+                <span class="small_infor">{{value.time}}</span>
+                <img v-bind:src="value.img1"/>
+              </div>
               <p>vs</p>
-              <img v-bind:src="value.img2"/>
+              <div class="catchPhoto">
+                <span class="small_infor">{{value.libName}}</span>
+                <img class="identifyPhoto" v-bind:src="value.img2"/>
+              </div>
             </div>
             <div class="recog-text">
               <p class="recog-score">{{value.score}}</p>
@@ -279,8 +285,8 @@ export default {
         }
 
         var wsc = new ReconnectingWebSocket(
-          "ws://" + location.hostname + ':9980' + "/" + cameraId,
-          //"ws://" + process.env.SOCKET_API + "/" + cameraId,
+          // "ws://" + location.hostname + ':9980' + "/" + cameraId,
+          "ws://" + process.env.SOCKET_API + "/" + cameraId,
           null,
           { debug: false, reconnectInterval: 4000 }
         );
@@ -291,35 +297,41 @@ export default {
         };
         wsc.onmessage = function(evt) {
           var msg = eval("(" + evt.data + ")");
+          // console.log(msg);
           if (msg.top_scores != undefined) {
+            console.log('走这里');
+            console.log(msg.libName);
             var live_id = msg.live_id;
             var channel_id = msg.channel_id;
+            var lib_name= msg.libName;
             var live_face = "data:image/jpg;base64," + msg.live_face;
-            var registered_face =
-              "data:image/jpg;base64," + msg.registered_face_0;
+            var registered_face = "data:image/jpg;base64," + msg.registered_face_0;
             var top_scores = parseInt(msg.top_scores * 100) + "%";
             for (var t in recogObjs) {
               if (recogObjs[t].liveId == live_id) {
                 recogObjs[t].time = "通道：" + channel_id;
                 recogObjs[t].img1 = live_face;
-                recogObjs[t].img2 = registered_face;
-                recogObjs[t].score = top_scores;
+                recogObjs[t].img2 = registered_face;   // 注册照
+                recogObjs[t].score = top_scores;     // 评分
+                recogObjs[t].libName = lib_name;    // 底库名称
                 return;
               }
             }
             var recogObj = new Object();
             recogObj.liveId = live_id;
-            recogObj.time = "通道：" + channel_id;
-            recogObj.img1 = live_face;
-            recogObj.img2 = registered_face;
-            recogObj.score = top_scores;
+            recogObj.time = "通道：" + channel_id;    // 通道信息
+            recogObj.img1 = live_face;    // 抓拍照
+            recogObj.img2 = registered_face;   // 注册照
+            recogObj.libName = lib_name;   // 底库名称
+            recogObj.score = top_scores;   // 评分
             if (recogObjs.length == 3) {
               recogObjs.shift();
             }
             recogObjs.push(recogObj);
           } else {
+            console.log('我炸这');
             var track_id = msg.track_id;
-            var channel_id = msg.channel_id;
+            var channel_id = msg.channel_id;    // 通道id
             var img = "data:image/jpg;base64," + msg.live_face;
             for (var t in captureObjs) {
               if (captureObjs[t].trackId == track_id) {
@@ -368,9 +380,7 @@ export default {
   overflow-x:auto;
   overflow-y:hidden;
 }
-</style>
 
-<style >
 .preview-content {
   width: 1480px;
   height: 730px;
@@ -427,15 +437,32 @@ export default {
   float: left;
   background: #ebebeb;
 }
-.recog-image > img {
-  display: block;
+.small_infor{
+  position: absolute;
+  width: 90px;
+  height: 24px;
+  background: rgba(0,0,0,0.4);
+  bottom: 0;
+  left:0;
+  font-size: 14px;
+  color: #eee;
+  text-align: center;
+  line-height: 24px;
+}
+
+.catchPhoto{
+  position: relative;
   width: 90px;
   height: 130px;
   margin: 5px;
   border: 0;
   float: left;
 }
-.recog-image > p {
+.catchPhoto img {
+  width: 90px;
+  height: 130px;
+}
+.recog-image p {
   display: block;
   width: 17px;
   float: left;
