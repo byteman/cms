@@ -74,7 +74,7 @@ export default {
             .dispatch("Login", this.loginForm)
             .then(() => {
               this.loading = false;
-              setToken(1);
+              // setToken(1);
               this.$router.push({ path: "/" });
             })
             .catch(() => {

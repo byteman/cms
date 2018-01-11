@@ -2,12 +2,12 @@ import fetch from '@/utils/fetch'
 
 export function login(username, password) {
   return fetch({
-    url: '/smart/business',
+    url: 'user/signin',
     method: 'post',
     data: {
       "requestdata" : {
         "bcode":"0x10001",
-        "token":"1",
+        // "token":"1",
         "account":username,
         "password":password
       }
