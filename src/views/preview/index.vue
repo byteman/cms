@@ -35,12 +35,12 @@
           <div class="recog-info">
             <div class="recog-image">
               <div class="catchPhoto">
-                <span class="small_infor">{{value.time}}</span>
+                <span class="small_infor" v-if="value.time">{{value.time}}</span>
                 <img v-bind:src="value.img1"/>
               </div>
               <p>vs</p>
               <div class="catchPhoto">
-                <span class="small_infor">{{value.libName}}</span>
+                <span class="small_infor"  v-if="value.libName">{{value.libName}}</span>
                 <img v-bind:src="value.img2"/>
               </div>
             </div>
