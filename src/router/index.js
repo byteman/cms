@@ -31,13 +31,7 @@ const Engine_Settings = _import('recog/envsettings');
 const Engine_System_Settings = _import('recog/envsystemsettings');
 Vue.use(Router)
 
-/**
- * icon : the icon show in the sidebar
- * hidden : if `hidden:true` will not show in the sidebar
- * redirect : if `redirect:noredirect` will not redirct in the levelbar
- * noDropdown : if `noDropdown:true` will not has submenu in the sidebar
- * meta : `{ role: ['admin'] }`  will control the page role
- **/
+
 export const constantRouterMap = [
   {path: '/login', component: Login, hidden: true},
   {path: '/404', component: Err404, hidden: true},

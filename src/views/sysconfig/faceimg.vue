@@ -23,9 +23,7 @@
     </div>
 
     <div class="content">
-
       <el-table :data="list" v-loading="loading" element-loading-text="努力加载中。。。,请稍等！">
-
         <el-table-column prop="name" label="姓名"></el-table-column>
         <el-table-column prop="aligndata" label="头像" align='center'>
           <template slot-scope="scope">
@@ -35,13 +33,11 @@
         <el-table-column prop="gender" label="性别"></el-table-column>
         <el-table-column prop="birthday" label="生日"></el-table-column>
         <el-table-column prop="staticDBId" label="所在底库"></el-table-column>
-
         <el-table-column label="操作" width="300" align='center'>
           <template slot-scope="scope">
             <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
-
       </el-table>
 
       <div class="footer">
@@ -175,7 +171,6 @@ export default {
         callback();
       }
     };
-
     var dk_validator = (rule, value, callback) => {
       // console.log(value);
       if (value === "") {
@@ -197,7 +192,7 @@ export default {
       currentPage: 1,
       selectdb: "",
       dboptions: [],
-      list: [],
+      list: [],    // 列表数据
       upload_show: false,
       upload_file_list: [],
       upload_form: {},
@@ -232,7 +227,7 @@ export default {
     };
   },
   created() {
-    console.log("face image page created");
+
   },
   mounted() {
     this.loading = true;
@@ -249,7 +244,7 @@ export default {
         console.log(this.dboptions);
       })
       .catch(() => {});
-    this.onRefresh();
+    this.onRefresh();   // 获取查询数据列表
   },
   methods: {
     beforeUpload(file) {
@@ -276,31 +271,33 @@ export default {
       }
 
       this.loading = true;
+      // 查询列表
       QueryFaceList(
         this.currentPage.toString(),
         "10",
         starttime,
         endtime,
         staticDBId,
-        userId
-      )
+        userId)
         .then(response => {
           this.list = [];
           this.total = 0;
           const tmpList = response.data.data.list;
+          console.log(tmpList);
           tmpList.forEach(function(item) {
             item.aligndata = Base64ToImage(item.img);
+            if(!item.gender){item.gender='未知'};
+            if(!item.birthday){item.birthday='未知'};
           });
           this.list = tmpList;
+          // console.log(this.list);
           this.total = parseInt(response.data.data.total);
           this.loading = false;
-          // console.log(this.list)
         })
         .catch(() => {
           this.list = [];
           this.total = 0;
           this.loading = false;
-          // console.log('error')
         });
     },
     handleSelectDbChange() {
