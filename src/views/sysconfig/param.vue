@@ -8,7 +8,7 @@
       </el-form>
     </div>
     <div class="footer">
-      <el-button type="primary" round @click="onSubmit">提交</el-button>
+      <el-button type="primary" plain round @click="onSubmit">提交</el-button>
     </div>
   </div>
 </template>

@@ -300,10 +300,11 @@ export default {
           // console.log(msg);
           if (msg.top_scores != undefined) {
             console.log('走这里');
-            console.log(msg.libName);
+            // console.log(msg);
             var live_id = msg.live_id;
             var channel_id = msg.channel_id;
             var lib_name= msg.libName;
+            // console.log(lib_name);
             var live_face = "data:image/jpg;base64," + msg.live_face;
             var registered_face = "data:image/jpg;base64," + msg.registered_face_0;
             var top_scores = parseInt(msg.top_scores * 100) + "%";

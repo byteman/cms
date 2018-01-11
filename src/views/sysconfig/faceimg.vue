@@ -288,14 +288,8 @@
             console.log(tmpList);
             tmpList.forEach(function (item) {
               item.aligndata = Base64ToImage(item.img);
-              if (!item.gender) {
-                item.gender = '未知'
-              }
-              ;
-              if (!item.birthday) {
-                item.birthday = '未知'
-              }
-              ;
+              if (!item.gender) {item.gender = '未知'};
+              if (!item.birthday) {item.birthday = '未知'};
             });
             this.list = tmpList;
             // console.log(this.list);

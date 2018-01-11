@@ -31,7 +31,6 @@ const Engine_Settings = _import('recog/envsettings');
 const Engine_System_Settings = _import('recog/envsystemsettings');
 Vue.use(Router)
 
-
 export const constantRouterMap = [
   {path: '/login', component: Login, hidden: true},
   {path: '/404', component: Err404, hidden: true},
