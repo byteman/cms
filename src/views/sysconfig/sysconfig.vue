@@ -57,7 +57,7 @@
 
 <style scoped>
   .el-tabs {
-    width: 50%;
+    width: 60%;
     margin: 0 auto;
   }
 </style>

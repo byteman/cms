@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <div class="footer">
-      <el-form ref="form" :model="para" label-width="140px">
+    <div class="main-content">
+      <el-form ref="form" :model="para" label-width="100px"  style="padding:30px 0 0;">
         <el-form-item label="设备唯一编号">
           <el-input v-model="para.code"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div class="footer">
-      <el-button type="primary" round @click="onSubmit">更新</el-button>
+      <el-button type="primary" round @click="onSubmit">提交</el-button>
     </div>
   </div>
 </template>
@@ -83,8 +83,8 @@
 
   .footer {
     height: 50px;
-    margin-top: 10px;
-    margin-right: 90px;
-    text-align: right;
+    margin-top: 40px;
+    /*margin-right: 90px;*/
+    text-align: center;
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="basic" label-width="80px">
+  <el-form ref="form" :model="basic" label-width="70px"  style="padding:30px 0 0;">
     <el-form-item label="设备名称">
       <el-input v-model="basic.name" readonly="readonly"></el-input>
     </el-form-item>
