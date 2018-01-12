@@ -32,7 +32,7 @@
     mounted() {
       CommQuery(0x10303)
         .then(response => {
-          this.para = response.data.data
+          this.para = response.data.data;
           console.log(this.para)
         })
         .catch(() => {

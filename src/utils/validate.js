@@ -3,12 +3,13 @@
  */
 import crypto from "crypto";
 
+// 判断合法用户名
 export function isvalidUsername(str) {
-  const valid_map = 'admin'
+  const valid_map = 'admin';
   return str.trim().indexOf(valid_map) >= 0
 }
 
-/* 合法uri*/
+/* 合法url*/
 export function validateURL(textval) {
   const urlregex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/
   return urlregex.test(textval)

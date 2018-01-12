@@ -9,6 +9,9 @@
     <el-tab-pane label="状态查询" name="status" >
       <status ref="statusch"></status>
     </el-tab-pane>
+    <el-tab-pane label="阈值设置" name="threshold" >
+      <facethresholds ref="facethreshold"></facethresholds>
+    </el-tab-pane>
   </el-tabs>
 </template>
 
@@ -16,11 +19,13 @@
   import Basic from './basic'
   import Paramx from './param'
   import Status from './status'
+  import Facethresholds from './facethreshold'
   export default {
     components: {
       basic: Basic,
       Paramx,
-      Status
+      Status,
+      Facethresholds
     },
     data() {
       return {
@@ -33,22 +38,24 @@
     mounted() {
     },
     methods: {
-      handleClick(tab, event) {
-        console.log(tab.name)
-        console.log(event.type)
+      handleClick(tab) {
         switch (tab.name) {
           case 'basic':
             console.log(this.$refs.basicch)
             this.$refs.basicch.reload()
-            break
+            break;
           case 'param':
             console.log(this.$refs.paramch)
             this.$refs.paramch.reload()
-            break
+            break;
           case 'status':
             this.$refs.statusch.reload()
-            break
+            break;
+          case 'threshold':
+            this.$refs.facethreshold.reload()
+            break;
           default:
+            this.$refs.basicch.reload()
         }
       }
     }

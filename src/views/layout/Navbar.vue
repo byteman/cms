@@ -16,7 +16,7 @@
         <div class="pull-right logininfo">
           <img src="../../assets/common_search/tx.png" class="pull-left">
           <div class="pull-left">
-            <p>欢迎您，超级管理员</p>
+            <p>欢迎您{{account}}</p>
             <p>{{time}}</p>
           </div>
         </div>
@@ -33,7 +33,8 @@
   export default {
     data() {
       return {
-        time: ""
+        time: "",
+        account:''
       };
     },
     mounted() {
@@ -56,7 +57,7 @@
       },
       logout() {
         this.$store.dispatch("LogOut").then(() => {
-          location.reload(); // 为了重新实例化vue-router对象 避免bug
+          location.reload();   // 为了重新实例化vue-router对象 避免bug
         });
       }
     }

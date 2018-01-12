@@ -1,7 +1,5 @@
 import axios from 'axios'
-import {
-  Message
-} from 'element-ui'
+import {Message} from 'element-ui'
 import store from '../store'
 import { getToken, removeToken } from '@/utils/auth'
 
@@ -19,31 +17,21 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-  // Do something with request error
-  console.log(error) // for debug
   Promise.reject(error)
-})
+});
 
 // respone拦截器
 service.interceptors.response.use(
   response => response,
   error => {
-    console.log('err' + error) // for debug
     if (error.response.status === 401) {
       // 401 说明 token 验证失败
       // 可以直接跳转到登录页面，重新登录获取 token
-      removeToken()
+      removeToken();
       location.href = '/login'
-    } else {
-      // do something
-      // Message({
-      //   message: error.message,
-      //   type: 'error',
-      //   duration: 1 * 1000
-      // })
     }
     return Promise.reject(error)
   }
-)
+);
 
 export default service

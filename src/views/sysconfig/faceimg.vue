@@ -91,7 +91,7 @@
       </span>
     </el-dialog>
 
-    <!--底裤新增人脸-->
+    <!--底裤新增单张人脸-->
     <el-dialog :title="face_title" :visible.sync="face_show" width="50%" center>
       <el-form ref="devform" :model="devform" label-width="100px" :rules="rules">
         <el-col :span="11">
@@ -110,7 +110,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="底库" prop="selectdb">
-            <el-select v-model="devform.selectdb" placeholder="请选择底库" @change="handleSelectDbChange" :maxlength="10"
+            <el-select v-model="selectedDb" multiple filterable  placeholder="请选择底库" @change="handleSelectDbChange" :maxlength="10"
                        class="database-num1">
               <el-option
                 v-for="item in dboptions"
@@ -173,7 +173,7 @@
       };
       var dk_validator = (rule, value, callback) => {
         // console.log(value);
-        if (value === "") {
+        if (value.length===0) {
           callback(new Error("底库不能为空"));
         } else {
           callback();
@@ -203,6 +203,7 @@
         face: {},
         face_avatar_url: "",
         face_dlg_btn_name: "",
+        selectedDb: [],
         // 表单验证
         devform: {
           name: "", // 姓名
@@ -217,7 +218,7 @@
             {min: 2, max: 5, message: "长度在 2 到 5 个字符", trigger: "blur"}
           ],
           gender: [{required: true, validator: sex_validator, trigger: "blur"}],
-          selectdb: [
+          dboptions: [
             {required: true, validator: dk_validator, trigger: "blur"}
           ],
           face_avatar_url: [
@@ -231,8 +232,8 @@
     },
     mounted() {
       this.loading = true;
-      // this.upload_url = process.env.BASE_API + "/system/increaseLib";
-      this.upload_url = 'http://' + location.hostname + ':8887' + "/system/increaseLib";
+      this.upload_url = process.env.BASE_API + "/system/increaseLib";
+      // this.upload_url = 'http://' + location.hostname + ':8887' + "/system/increaseLib";
       GetGroup(80001)
         .then(response => {
           const tmpList = response.data.data.group_ids;
