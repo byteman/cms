@@ -10,25 +10,30 @@ router.beforeEach((to, from, next) => {
   if (store.getters.token) {
     if (to.path === '/login') {
       next({path: '/'})
+      NProgress.done() // router在hash模式下 手动改变hash 重定向回来 不会触发afterEach 暂时hack方案 ps：history模式下无问题，可删除该行！
     } else {
-      if (store.getters.roles.length ===0) {
-        debugger;
+      if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
+        // debugger;
         store.dispatch('GetUserInfo').then(res => { // 拉取info
-          console.log(res);
-          debugger;
           const roles = res.data.userType;
           console.log(roles);
           store.dispatch('GenerateRoutes', {roles}).then(() => { // 生成可访问的路由表
+            // debugger;
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-            next({...to}) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+            next({...to, replace: true}) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
-        }).catch(err => {
-          console.log(err);
-        });
-      } else {
+        }).catch(() => {
+          store.dispatch('FedLogOut').then(() => {
+            this.$message('验证失败,请重新登录')
+            next({path: '/login'})
+          })
+        })
+      }
+      else {
         next()
       }
     }
+
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
       next()

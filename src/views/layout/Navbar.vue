@@ -16,7 +16,7 @@
         <div class="pull-right logininfo">
           <img src="../../assets/common_search/tx.png" class="pull-left">
           <div class="pull-left">
-            <p>欢迎您{{account}}</p>
+            <p>{{account}}</p>
             <p>{{time}}</p>
           </div>
         </div>
@@ -29,12 +29,11 @@
   import {mapGetters} from "vuex";
   import {getTime} from "@/utils/index";
   import Hamburger from "@/components/Hamburger";
-
+  import store from "../../store";
   export default {
     data() {
       return {
-        time: "",
-        account:''
+        time: ""
       };
     },
     mounted() {
@@ -49,7 +48,10 @@
       Hamburger
     },
     computed: {
-      ...mapGetters(["sidebar", "avatar"])
+      ...mapGetters(["sidebar", "avatar"]),
+      account(){
+        return "欢迎您"+'管理员';
+      }
     },
     methods: {
       toggleSideBar() {

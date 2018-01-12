@@ -63,7 +63,7 @@ export const asyncRouterMap = [
     noDropdown: true,
     // name: '实时预览',
     children: [
-      {path: 'index', component: Preview, name: '实时预览', meta: {role: ['normal','superuser']}}
+      {path: 'index', component: Preview, name: '实时预览', meta: {roles: ['normal','superuser']}}
     ]
   },
   {
@@ -73,11 +73,11 @@ export const asyncRouterMap = [
     icon: 'takeSet',
     name: '参数配置',
     children: [
-      {path: 'index', component: VideoDebug, name: '抓拍诊断', meta: {role: ['normal','superuser']}},
-      {path: 'facedb', component: FaceDB, name: '底库管理', meta: {role: ['normal','superuser']}},
-      {path: 'faceimg', component: FaceImg, name: '底库照片管理', meta: {role: ['normal','superuser']}},
-      {path: 'camera', component: Camera, name: '摄像头管理', meta: {role: ['normal','superuser']}},
-      {path: 'system', component: SysConfig, name: '系统管理', meta: {role: ['normal','superuser']}}
+      {path: 'index', component: VideoDebug, name: '抓拍诊断', meta: {roles: ['normal','superuser']}},
+      {path: 'facedb', component: FaceDB, name: '底库管理', meta: {roles: ['normal','superuser']}},
+      {path: 'faceimg', component: FaceImg, name: '底库照片管理', meta: {roles: ['normal','superuser']}},
+      {path: 'camera', component: Camera, name: '摄像头管理', meta: {roles: ['normal','superuser']}},
+      {path: 'system', component: SysConfig, name: '系统管理', meta: {roles: ['normal','superuser']}}
     ]
   },
   {
@@ -87,8 +87,8 @@ export const asyncRouterMap = [
     icon: 'photoSet',
     name: '抓拍配置',
     children: [
-      {path: 'record', component: SnapRecord, name: '抓拍记录', meta: {role: ['normal','superuser']}},
-      // {path: 'config', component: SnapConfig, name: '抓拍设置', meta: {role: ['superuser']}}
+      {path: 'record', component: SnapRecord, name: '抓拍记录', meta: {roles: ['normal','superuser']}},
+      {path: 'config', component: SnapConfig, name: '抓拍设置', meta: {roles: ['superuser']}}
     ]
   },
   {
@@ -98,10 +98,10 @@ export const asyncRouterMap = [
     icon: 'recognition',
     name: '识别配置',
     children: [
-      {path: 'recog_recod', component: RecogRecod, name: '识别记录', meta: {role: ['normal','superuser']}},
-      // {path: 'clustering', component: Clustering, name: '频次分析', meta: {role: ['superuser']}},
-      // {path: 'engine_settings', component: Engine_Settings, name: '引擎设置', meta: {role: ['superuser']}},
-      // {path: 'engine_system_settings', component: Engine_System_Settings, name: '引擎系统操作', meta: {role: ['superuser']}}
+      {path: 'recog_recod', component: RecogRecod, name: '识别记录', meta: {roles: ['normal','superuser']}},
+      {path: 'clustering', component: Clustering, name: '频次分析', meta: {roles: ['superuser']}},
+      {path: 'engine_settings', component: Engine_Settings, name: '引擎设置', meta: {roles: ['superuser']}},
+      {path: 'engine_system_settings', component: Engine_System_Settings, name: '引擎系统操作', meta: {roles: ['superuser']}}
     ]
   },
   {path: '*', redirect: '/404', hidden: true}
