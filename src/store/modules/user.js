@@ -5,7 +5,7 @@ const user = {
   state: {
     token: getToken(),
     name: '',
-    avatar: '',
+    // avatar: '',
     roles: []
   },
 
@@ -16,9 +16,9 @@ const user = {
     SET_NAME: (state, name) => {
       state.name = name
     },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
-    },
+    // SET_AVATAR: (state, avatar) => {
+    //   state.avatar = avatar
+    // },
     SET_ROLES: (state, roles) => {
       state.roles = roles
     }
@@ -43,20 +43,25 @@ const user = {
           }
           resolve()
         }).catch(error => {
-          console.log("捕获到", error)
+          // console.log("捕获到", error)
           reject(error)
         })
       })
     },
 
     // 获取用户信息
-    GetInfo({commit, state}) {
+    GetUserInfo({commit, state}) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
+          debugger;
+          if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
+            reject('error')
+          }
+          const resData = response.data
+          console.log(resData);
+          commit('SET_ROLES', resData.userType)
+          commit('SET_NAME', resData.name)
+          // commit('SET_AVATAR', resData.avatar)
           resolve(response)
         }).catch(error => {
           reject(error)

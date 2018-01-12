@@ -34,7 +34,7 @@ function filterAsyncRouter(asyncRouterMap, roles) {
 const permission = {
   state: {
     routers: constantRouterMap,
-    addRouters: [] 
+    addRouters: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
@@ -44,23 +44,30 @@ const permission = {
   },
   actions: {
     GenerateRoutes({ commit }, data) {
-      console.log('data=', data)
       return new Promise(resolve => {
-        //var roles = data.stringify()
-        let accessedRouters 
-        //console.log(typeof roles)      
-        // if (roles.indexOf('admin') >= 0) {
-        //   accessedRouters = asyncRouterMap
-        // } else {
-        //   accessedRouters = filterAsyncRouter(asyncRouterMap, roles)
-        // }
-        // console.log("get routes")
-        accessedRouters = asyncRouterMap
-        commit('SET_ROUTERS', accessedRouters)
-        resolve()
+        const { roles } = data;
+        const accessedRouters = asyncRouterMap.filter(v => {
+          if (roles.indexOf('superuser') >= 0) return true;
+          if (hasPermission(roles, v)) {
+            if (v.children && v.children.length > 0) {
+              v.children = v.children.filter(child => {
+                if (hasPermission(roles, child)) {
+                  return child
+                }
+                return false;
+              });
+              return v
+            } else {
+              return v
+            }
+          }
+          return false;
+        });
+        commit('SET_ROUTERS', accessedRouters);
+        resolve();
       })
     }
   }
-}
+};
 
 export default permission

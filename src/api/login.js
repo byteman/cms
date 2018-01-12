@@ -16,11 +16,11 @@ export function login(username, password) {
 }
 
 // 获取角色信息
-export function getInfo(token) {
+export function getInfo(token){
   return fetch({
-    url: '/api/v1/user/info',
-    method: 'get',
-    data: token
+    url: '/v1/platform/getTokenAutority',
+    method: 'post',
+    data: {'token': token }
   })
 }
 
@@ -28,7 +28,6 @@ export function getInfo(token) {
 export function logout() {
   return fetch({
     url: '/api/v1/user/logout',
-    method: 'post',
-    // data: {}
+    method: 'post'
   })
 }

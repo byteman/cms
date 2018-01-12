@@ -80,7 +80,7 @@
               .dispatch("Login", this.loginForm)
               .then(() => {
                 this.loading = false;
-                this.$router.push({path: "/"});
+                this.$router.push({path: "/preview/index"});
               })
               .catch(() => {
                 this.$message('用户名或密码错误！请重新输入！')
@@ -89,7 +89,7 @@
                 this.loginForm.password = '';
               });
           } else {
-            this.$message('密码或用户名错误！请重新输入！')
+            this.$message('请输入正确的用户名和密码！')
             return false;
           }
         });

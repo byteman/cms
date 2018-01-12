@@ -2,42 +2,37 @@ import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条样式
-import { getToken } from '@/utils/auth' // 验权
+// import {getToken} from '@/utils/auth' // 验权
 
 const whiteList = ['/login']
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (getToken()) { 
+  if (store.getters.token) {
     if (to.path === '/login') {
-      next({ path: '/' })
+      next({path: '/'})
     } else {
-      if (store.getters.roles.length === 0) {
-
-        var role = {
-          role: 'admin',
-          name: 'admin',
-          avatar: '/logo.gif'
-        }
-        const roles = role
-        store.dispatch('GenerateRoutes', { roles }).then(() => {
-          console.log('genrouteer')
-          router.addRoutes(store.getters.addRouters)
-          store.commit('SET_ROLES', role)
-          next({ ...to })
-        })
+      if (store.getters.roles.length ===0) {
+        debugger;
+        store.dispatch('GetUserInfo').then(res => { // 拉取info
+          console.log(res);
+          debugger;
+          const roles = res.data.userType;
+          console.log(roles);
+          store.dispatch('GenerateRoutes', {roles}).then(() => { // 生成可访问的路由表
+            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+            next({...to}) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+          })
+        }).catch(err => {
+          console.log(err);
+        });
       } else {
-        
         next()
       }
-      return
     }
   } else {
-    console.log("no token to->",to.path)
     if (whiteList.indexOf(to.path) !== -1) {
-      console.log(to.path, "in whiteList allow !!")
       next()
     } else {
-      console.log("not allow",to.path,"goto /login")
       next('/login')
       NProgress.done()
     }
