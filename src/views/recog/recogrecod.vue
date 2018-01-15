@@ -374,10 +374,10 @@
       getResult() {
         this.param.loading = true;
         if (this.param.datetime[0]) {
-          let start = this.param.datetime[0].getTime();
+          var start = this.param.datetime[0].getTime();
         }
         if (this.param.datetime[1]) {
-          let end = this.param.datetime[1].getTime();
+          var end = this.param.datetime[1].getTime();
         }
 
         Page(
@@ -389,8 +389,8 @@
           start, end).then(resp => {
           let result = resp.data.data.results;
           let resultObj = eval("(" + result + ")");
-          console.log(resultObj);
-          console.log(resultObj.liveArray);
+          // console.log(resultObj);
+          // console.log(resultObj.liveArray);
 
           this.param.total = resultObj.total;
           this.param.list = [];

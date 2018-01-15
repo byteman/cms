@@ -143,7 +143,7 @@ export default {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-              <span class="cameraStatusClose" style="width: 22px; height: 18px; float: left; background-size: 100%; background-repeat: no-repeat;background-image: url('assets/common_search/cameraClose.png');" ></span>
+              <div class="cameraStatusClose" style = "width:22px;height: 18px;margin-top:3px; float: left;background: url('/src/assets/common_search/cameraClose.png') no-repeat;background-size: 100%;" />
               <span>&nbsp;{node.label}</span>
             </span>
           </span>
@@ -152,7 +152,7 @@ export default {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-              <span class="cameraStatusOpen" style="width: 22px; height: 18px; float: left; background-size: 100%; background-repeat: no-repeat;background-image: url('assets/common_search/cameraOpen.png');" ></span>
+              <div class="cameraStatusOpen" style="width:22px;height: 18px; margin-top:3px; float: left;background: url('/src/assets/common_search/cameraOpen.png') no-repeat;background-size: 100%;"/>
               <span>&nbsp;{node.label}</span>
             </span>
           </span>
@@ -256,7 +256,7 @@ export default {
           function fnSuc() {},
           function fnClosed() {},
           function fnNoSurrpot() {
-            alert("This browser does not support WebSockets.");
+            this.$message.warning("浏览器不支持webSocket！");
           }
         );
       } else if ("playevent" === j.method && 8 === j.param.type) {
@@ -285,6 +285,7 @@ export default {
         }
 
         let wsc = new ReconnectingWebSocket(
+          // 打包之前修改修改
           // "ws://" + location.hostname + ':9980' + "/" + cameraId,
           "ws://" + process.env.SOCKET_API + "/" + cameraId,
           null,
@@ -298,7 +299,7 @@ export default {
         wsc.onmessage = function(evt) {
           let msg = eval("(" + evt.data + ")");
           // console.log(msg);
-          if (msg.top_scores != undefined) {
+          if (msg.top_scores !== undefined) {
             console.log('走这里');
             // console.log(msg);
             let live_id = msg.live_id;
@@ -318,7 +319,7 @@ export default {
                 return;
               }
             }
-            let recogObj = new Object();
+            let recogObj ={};
             recogObj.liveId = live_id;
             recogObj.time = "通道：" + channel_id;    // 通道信息
             recogObj.img1 = live_face;    // 抓拍照
@@ -341,7 +342,7 @@ export default {
                 return;
               }
             }
-            let captureObj = new Object();
+            let captureObj = {};
             captureObj.trackId = track_id;
             captureObj.time = "通道：" + channel_id;
             captureObj.img = img;

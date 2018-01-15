@@ -111,9 +111,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="底库" prop="selectdb">
-            <el-select v-model="selectedDb" multiple filterable placeholder="请选择底库" @change="handleSelectDbChange"
-                       :maxlength="10"
-                       class="database-num1">
+            <el-select v-model="devform.selectdb" placeholder="请选择底库" :maxlength="10" class="database-num1">
               <el-option
                 v-for="item in dboptions"
                 :key="item.value"
@@ -273,13 +271,14 @@
           This.devform.face_avatar_url = this.result;
         };
       },
+      // 刷新列表
       onRefresh() {
         let starttime = null;
         let endtime = null;
         let staticDBId = null;
         let userId = null;
 
-        if (this.selectdb !== 0) {
+        if (this.selectdb) {
           staticDBId = this.selectdb;
         }
 
@@ -296,20 +295,18 @@
             this.list = [];
             this.total = 0;
             const tmpList = response.data.data.list;
-            console.log(tmpList);
             tmpList.forEach(function (item) {
               item.aligndata = Base64ToImage(item.img);
               if (!item.gender) {
                 item.gender = '未知'
               }
-              ;
               if (!item.birthday) {
                 item.birthday = '未知'
+              } else {
+                item.birthday = item.birthday.slice(0, item.birthday.indexOf("T"))
               }
-              ;
             });
             this.list = tmpList;
-            // console.log(this.list);
             this.total = parseInt(response.data.data.total);
             this.loading = false;
           })
@@ -326,61 +323,57 @@
         this.currentPage = val;
         this.onRefresh();
       },
-      // 新增人脸
+      // 新增人脸弹窗
       onAdd() {
         this.face_title = "底库新增人脸";
         this.face_show = true;
         // this.face = {}
-        this.devform.selectdb = this.selectdb;
+        // this.devform.selectdb = this.selectdb;
         // this.face_avatar_url = ''
         this.face_dlg_btn_name = "新 增";
       },
+      // 导入人脸弹窗
       onImport() {
         this.upload_show = true;
         this.upload_form.group_id = this.selectdb;
         this.upload_file_list = [];
       },
+      // 删除单张人脸
       handleDelete(row) {
-        this.$confirm("确认删除该设备, 是否继续?", "提示", {
+        this.$confirm("确认删除该条人脸信息, 是否继续?", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         })
           .then(() => {
-            console.log(row.staticDBId, row.id);
             DeleteFace(row.staticDBId, row.id)
               .then(response => {
-                this.$message({
-                  type: "info",
-                  message: "删除人脸结果:" + response.data.info
-                });
-                this.onRefresh();
+                if (response.data.result === 0){
+                  this.$message.success("删除人脸成功!")
+                  this.onRefresh();
+                } else {
+                  this.$message.success("删除人脸失败!")
+                }
               })
               .catch(() => {
-                this.$message({
-                  type: "info",
-                  message: "删除人脸异常"
-                });
+                this.$message.error("删除人脸失败或请求超时！");
               });
           })
           .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除"
+            this.$message.info({
+              message: "取消删除人脸！"
             });
           });
       },
       handleBeforeUpload(file) {
         if (!this.selectdb) {
-          this.$message("底库为空，请选择底库后重试");
+          this.$message.error("底库不能为空，请选择底库后重试");
           return false;
         }
         var zipReg = /^\S+\.zip$/;
         if (!zipReg.test(file.name)) {
-          this.$message("请上传后缀为.zip的压缩包文件！");
+          this.$message.warning("请上传后缀为.zip的压缩包文件！");
           return false;
-        } else {
-          return true;
         }
         this.upload_message = "";
       },
@@ -398,58 +391,39 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
+      // 新增单张人脸
       submitForm(formName) {
-        // console.log(formName);
         this.$refs[formName].validate(valid => {
           if (valid) {
-            // console.log(this.devform.birthday);
-            // console.log(this.devform.face_avatar_url);
-            // console.log(this.devform.gender);
-            // console.log(this.devform.name);
-            // console.log(this.devform.selectdb);
-
-            let mStaticDBId = null;
-            let mImg = null;
-            let mBirthday = null;
-            let mGender = null;
-            let mName = null;
-
-            if (this.devform.selectdb) {
-              mStaticDBId = this.devform.selectdb;
-            }
-
-            if (this.devform.face_avatar_url) {
-              mImg = this.devform.face_avatar_url.substring(
-                this.devform.face_avatar_url.indexOf(",") + 1
-              );
-            }
-            if (this.devform.birthday) {
-              mBirthday = this.devform.birthday;
-            }
-            if (this.devform.gender) {
-              mGender = this.devform.gender;
-            }
-            if (this.devform.name) {
-              mName = this.devform.name;
-            }
+            var mStaticDBId = this.devform.selectdb;
+            var mImg = this.devform.face_avatar_url.substring(
+              this.devform.face_avatar_url.indexOf(",") + 1
+            );
+            var mBirthday = this.devform.birthday;
+            var mGender = this.devform.gender;
+            var mName = this.devform.name;
 
             AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
               .then(response => {
-                this.$message({
-                  type: "info",
-                  message: "新增人脸结果成功"
-                });
-                this.onRefresh();
+                if (response.data.result !== 0) {
+                  this.$message.error("新增人脸失败！");
+                  return false;
+                }
+                else {
+                  this.devform.birthday = '';
+                  this.devform.gender = '男';
+                  this.devform.name = '';
+                  this.devform.face_avatar_url = '';
+                  this.devform.selectdb = '';
+                  this.onRefresh();
+                }
               })
               .catch(() => {
-                this.$message({
-                  type: "info",
-                  message: "新增人脸异常"
-                });
+                this.$message.error("新增人脸失败");
               });
             this.face_show = false;
           } else {
-            this.$message({
+            this.$message.warning({
               message: "请正确填写信息！"
             });
             return false;
