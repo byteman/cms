@@ -130,7 +130,7 @@
               action=""
               :before-upload="beforeUpload"
               :on-change="changeFile">
-              <img id="giftImg" v-bind:src="devform.face_avatar_url" class="avatar1">
+              <img id="giftImg" :src="devform.face_avatar_url" class="avatar1">
               <div class="el-upload__text">将图片拖到此处，或<em>点击上传</em></div>
             </el-upload>
           </el-form-item>
@@ -156,31 +156,30 @@
       ElInput
     },
     data() {
-      var name_validator = (rule, value, callback) => {
+      let name_validator = (rule, value, callback) => {
         // console.log(value);
-        if (value === "") {
+        if (!value) {
           callback(new Error("姓名不能为空"));
         } else {
           callback();
         }
       };
-      var sex_validator = (rule, value, callback) => {
-        if (value === "") {
+      let sex_validator = (rule, value, callback) => {
+        if (!value) {
           callback(new Error("请选择性别"));
         } else {
           callback();
         }
       };
-      var dk_validator = (rule, value, callback) => {
-        // console.log(value);
+      let dk_validator = (rule, value, callback) => {
         if (value.length === 0) {
           callback(new Error("底库不能为空"));
         } else {
           callback();
         }
       };
-      var pic_validator = (rule, value, callback) => {
-        if (value === "") {
+      let pic_validator = (rule, value, callback) => {
+        if (!value) {
           callback(new Error("图片不能为空"));
         } else {
           callback();
@@ -210,7 +209,7 @@
           birthday: "", // 生日
           gender: "男", // 性别
           selectdb: "", // 底库
-          face_avatar_url: "" // url
+          face_avatar_url: "/static/boyAvaster.png"  // url
         },
         rules: {
           name: [
@@ -242,11 +241,10 @@
             item.label = item.id + "(" + item.group_name + ")";
           });
           this.dboptions = tmpList;
-          // console.log(this.dboptions);
           this.onRefresh();   // 获取查询数据列表
         })
         .catch(() => {
-          this.$message.error('查询列表失败！')
+          this.$message.error('获取数据失败,请检查服务器！')
         });
     },
     methods: {
@@ -264,11 +262,11 @@
           this.upload_message = "上传文件:" + JSON.stringify(res);
         }
       },
-      changeFile(file, fileList) {
+      changeFile(file) {
         let This = this;
         let reader = new FileReader();
         reader.readAsDataURL(file.raw);
-        reader.onload = function (e) {
+        reader.onload = function () {
           This.devform.face_avatar_url = this.result;
         };
       },
@@ -313,7 +311,7 @@
             this.list = [];
             this.total = 0;
             this.loading = false;
-            this.$message.error("获取列表失败！")
+            this.$message.error("获取数据失败,请检查服务器！")
           });
       },
       handleSelectDbChange() {
@@ -327,10 +325,7 @@
       onAdd() {
         this.face_title = "底库新增人脸";
         this.face_show = true;
-        // this.face = {}
-        // this.devform.selectdb = this.selectdb;
-        // this.face_avatar_url = ''
-        this.face_dlg_btn_name = "新 增";
+        this.face_dlg_btn_name = "新增";
       },
       // 导入人脸弹窗
       onImport() {
@@ -412,7 +407,7 @@
                   this.devform.birthday = '';
                   this.devform.gender = '男';
                   this.devform.name = '';
-                  this.devform.face_avatar_url = '';
+                  this.devform.face_avatar_url = '/static/boyAvaster.png';
                   this.devform.selectdb = '';
                   this.onRefresh();
                 }
@@ -435,9 +430,9 @@
 
 <style scoped>
   .avatar1 {
-    margin-top: 20px;
+    margin-top: 30px;
     width: 120px;
-    height: 90px;
+    height: 120px;
     border: none;
   }
 

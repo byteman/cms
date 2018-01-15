@@ -4,13 +4,9 @@
     <div slot="header" class="clearfix">
       <span style="line-height: 24px;">{{section.Name}}</span>
     </div>
-
       <el-col :span="span" v-for="s in 2" :key="s" >
-        
         <el-form-item v-for="(item,idx) in section.Items" :key="idx" :label="item.Display" label-width="200px" v-if="(idx % column) === (s-1)" >
-          
           <el-input v-if="item.Type==='text'" v-model="item.Value" :disabled="item.ReadOnly" ></el-input>
-
           <el-checkbox v-if="item.Type==='checkbox'" v-model="item.Value">{{item.Display}}</el-checkbox>
           <el-select v-if="item.Type==='select'" v-model="item.Value" placeholder="请选择" style="width:100%">
             <el-option
@@ -20,13 +16,10 @@
               :value="it.Value">
             </el-option>
           </el-select>
-
         </el-form-item>
       </el-col>
-    
 
     <!-- <div v-for="(item,idx) in section.Items" :key="idx" class="text item">
-
       {{'列表内容 ' + item.Name }}
     </div> -->
 
@@ -70,7 +63,7 @@ export default {
       this.listLoading = true
       console.log("fetchData.......")
       GetParams(url).then(response => {
-        console.log(response.data)
+        // console.log(response.data)
         this.sections = response.data.config.Sections
         this.listLoading = false
       })

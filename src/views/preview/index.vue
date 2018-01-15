@@ -143,7 +143,7 @@ export default {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-              <div class="cameraStatusClose" style = "width:22px;height: 18px;margin-top:3px; float: left;background: url('/src/assets/common_search/cameraClose.png') no-repeat;background-size: 100%;" />
+              <div class="cameraStatusClose" style = "width:22px;height: 18px; float: left;background: url('/static/cameraClose.png') no-repeat;background-size: 100%;" />
               <span>&nbsp;{node.label}</span>
             </span>
           </span>
@@ -152,7 +152,7 @@ export default {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-              <div class="cameraStatusOpen" style="width:22px;height: 18px; margin-top:3px; float: left;background: url('/src/assets/common_search/cameraOpen.png') no-repeat;background-size: 100%;"/>
+              <div class="cameraStatusOpen" style="width:22px;height: 18px; float: left;background: url('/static/cameraOpen.png') no-repeat;background-size: 100%;"/>
               <span>&nbsp;{node.label}</span>
             </span>
           </span>
@@ -539,7 +539,7 @@ export default {
   float: left;
   background-size: 100%;
   background-repeat: no-repeat;
-  background-image: url("../../assets/common_search/cameraClose.png");
+  background-image: url("../../../static/cameraClose.png");
 }
 .cameraStatusOpen {
   width: 22px;
@@ -547,7 +547,7 @@ export default {
   float: left;
   background-size: 100%;
   background-repeat: no-repeat;
-  background-image: url("../../assets/common_search/cameraOpen.png");
+  background-image: url("../../../static/cameraOpen.png");
 }
 </style>
 

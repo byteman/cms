@@ -152,7 +152,7 @@
             <el-button icon="el-icon-circle-close-outline" @click="specialcontroll(3,0x12017)"></el-button>
           </li>
           <li class="button-li7">
-            <el-button icon="el-icon-check" @click="specialcontroll(1,0x12014)"></el-button>
+            <el-button icon="el-icon-check" @click="markPicControl(1,0x12014)"></el-button>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -193,7 +193,7 @@
 </template>
 
 <script>
-  import {Page, List, Special} from "@/api/recogrecod";
+  import {Page, List, Special, markPic} from "@/api/recogrecod";
 
   export default {
     data() {
@@ -217,9 +217,14 @@
         show_reg_id: "",
         show_reg_src: "",
         show_score: "",
+        showliveId:"",
+        registerId:'',
+        similarLiveId:'',
+        matchedType:'',
+        qualityScore:'',
+
         title: "识别详情",
         showChannel: false,
-
         selectedSrc: "",
         selectedchannel_id: "",
         selectedlive_id: "",
@@ -279,6 +284,12 @@
         this.show_score = value.topScore;
         this.show_channel_id = this.selectedchannel_id;
       },
+      // 标记图片
+      markPicControl(iflag, bcode){
+        markPic(iflag, bcode, this.show_channel_id, this.show_live_id, this.show_reg_id, this.showliveId, this.registerId ,this.similarLiveId, this.matchedType,this.qualityScore).then( responce =>{
+          console.log(responce);
+        })
+      },
       specialcontroll(iflag, bcode) {
         Special(
           iflag,
@@ -287,16 +298,20 @@
           this.show_live_id,
           this.show_reg_id
         ).then(resp => {
-          if (resp.data.status === "0") {
+          if (resp.data.status === 0) {
+            console.log(resp);
             this.$message.success('操作成功')
           } else {
             this.$message.error('操作失败')
          }
-        });
+        }).catch(()=>{
+          this.$message.error('操作失败')
+        })
+        ;
       },
       specialClick(row, index) {
         this.show = true;
-        switch (index) {
+        switch (index + '') {
           case "1":
             this.show_reg_src = row.top1;
             this.show_live_id = row.live_id;
@@ -379,7 +394,6 @@
         if (this.param.datetime[1]) {
           var end = this.param.datetime[1].getTime();
         }
-
         Page(
           this.param.currrent,
           this.param.size,
@@ -390,7 +404,7 @@
           let result = resp.data.data.results;
           let resultObj = eval("(" + result + ")");
           // console.log(resultObj);
-          // console.log(resultObj.liveArray);
+          console.log(resultObj.liveArray);
 
           this.param.total = resultObj.total;
           this.param.list = [];
@@ -478,6 +492,7 @@
 
   .show_library img {
     vertical-align: bottom;
+    width: 100%;
   }
 
   .lib_message {
@@ -521,11 +536,7 @@
     width: 100%;
   }
 
-  .more-dialog-left-channel {
-    text-align: center;
-  }
-
-  .more-dialog-left-live {
+  .more-dialog-left-channel,.more-dialog-left-live,.more-dialog-right-li-top ,.more-dialog-right-li-bottum {
     text-align: center;
   }
 
@@ -538,21 +549,14 @@
   .more-dialog-right-li {
     float: left;
     margin-left: 10px;
+    width: 150px;
   }
 
   .clearfix {
     clear: both;
   }
 
-  .more-dialog-right-li-top {
-    margin-left: 43px;
-  }
-
-  .more-dialog-right-li-bottum {
-    margin-left: 22px;
-  }
-
-  .show-dilog-avatar {
+   .show-dilog-avatar {
     margin-left: 40px;
     width: 85%;
   }
@@ -570,7 +574,5 @@
     margin-left: -6px;
   }
 
-  .clearfix {
-    clear: both;
-  }
+
 </style>
