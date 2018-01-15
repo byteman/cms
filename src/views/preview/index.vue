@@ -91,7 +91,7 @@ export default {
       data2: [
         {
           id: 1,
-          label: "中华人民共和国",
+          label: "摄像头列表",
           isOpen: 0,
           children: []
         }
@@ -107,18 +107,18 @@ export default {
     BrowserDetect.init();
     getTree()
       .then(response => {
-        var json = response.data;
-        if (json != undefined && json.status == 0) {
+        let json = response.data;
+        if (json !== undefined && json.status === 0) {
           for (var i = 0; i < json.data.channels.length; i++) {
-            var channelId = json.data.channels[i].id;
-            var channelName = json.data.channels[i].name;
+            let channelId = json.data.channels[i].id;
+            let channelName = json.data.channels[i].name;
             getRtspUrl(channelId)
               .then(response => {
-                var res = response.data;
-                if (res != undefined && res.status == 0) {
-                  var jsonData = eval("(" + res.data + ")");
-                  var rtspUrl = jsonData.preview.url;
-                  var Device = new Object();
+                let res = response.data;
+                if (res !== undefined && res.status === 0) {
+                  let jsonData = eval("(" + res.data + ")");
+                  let rtspUrl = jsonData.preview.url;
+                  let Device = new Object();
                   Device.id = jsonData.ags.cameraId;
                   Device.label = jsonData.ags.cameraName;
                   Device.status = "1";
@@ -133,26 +133,26 @@ export default {
       })
       .catch(() => {});
     this.cloudwalkobj = document.createElement("object");
-    var el = document.getElementById("cloudwalkwebobj");
+    let el = document.getElementById("cloudwalkwebobj");
     this.create(el);
   },
   beforeDestroy() {},
   methods: {
     renderContent(h, { node, data, store }) {
-      if (data.isOpen == 0) {
+      if (data.isOpen === 0) {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-              <div class="cameraStatusClose" />
+              <span class="cameraStatusClose" style="width: 22px; height: 18px; float: left; background-size: 100%; background-repeat: no-repeat;background-image: url('assets/common_search/cameraClose.png');" ></span>
               <span>&nbsp;{node.label}</span>
             </span>
           </span>
         );
-      } else if (data.isOpen == 1) {
+      } else if (data.isOpen === 1) {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
             <span>
-              <div class="cameraStatusOpen" />
+              <span class="cameraStatusOpen" style="width: 22px; height: 18px; float: left; background-size: 100%; background-repeat: no-repeat;background-image: url('assets/common_search/cameraOpen.png');" ></span>
               <span>&nbsp;{node.label}</span>
             </span>
           </span>
@@ -164,28 +164,28 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     playVideo(obj, node, self) {
-      var channelId = obj.id;
-      var cameraUrl = obj.url;
-      var status = obj.isOpen;
-      if (status == 0) {
+      let channelId = obj.id;
+      let cameraUrl = obj.url;
+      let status = obj.isOpen;
+      if (status === 0) {
         this.openCam(channelId, cameraUrl);
         this.$refs.tree2.setCheckedKeys([1]);
         obj.status = 1;
-      } else if (status == 1) {
+      } else if (status === 1) {
         this.closeCam(channelId);
       }
     },
     create(targetE) {
-      var cloudwalkobj = this.cloudwalkobj;
+      let cloudwalkobj = this.cloudwalkobj;
       cloudwalkobj.id = "CloudWalkSDKPlugin";
       cloudwalkobj.width = 780;
       cloudwalkobj.height = 500;
-      var bDet = BrowserDetect.browser;
-      if ("Explorer" == bDet) {
+      let bDet = BrowserDetect.browser;
+      if ("Explorer" === bDet) {
         cloudwalkobj.classid = "CLSID:AB61579B-9111-440B-B868-28634A100131"; //IE
-      } else if ("Firefox" == bDet) {
+      } else if ("Firefox" === bDet) {
         cloudwalkobj.type = "application/x-npCloudPlay"; //Firefox
-      } else if ("Chrome" == bDet) {
+      } else if ("Chrome" === bDet) {
         cloudwalkobj.type = "application/x-npCloudPlay"; //Chrome
       } else {
         cloudwalkobj.type = "application/x-npCloudPlay";
@@ -198,13 +198,13 @@ export default {
         this.cwEventNotifyEvt
       );
 
-      if (cloudwalkobj.valid == undefined && !cloudwalkobj.valid) {
-        alert("插件不支持！请更换浏览器！");
+      if (cloudwalkobj.valid === undefined && !cloudwalkobj.valid) {
+        this.$message.error("插件不支持！请更换浏览器！");
         return false;
       }
 
-      if (cloudwalkobj.cwGetVersions() != '1.0.1.20171206') {
-        alert("插件版本不匹配！安装时请关闭浏览器！");
+      if (cloudwalkobj.cwGetVersions() !== '1.0.1.20171206') {
+        this.$message.warning("插件版本不匹配！安装时请关闭浏览器！");
         return false;
       }
 
@@ -214,40 +214,40 @@ export default {
       cloudwalkobj.cwSetConnectWay(1);
     },
     openCam(devid, url) {
-      var cloudwalkobj = this.cloudwalkobj;
-      var rooter = new Object();
+      let cloudwalkobj = this.cloudwalkobj;
+      let rooter = new Object();
       rooter.method = "open";
 
-      var paramer = new Object();
+      let paramer = new Object();
       paramer.deviceId = devid;
       paramer.strUrl = url;
       rooter.param = paramer;
 
-      var info = JSON.stringify(rooter);
-      var n = cloudwalkobj.cwDisplayGDI(0);
-      var m = cloudwalkobj.cwHardDecode(0);
-      var nRet = cloudwalkobj.cwSendCmd(info);
+      let info = JSON.stringify(rooter);
+      let n = cloudwalkobj.cwDisplayGDI(0);
+      let m = cloudwalkobj.cwHardDecode(0);
+      let nRet = cloudwalkobj.cwSendCmd(info);
     },
     closeCam(devid) {
-      var cloudwalkobj = this.cloudwalkobj;
-      var rooter = new Object();
+      let cloudwalkobj = this.cloudwalkobj;
+      let rooter = new Object();
       rooter.method = "close";
 
-      var paramer = new Object();
+      let paramer = new Object();
       paramer.deviceId = devid;
       rooter.param = paramer;
 
-      var info = JSON.stringify(rooter);
-      var nRet = cloudwalkobj.cwSendCmd(info);
+      let info = JSON.stringify(rooter);
+      let nRet = cloudwalkobj.cwSendCmd(info);
     },
     cwEventNotifyEvt(jsInfo) {
-      var j = JSON.parse(jsInfo);
-      var channelId = j.param.deviceId;
+      let j = JSON.parse(jsInfo);
+      let channelId = j.param.deviceId;
       console.log(j);
-      if ("opened" == j.method) {
-        var childrenArray = this.data2[0].children;
+      if ("opened" === j.method) {
+        let childrenArray = this.data2[0].children;
         for (var t in childrenArray) {
-          if (childrenArray[t].id == channelId) {
+          if (childrenArray[t].id === channelId) {
             this.data2[0].children[t].isOpen = 1;
           }
         }
@@ -259,14 +259,14 @@ export default {
             alert("This browser does not support WebSockets.");
           }
         );
-      } else if ("playevent" == j.method && 8 == j.param.type) {
+      } else if ("playevent" === j.method && 8 === j.param.type) {
         postCameraPreview(channelId)
           .then(response => {})
           .catch(() => {});
-      } else if (j.method == "closed") {
-        var childrenArray = this.data2[0].children;
-        for (var t in childrenArray) {
-          if (childrenArray[t].id == channelId) {
+      } else if (j.method === "closed") {
+        let childrenArray = this.data2[0].children;
+        for (let t in childrenArray) {
+          if (childrenArray[t].id === channelId) {
             this.data2[0].children[t].isOpen = 0;
           }
         }
@@ -274,17 +274,17 @@ export default {
       }
     },
     SnapWebSocket(cameraId, fnSucc, fnClosed, fnNoSurrport) {
-      var wsJsonObj = this.wsJsonObj;
-      var captureObjs = this.captureObjs;
-      var recogObjs = this.recogObjs;
+      let wsJsonObj = this.wsJsonObj;
+      let captureObjs = this.captureObjs;
+      let recogObjs = this.recogObjs;
       if ("WebSocket" in window) {
-        if (wsJsonObj[cameraId] != undefined) {
+        if (wsJsonObj[cameraId] !== undefined) {
           wsJsonObj[cameraId].close();
           delete wsJsonObj[cameraId];
           wsJsonObj[cameraId] = null;
         }
 
-        var wsc = new ReconnectingWebSocket(
+        let wsc = new ReconnectingWebSocket(
           // "ws://" + location.hostname + ':9980' + "/" + cameraId,
           "ws://" + process.env.SOCKET_API + "/" + cameraId,
           null,
@@ -296,56 +296,56 @@ export default {
           console.log("WebSocketClient connected:", e);
         };
         wsc.onmessage = function(evt) {
-          var msg = eval("(" + evt.data + ")");
+          let msg = eval("(" + evt.data + ")");
           // console.log(msg);
           if (msg.top_scores != undefined) {
             console.log('走这里');
             // console.log(msg);
-            var live_id = msg.live_id;
-            var channel_id = msg.channel_id;
-            var lib_name= msg.libName;
+            let live_id = msg.live_id;
+            let channel_id = msg.channel_id;
+            let lib_name= msg.libName;
             // console.log(lib_name);
-            var live_face = "data:image/jpg;base64," + msg.live_face;
-            var registered_face = "data:image/jpg;base64," + msg.registered_face_0;
-            var top_scores = parseInt(msg.top_scores * 100) + "%";
-            for (var t in recogObjs) {
-              if (recogObjs[t].liveId == live_id) {
+            let live_face = "data:image/jpg;base64," + msg.live_face;
+            let registered_face = "data:image/jpg;base64," + msg.registered_face_0;
+            let top_scores = parseInt(msg.top_scores * 100) + "%";
+            for (let t in recogObjs) {
+              if (recogObjs[t].liveId === live_id) {
                 recogObjs[t].time = "通道：" + channel_id;
                 recogObjs[t].img1 = live_face;
                 recogObjs[t].img2 = registered_face;   // 注册照
                 recogObjs[t].score = top_scores;     // 评分
-                recogObjs[t].libName = lib_name;    // 底库名称
+                recogObjs[t].libName = '底库：'+lib_name;    // 底库名称
                 return;
               }
             }
-            var recogObj = new Object();
+            let recogObj = new Object();
             recogObj.liveId = live_id;
             recogObj.time = "通道：" + channel_id;    // 通道信息
             recogObj.img1 = live_face;    // 抓拍照
             recogObj.img2 = registered_face;   // 注册照
-            recogObj.libName = lib_name;   // 底库名称
+            recogObj.libName =  '底库：'+lib_name;   // 底库名称
             recogObj.score = top_scores;   // 评分
-            if (recogObjs.length == 3) {
+            if (recogObjs.length === 3) {
               recogObjs.shift();
             }
             recogObjs.push(recogObj);
           } else {
             console.log('我炸这');
-            var track_id = msg.track_id;
-            var channel_id = msg.channel_id;    // 通道id
-            var img = "data:image/jpg;base64," + msg.live_face;
-            for (var t in captureObjs) {
-              if (captureObjs[t].trackId == track_id) {
+            let track_id = msg.track_id;
+            let channel_id = msg.channel_id;    // 通道id
+            let img = "data:image/jpg;base64," + msg.live_face;
+            for (let t in captureObjs) {
+              if (captureObjs[t].trackId === track_id) {
                 captureObjs[t].time = "通道：" + channel_id;
                 captureObjs[t].img = img;
                 return;
               }
             }
-            var captureObj = new Object();
+            let captureObj = new Object();
             captureObj.trackId = track_id;
             captureObj.time = "通道：" + channel_id;
             captureObj.img = img;
-            if (captureObjs.length == 10) {
+            if (captureObjs.length === 10) {
               captureObjs.shift();
             }
             captureObjs.push(captureObj);
@@ -353,10 +353,10 @@ export default {
         };
         wsc.onclose = function(evt) {
           console.log("WebSocket closed.");
-          //fnClosed();
+          // fnClosed();
         };
         wsc.onerror = function(evt) {
-          //fnClosed()
+          // fnClosed()
         };
       } else {
         fnNoSurrport();

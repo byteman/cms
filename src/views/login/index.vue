@@ -14,15 +14,13 @@
                 <icon-svg icon-class="yonghuming"/>
               </span>
               <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on"
-                        placeholder="输入您的登录名"/>
+                        placeholder="请输入登录名"/>
             </el-form-item>
             <el-form-item prop="password">
               <span class="svg-container">
                 <icon-svg icon-class="mima"></icon-svg>
               </span>
-              <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password"
-                        autoComplete="on"
-                        placeholder="输入您的密码"></el-input>
+              <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
               登&nbsp;录
@@ -83,13 +81,13 @@
                 this.$router.push({path: "/preview/index"});
               })
               .catch(() => {
-                this.$message('用户名或密码错误！请重新输入！')
+                this.$message.error('用户名或密码错误！请重新输入！');
                 this.loading = false;
                 this.loginForm.username = '';
                 this.loginForm.password = '';
               });
           } else {
-            this.$message('请输入正确的用户名和密码！')
+            this.$message.warning('请输入正确的用户名和密码！');
             return false;
           }
         });
@@ -113,7 +111,7 @@
     background: url("../../assets/login_images/login_pg.png") no-repeat center;
     background-size: cover;
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
+      -webkit-box-shadow: 0 0 0 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
     }
     input {

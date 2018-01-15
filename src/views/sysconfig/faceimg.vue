@@ -77,6 +77,7 @@
             :on-success='handleSuccess'
             :on-exceed="handleExceed"
             :on-preview="handlePreview"
+            :on-error="updateZipError"
             :auto-upload="true"
             :file-list="upload_file_list">
             <el-button size="large" type="primary" class="btn-distance database-num2">选择上传（仅支持zip文件）</el-button>
@@ -110,7 +111,8 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="底库" prop="selectdb">
-            <el-select v-model="selectedDb" multiple filterable  placeholder="请选择底库" @change="handleSelectDbChange" :maxlength="10"
+            <el-select v-model="selectedDb" multiple filterable placeholder="请选择底库" @change="handleSelectDbChange"
+                       :maxlength="10"
                        class="database-num1">
               <el-option
                 v-for="item in dboptions"
@@ -173,7 +175,7 @@
       };
       var dk_validator = (rule, value, callback) => {
         // console.log(value);
-        if (value.length===0) {
+        if (value.length === 0) {
           callback(new Error("底库不能为空"));
         } else {
           callback();
@@ -255,6 +257,14 @@
       handlePreview(file) {
         console.log(file);
       },
+      updateZipError(err, file, fileList) {
+        console.log(err);
+        console.log(file);
+        console.log(fileList);
+        if (err !== 0) {
+          this.upload_message = "上传文件:" + JSON.stringify(res);
+        }
+      },
       changeFile(file, fileList) {
         var This = this;
         var reader = new FileReader();
@@ -289,8 +299,14 @@
             console.log(tmpList);
             tmpList.forEach(function (item) {
               item.aligndata = Base64ToImage(item.img);
-              if (!item.gender) {item.gender = '未知'};
-              if (!item.birthday) {item.birthday = '未知'};
+              if (!item.gender) {
+                item.gender = '未知'
+              }
+              ;
+              if (!item.birthday) {
+                item.birthday = '未知'
+              }
+              ;
             });
             this.list = tmpList;
             // console.log(this.list);
@@ -370,7 +386,7 @@
       },
       handleSuccess(res, file, fileList) {
         if (res.status !== 0) {
-          this.upload_message = "失败反馈:" + JSON.stringify(res);
+          this.upload_message = "上传文件:" + JSON.stringify(res);
         }
       },
       handleExceed(files, fileList) {
@@ -382,7 +398,6 @@
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
-
       submitForm(formName) {
         // console.log(formName);
         this.$refs[formName].validate(valid => {
