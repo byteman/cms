@@ -215,7 +215,7 @@
         rules: {
           name: [
             {required: true, validator: name_validator, trigger: "blur"},
-            {min: 2, max: 5, message: "长度在 2 到 5 个字符", trigger: "blur"}
+            {min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur"}
           ],
           gender: [{required: true, validator: sex_validator, trigger: "blur"}],
           dboptions: [
@@ -242,11 +242,12 @@
             item.label = item.id + "(" + item.group_name + ")";
           });
           this.dboptions = tmpList;
-          console.log(this.dboptions);
+          // console.log(this.dboptions);
+          this.onRefresh();   // 获取查询数据列表
         })
         .catch(() => {
+          this.$message.error('查询列表失败！')
         });
-      this.onRefresh();   // 获取查询数据列表
     },
     methods: {
       beforeUpload(file) {
@@ -264,8 +265,8 @@
         }
       },
       changeFile(file, fileList) {
-        var This = this;
-        var reader = new FileReader();
+        let This = this;
+        let reader = new FileReader();
         reader.readAsDataURL(file.raw);
         reader.onload = function (e) {
           This.devform.face_avatar_url = this.result;
@@ -277,11 +278,9 @@
         let endtime = null;
         let staticDBId = null;
         let userId = null;
-
         if (this.selectdb) {
           staticDBId = this.selectdb;
         }
-
         this.loading = true;
         // 查询列表
         QueryFaceList(
@@ -295,7 +294,7 @@
             this.list = [];
             this.total = 0;
             const tmpList = response.data.data.list;
-            tmpList.forEach(function (item) {
+            tmpList.forEach( item => {
               item.aligndata = Base64ToImage(item.img);
               if (!item.gender) {
                 item.gender = '未知'
@@ -314,6 +313,7 @@
             this.list = [];
             this.total = 0;
             this.loading = false;
+            this.$message.error("获取列表失败！")
           });
       },
       handleSelectDbChange() {
@@ -370,7 +370,7 @@
           this.$message.error("底库不能为空，请选择底库后重试");
           return false;
         }
-        var zipReg = /^\S+\.zip$/;
+        let zipReg = /^\S+\.zip$/;
         if (!zipReg.test(file.name)) {
           this.$message.warning("请上传后缀为.zip的压缩包文件！");
           return false;
@@ -395,21 +395,20 @@
       submitForm(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
-            var mStaticDBId = this.devform.selectdb;
-            var mImg = this.devform.face_avatar_url.substring(
+            let mStaticDBId = this.devform.selectdb;
+            let mImg = this.devform.face_avatar_url.substring(
               this.devform.face_avatar_url.indexOf(",") + 1
             );
-            var mBirthday = this.devform.birthday;
-            var mGender = this.devform.gender;
-            var mName = this.devform.name;
+            let mBirthday = this.devform.birthday;
+            let mGender = this.devform.gender;
+            let mName = this.devform.name;
 
             AddFace(mStaticDBId, mImg, mBirthday, mGender, mName)
               .then(response => {
-                if (response.data.result !== 0) {
+                if (response.data.result) {
                   this.$message.error("新增人脸失败！");
                   return false;
-                }
-                else {
+                } else {
                   this.devform.birthday = '';
                   this.devform.gender = '男';
                   this.devform.name = '';
