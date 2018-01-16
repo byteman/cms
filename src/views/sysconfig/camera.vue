@@ -57,17 +57,13 @@
           </el-form-item>
 
           <el-form-item label="是否启用">
-
-
             <el-switch :disabled="filedEnable"
                        v-model="camera.enable"
                        active-color="#13ce66"
                        inactive-color="#dfdfdf">
             </el-switch>
           </el-form-item>
-
           <el-form-item label="运算单元">
-
             <el-select :disabled="filedEnable" v-model="camera.protocal" placeholder="请选择运算单元" style="width:100%">
               <el-option
                 v-for="item in calcOptions"

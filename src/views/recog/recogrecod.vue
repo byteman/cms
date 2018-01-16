@@ -217,11 +217,9 @@
         show_reg_id: "",
         show_reg_src: "",
         show_score: "",
-        showliveId:"",
-        registerId:'',
-        similarLiveId:'',
-        matchedType:'',
-        qualityScore:'',
+        show_similarLiveId: '',
+        show_matchedType: '',
+        show_qualityScore: '',
 
         title: "识别详情",
         showChannel: false,
@@ -285,27 +283,32 @@
         this.show_channel_id = this.selectedchannel_id;
       },
       // 标记图片
-      markPicControl(iflag, bcode){
-        markPic(iflag, bcode, this.show_channel_id, this.show_live_id, this.show_reg_id, this.showliveId, this.registerId ,this.similarLiveId, this.matchedType,this.qualityScore).then( responce =>{
-          console.log(responce);
-        })
-      },
-      specialcontroll(iflag, bcode) {
-        Special(
-          iflag,
-          bcode,
+      markPicControl(iflag, bcode) {
+        markPic(iflag, bcode,
           this.show_channel_id,
           this.show_live_id,
-          this.show_reg_id
-        ).then(resp => {
+          this.show_reg_id,
+          this.show_similarLiveId,
+          this.show_matchedType,
+          this.show_qualityScore).then(responce => {
+          if (responce.data.status === 0) {
+            this.$message.success('操作成功！')
+          }
+          console.log(responce);
+        }).catch(() => {
+          this.$message.error('标记图片失败！')
+        })
+      },
+      // 微调图片参数
+      specialcontroll(iflag, bcode) {
+        Special(iflag, bcode, this.show_channel_id, this.show_live_id, this.show_reg_id).then(resp => {
           if (resp.data.status === 0) {
-            console.log(resp);
             this.$message.success('操作成功')
           } else {
             this.$message.error('操作失败')
-         }
-        }).catch(()=>{
-          this.$message.error('操作失败')
+          }
+        }).catch(() => {
+          this.$message.error('操作失败，请检查服务器！')
         })
         ;
       },
@@ -313,11 +316,15 @@
         this.show = true;
         switch (index + '') {
           case "1":
-            this.show_reg_src = row.top1;
-            this.show_live_id = row.live_id;
-            this.show_reg_id = row.top1id;
-            this.show_score = row.top1Score;
-            this.show_channel_id = row.channel_id;
+            console.log(row);
+            this.show_reg_src = row.top1;   // 注册照
+            this.show_live_id = row.live_id;   //  抓拍id
+            this.show_reg_id = row.top1id;    // 注册id
+            this.show_score = row.top1Score;     // 最高分
+            this.show_channel_id = row.channel_id;   // 通道id
+            this.show_similarLiveId = row.similar_live_id;   // 相似度id
+            this.show_matchedType = row.matched_type;   //  匹配类型
+            this.show_qualityScore = row.qualityScore;  // 质量分
             break;
           case "2":
             this.show_reg_src = row.top2;
@@ -325,6 +332,9 @@
             this.show_reg_id = row.top2id;
             this.show_score = row.top2Score;
             this.show_channel_id = row.channel_id;
+            this.show_similarLiveId = row.similar_live_id;   // 相似度id
+            this.show_matchedType = row.matched_type;   //  匹配类型
+            this.show_qualityScore = row.qualityScore;  // 质量分
             break;
           case "3":
             this.show_reg_src = row.top3;
@@ -332,6 +342,9 @@
             this.show_reg_id = row.top3id;
             this.show_score = row.top3Score;
             this.show_channel_id = row.channel_id;
+            this.show_similarLiveId = row.similar_live_id;   // 相似度id
+            this.show_matchedType = row.matched_type;   //  匹配类型
+            this.show_qualityScore = row.qualityScore;  // 质量分
             break;
           case "4":
             this.show_reg_src = row.top4;
@@ -339,6 +352,9 @@
             this.show_reg_id = row.top4id;
             this.show_score = row.top4Score;
             this.show_channel_id = row.channel_id;
+            this.show_similarLiveId = row.similar_live_id;   // 相似度id
+            this.show_matchedType = row.matched_type;   //  匹配类型
+            this.show_qualityScore = row.qualityScore;  // 质量分
             break;
           case "5":
             this.show_reg_src = row.top5;
@@ -346,6 +362,9 @@
             this.show_reg_id = row.top5id;
             this.show_score = row.top5Score;
             this.show_channel_id = row.channel_id;
+            this.show_similarLiveId = row.similar_live_id;   // 相似度id
+            this.show_matchedType = row.matched_type;   //  匹配类型
+            this.show_qualityScore = row.qualityScore;  // 质量分
             break;
         }
       },
@@ -363,7 +382,7 @@
               this.selected[i].flg = false;
               continue;
             }
-            if (!this.selected[i].libName){
+            if (!this.selected[i].libName) {
               this.selected[i].libName = '未知';
             }
             this.selected[i].flg = true;
@@ -405,50 +424,67 @@
           let resultObj = eval("(" + result + ")");
           // console.log(resultObj);
           console.log(resultObj.liveArray);
-
           this.param.total = resultObj.total;
           this.param.list = [];
           for (let i = 0; i < resultObj.liveArray.length; i++) {
             let item = {};
-            item.live_id = resultObj.liveArray[i].live_id;
-            item.channel_id = resultObj.liveArray[i].channel_id;
-            let timestamp = resultObj.liveArray[i].timeStamp;
 
+            item.live_id = resultObj.liveArray[i].live_id;   // 抓拍id
+            item.liveFaceData = "data:image/jpeg;base64," + resultObj.liveArray[i].liveFaceData;  // 抓拍照
+            item.channel_id = resultObj.liveArray[i].channel_id;  // 通道id
+
+            let timestamp = resultObj.liveArray[i].timeStamp;   // 抓拍时间搓
             item.timeStamp = new Date(timestamp).toLocaleString();
-
             item.timeStamp0 = timestamp;
-            item.liveFaceData = "data:image/jpeg;base64," + resultObj.liveArray[i].liveFaceData;
-            item.similar_live_id = resultObj.liveArray[i].similar_live_id;
-            item.top1Score = resultObj.liveArray[i].recogArray[0].topScore;
-            item.top1 = "data:image/jpeg;base64," + resultObj.liveArray[i].recogArray[0].regFaceData;
-            item.top1id = resultObj.liveArray[i].recogArray[0].registerId;
-            item.libName1 = resultObj.liveArray[i].recogArray[0].libName ? '底库：'+ resultObj.liveArray[i].recogArray[0].libName : '底库：未知';
+
+            item.similar_live_id = resultObj.liveArray[i].similar_live_id;  // 相似度id
+            item.top1Score = resultObj.liveArray[i].recogArray[0].topScore;  // 最高分
+            item.top1 = "data:image/jpeg;base64," + resultObj.liveArray[i].recogArray[0].regFaceData;  // 注册照
+            item.top1id = resultObj.liveArray[i].recogArray[0].registerId;  // 注册id
+
+            item.libName1 = resultObj.liveArray[i].recogArray[0].libName ? '底库：' + resultObj.liveArray[i].recogArray[0].libName : '底库：未知';   // 所在底库
+            item.qualityScore = resultObj.liveArray[i].recogArray[0].qualityScore;   // 质量分
+            item.matched_type = resultObj.liveArray[i].matched_type;   // 匹配类型
 
             if (resultObj.liveArray[i].recogArray[1]) {
               item.top2 = "data:image/jpeg;base64," + resultObj.liveArray[i].recogArray[1].regFaceData;
               item.top2id = resultObj.liveArray[i].recogArray[1].registerId;
               item.top2Score = resultObj.liveArray[i].recogArray[1].topScore;
-              item.libName2 = resultObj.liveArray[i].recogArray[1].libName ? '底库：'+ resultObj.liveArray[i].recogArray[1].libName : '底库：未知';
+              item.libName2 = resultObj.liveArray[i].recogArray[1].libName ? '底库：' + resultObj.liveArray[i].recogArray[1].libName : '底库：未知';
+              item.qualityScore = resultObj.liveArray[i].recogArray[1].qualityScore;   // 质量分
+              item.matched_type = resultObj.liveArray[i].matched_type;   // 匹配类型
+              item.similar_live_id = resultObj.liveArray[i].similar_live_id;  // 相似度id
+
             }
             if (resultObj.liveArray[i].recogArray[2]) {
               item.top3 = "data:image/jpeg;base64," + resultObj.liveArray[i].recogArray[2].regFaceData;
               item.top3id = resultObj.liveArray[i].recogArray[2].registerId;
               item.top3Score = resultObj.liveArray[i].recogArray[2].topScore;
-              item.libName3 = resultObj.liveArray[i].recogArray[2].libName ? '底库：'+ resultObj.liveArray[i].recogArray[2].libName : '底库：未知';
+              item.libName3 = resultObj.liveArray[i].recogArray[2].libName ? '底库：' + resultObj.liveArray[i].recogArray[2].libName : '底库：未知';
+              item.qualityScore = resultObj.liveArray[i].recogArray[2].qualityScore;   // 质量分
+              item.matched_type = resultObj.liveArray[i].matched_type;   // 匹配类型
+              item.similar_live_id = resultObj.liveArray[i].similar_live_id;  // 相似度id
 
             }
             if (resultObj.liveArray[i].recogArray[3]) {
               item.top4 = "data:image/jpeg;base64," + resultObj.liveArray[i].recogArray[3].regFaceData;
               item.top4id = resultObj.liveArray[i].recogArray[3].registerId;
               item.top4Score = resultObj.liveArray[i].recogArray[3].topScore;
-              item.libName4 = resultObj.liveArray[i].recogArray[3].libName ? '底库：'+ resultObj.liveArray[i].recogArray[3].libName : '底库：未知';
+              item.libName4 = resultObj.liveArray[i].recogArray[3].libName ? '底库：' + resultObj.liveArray[i].recogArray[3].libName : '底库：未知';
+              item.qualityScore = resultObj.liveArray[i].recogArray[3].qualityScore;   // 质量分
+              item.matched_type = resultObj.liveArray[i].matched_type;   // 匹配类型
+              item.similar_live_id = resultObj.liveArray[i].similar_live_id;  // 相似度id
 
             }
             if (resultObj.liveArray[i].recogArray[4]) {
               item.top5 = "data:image/jpeg;base64," + resultObj.liveArray[i].recogArray[4].regFaceData;
               item.top5id = resultObj.liveArray[i].recogArray[4].registerId;
               item.top5Score = resultObj.liveArray[i].recogArray[4].topScore;
-              item.libName5 = resultObj.liveArray[i].recogArray[4].libName ? '底库：'+ resultObj.liveArray[i].recogArray[4].libName : '未知';
+              item.libName5 = resultObj.liveArray[i].recogArray[4].libName ? '底库：' + resultObj.liveArray[i].recogArray[4].libName : '未知';
+              item.qualityScore = resultObj.liveArray[i].recogArray[4].qualityScore;   // 质量分
+              item.matched_type = resultObj.liveArray[i].matched_type;   // 匹配类型
+              item.similar_live_id = resultObj.liveArray[i].similar_live_id;  // 相似度id
+
             }
             this.param.list.push(item);
           }
@@ -536,7 +572,7 @@
     width: 100%;
   }
 
-  .more-dialog-left-channel,.more-dialog-left-live,.more-dialog-right-li-top ,.more-dialog-right-li-bottum {
+  .more-dialog-left-channel, .more-dialog-left-live, .more-dialog-right-li-top, .more-dialog-right-li-bottum {
     text-align: center;
   }
 
@@ -556,7 +592,7 @@
     clear: both;
   }
 
-   .show-dilog-avatar {
+  .show-dilog-avatar {
     margin-left: 40px;
     width: 85%;
   }

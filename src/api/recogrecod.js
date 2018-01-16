@@ -55,7 +55,7 @@ export function Special(iflag, bcode, channel_id, live_id, reg_id) {
   })
 }
 
-export function markPic(iflag, bcode, channel_id, live_id, reg_id, similar_id, similarLiveId, Matchtype, qualityScore) {
+export function markPic(iflag, bcode, channel_id, live_id, reg_id, similar_id, Matchtype, qualityScore) {
   return fetch({
     url: '/channel/list',
     method: 'post',
@@ -64,14 +64,12 @@ export function markPic(iflag, bcode, channel_id, live_id, reg_id, similar_id, s
         'token': '1',
         'bcode': bcode + "",
         'iflag': iflag + "",
+        'channel_id': channel_id + "",
         'live_id': live_id + "",
+        'registered_id': reg_id + "",
         'similar_live_id': similar_id + "",
-        'similarLiveId': similarLiveId + "",
         'matched_type': Matchtype + "",
         'quality_score': qualityScore + "",
-        'reg_id': reg_id + "",
-        'channel_id': channel_id + "",
-        'registered_id': reg_id + "",
       }
     }
   })
