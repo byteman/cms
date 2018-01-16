@@ -98,7 +98,7 @@
             item.label = item.id + '(' + item.name + ')'
           })
           this.camoptions = tmpList
-          console.log(this.camoptions)
+          // console.log(this.camoptions)
         })
         .catch(() => {
         })
@@ -149,13 +149,13 @@
             this.list = tmpList
             this.total = parseInt(response.data.data.total)
             this.loading = false
-            console.log(this.list)
+            // console.log(this.list)
           })
           .catch(() => {
             this.list = []
             this.total = 0
             this.loading = false
-            console.log('error')
+            // console.log('error')
           })
       },
       onSubmit() {
