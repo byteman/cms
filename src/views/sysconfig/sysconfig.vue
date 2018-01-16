@@ -10,7 +10,7 @@
       <status ref="statusch"></status>
     </el-tab-pane>
     <el-tab-pane label="阈值设置" name="threshold" >
-      <facethresholds ref="facethreshold"></facethresholds>
+      <facethresholds ref="facethresholdch"></facethresholds>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -20,12 +20,14 @@
   import Paramx from './param'
   import Status from './status'
   import Facethresholds from './facethreshold'
+  import { CommQuery } from '@/api/sysconfig'
+
   export default {
     components: {
       basic: Basic,
-      Paramx,
-      Status,
-      Facethresholds
+      paramx: Paramx,
+      status: Status,
+      facethresholds: Facethresholds
     },
     data() {
       return {
@@ -33,30 +35,40 @@
       }
     },
     created() {
-      console.log('video debug  created')
     },
     mounted() {
+      this.reload();
     },
     methods: {
       handleClick(tab) {
         switch (tab.name) {
           case 'basic':
-            console.log(this.$refs.basicch)
-            this.$refs.basicch.reload()
+            // console.log(this.$refs.basicch)
+            this.$refs.basicch.reload();
             break;
           case 'param':
-            console.log(this.$refs.paramch)
+            // console.log(this.$refs.paramch)
             this.$refs.paramch.reload()
             break;
           case 'status':
-            this.$refs.statusch.reload()
+            this.$refs.statusch.reload();
             break;
           case 'threshold':
-            this.$refs.facethreshold.reload()
+            this.$refs.facethresholdch.reload();
             break;
           default:
             this.$refs.basicch.reload()
         }
+      },
+      reload() {
+        CommQuery(0x10303)
+          .then(response => {
+            this.para = response.data.data
+            console.log(this.para)
+          })
+          .catch(() => {
+            this.$message.error("数据获取失败！请检查服务器！")
+          })
       }
     }
   }

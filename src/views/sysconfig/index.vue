@@ -45,7 +45,7 @@
       </el-table>
 
     </div>
- 
+
 
   </div>
 </template>
@@ -59,9 +59,7 @@ export default {
       list: []
     }
   },
-  created() {
-    console.log("video debug  created");
-  },
+
   mounted() {
     console.log("video debug mounted")
     this.loading = true

@@ -15,6 +15,9 @@
     <el-form-item label="抓拍版本">
       <el-input v-model="basic.snapVer" readonly="readonly"></el-input>
     </el-form-item>
+    <!--<el-form-item>-->
+      <!--<el-button type="primary" plain @click="submitForm">提交</el-button>-->
+    <!--</el-form-item>-->
   </el-form>
 </template>
 
@@ -27,27 +30,20 @@
         basic: {}
       }
     },
-    created() {
-      console.log('video debug  created')
-    },
     mounted() {
-      CommQuery(0x10303)
-        .then(response => {
-          this.basic = response.data.data
-          console.log(this.list)
-        })
-        .catch(() => {
-        })
+      this.reload();
     },
     methods: {
-      reload: function() {
-        console.log('basic reload')
+      submitForm(){
+        console.log('提交修改');
+      },
+      reload(){
         CommQuery(0x10303)
           .then(response => {
-            this.basic = response.data.data
-            console.log(this.list)
+            this.basic = response.data.data;
           })
           .catch(() => {
+              this.$message.error("获取数据失败！请检查！")
           })
       }
     }

@@ -207,3 +207,23 @@ export function AddFace(staticDBId ,img, birthday, gender, name) {
     }
   })
 }
+
+// 查询阈值
+export function queryThresholdData() {
+  return fetch({
+    url: '/v1/platform/getSwitchValue',
+    method: 'get'
+  })
+}
+
+// 修改阈值
+export function updateThresholdData(switchVal, picVal) {
+  return fetch({
+    url: '/v1/platform/setPicValue',
+    method: 'post',
+    data: {
+      switchValue: switchVal,
+      picValue: picVal
+    }
+  })
+}

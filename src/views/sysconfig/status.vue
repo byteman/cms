@@ -60,30 +60,22 @@ export default {
   data() {
     return {
       status: {
-
       }
-
     }
   },
-  created() {
-    console.log('video debug  created')
-  },
+
   mounted() {
-    CommQuery(0x12005)
-      .then(response => {
-        this.status = response.data.data
-        console.log(this.list)
-      })
-      .catch(() => {})
+   this.reload();
   },
   methods: {
     reload: function() {
       CommQuery(0x12005)
         .then(response => {
           this.status = response.data.data
-          console.log(this.list)
         })
-        .catch(() => {})
+        .catch(() => {
+          this.$message.error("获取数据失败！请检查!")
+        })
     }
   }
 }

@@ -11,10 +11,8 @@
         </el-form-item>
       </el-form>
       <el-table :data="list">
-
         <el-table-column type="selection" width="55">
         </el-table-column>
-
         <el-table-column prop="id" label="相机编号" width="200">
         </el-table-column>
         <el-table-column prop="name" label="相机名称" width="200">
@@ -25,8 +23,6 @@
                          :filter-method="filterCameraStatus"
                          :formatter="formatStatus" width="150">
         </el-table-column>
-
-
         <el-table-column label="操作" align='center'>
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="handleDetail(scope.row)">详情</el-button>
@@ -39,23 +35,14 @@
             </el-button>
           </template>
         </el-table-column>
-
       </el-table>
-
     </div>
-
-
     <el-dialog :title="title" :visible.sync="showChannel" width="50%" center>
       <el-form ref="form" :model="camera" label-width="100px" :rules="rules">
-
         <el-col :span="11">
-
           <el-form-item label="相机编号" prop="cameraId">
-
             <el-input :disabled="filedEnable" v-model="camera.cameraId"></el-input>
-
           </el-form-item>
-
           <el-form-item label="是否启用">
             <el-switch :disabled="filedEnable"
                        v-model="camera.enable"
@@ -83,28 +70,18 @@
               </el-option>
             </el-select>
           </el-form-item>
-
           <el-form-item label="端口">
             <el-input :disabled="filedEnable" v-model="camera.cameraPort"></el-input>
           </el-form-item>
-
           <el-form-item :label="namePwd">
             <el-input :disabled="filedEnable" v-model="camera.cameraPwd"></el-input>
           </el-form-item>
-
         </el-col>
-
         <el-col :span="11">
-
           <el-form-item label="相机名称">
-
             <el-input :disabled="filedEnable" v-model="camera.cameraName"></el-input>
-
           </el-form-item>
-
           <el-form-item label="相机类型">
-
-
             <el-select :disabled="filedEnable" v-model="camera.cameraType" placeholder="请选择相机类型"
                        @change="onSelectChanged" style="width:100%">
               <el-option
@@ -114,26 +91,18 @@
                 :value="item.value">
               </el-option>
             </el-select>
-
           </el-form-item>
-
           <el-form-item label="URL">
-
             <el-input :disabled="filedEnable" v-model="camera.cameraChannel"
                       placeholder="海康、大华、宇视相机的主码流填live"></el-input>
-
           </el-form-item>
-
           <el-form-item label="IP地址">
             <el-input :disabled="filedEnable" v-model="camera.cameraIp"></el-input>
           </el-form-item>
-
           <el-form-item :label="nameUser">
             <el-input :disabled="filedEnable" v-model="camera.cameraUser"></el-input>
           </el-form-item>
-
         </el-col>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showChannel = false">取 消</el-button>
@@ -228,9 +197,7 @@
         <el-button type="primary" @click="handleSavePrew">保 存</el-button>
       </span>
     </el-dialog>
-
   </div>
-
 </template>
 
 <script>
@@ -238,9 +205,7 @@
   import Channel from "./channel";
 
   export default {
-    components: {
-      Channel
-    },
+    components: {Channel},
     data() {
       var id_validator = (rule, value, callback) => {
         var re = /^\d+(\.\d+)?$/;
@@ -394,7 +359,7 @@
         else return this.handleEditCamera;
       },
       filedEnable(name) {
-        console.log("field =", this.cameraDialogState);
+        // console.log("field =", this.cameraDialogState);
         // 详情，全部禁用
         if (this.cameraDialogState === 1) return true;
         else if (this.cameraDialogState === 0)
@@ -422,7 +387,7 @@
         }
       },
       closeDlg() {
-        console.log("close");
+        // console.log("close");
         this.showChannel = false;
       },
       onReset: function () {
@@ -436,7 +401,7 @@
         CommQuery(0x12003)
           .then(response => {
             this.list = response.data.data.channels;
-            console.log(this.list);
+            // console.log(this.list);
           })
           .catch(() => {
           });
@@ -458,7 +423,6 @@
           });
       },
       handleSaveSnap() {
-        console.log("edit camera");
         var chan = this.snap.id;
         var data = {
           requestdata: {

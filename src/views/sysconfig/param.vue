@@ -8,15 +8,15 @@
       </el-form>
     </div>
     <div class="footer">
-      <el-button type="primary" plain round @click="onSubmit">提交</el-button>
+      <el-button type="primary" plain  @click="onSubmit">提交</el-button>
     </div>
   </div>
 </template>
 
 <script>
-  import {CommQuery} from '@/api/sysconfig'
-  import {PortSave} from '@/api/sysconfig'
-  import {BasicSave} from '@/api/sysconfig'
+  import { CommQuery } from '@/api/sysconfig'
+  import { PortSave } from '@/api/sysconfig'
+  import { BasicSave } from '@/api/sysconfig'
 
   export default {
     data() {
@@ -26,42 +26,34 @@
         }
       }
     },
-    created() {
-      console.log('video debug  created')
-    },
     mounted() {
-      CommQuery(0x10303)
-        .then(response => {
-          this.para = response.data.data;
-          console.log(this.para)
-        })
-        .catch(() => {
-        })
+      this.reload()
     },
     methods: {
       onSubmit: function() {
         PortSave(0x10315, this.para.code)
           .then(response => {
-            this.$message('设备唯一编号(Port)保存:' + response.data.message)
+            this.$message('设备唯一编号(Port)保存:' + response.data.message);
             console.log(response.data.message)
           })
           .catch(() => {
-            console.log('1')
+            this.$message.error("获取数据失败！请检查！")
           })
         BasicSave(0x10304, this.para.code)
           .then(response => {
+            console.log(response);
           })
           .catch(() => {
-            console.log('1')
+            this.$message.error("获取数据失败！请检查！")
           })
       },
-      reload: function() {
+      reload() {
         CommQuery(0x10303)
           .then(response => {
             this.para = response.data.data
-            console.log(this.para)
           })
           .catch(() => {
+            this.$message.error("获取数据失败！请检查！")
           })
       }
     }
