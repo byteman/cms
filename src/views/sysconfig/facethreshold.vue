@@ -19,18 +19,11 @@
   export default {
     data() {
       var setValue_validator = (rule, value, callback) => {
-        var re = /^\d+(\.\d+)?$/;
-        var re2 = /^[1-9]+[0-9]*]*$/;
-        if (!re.test(value)) {
-          callback(new Error("组ID必须是0-1之间的小数"));
-          this.$message("组ID必须是0-1之间的小数");
-        }
         if (value < 0 || value > 1) {
-          callback(new Error("0-1之间的小数"));
-          this.$message("0-1之间的小数");
+          callback(new Error("图片阈值必须是0-1之间的小数"));
+          this.$message.error("图片阈值必须是0-1之间的小数");
         }
-      }
-
+      };
       return {
         faceThresholds: {
           switchBox: false,   //  切换开关
@@ -40,27 +33,38 @@
           settingValue: [{validator: setValue_validator, trigger: "blur"}],
         }
       }
-
     },
     mounted() {
       this.reload();
     },
     methods: {
       submit_rec() {
-        console.log(this.faceThresholds.switchBox);
-        console.log(this.faceThresholds.settingValue);
-        updateThresholdData(this.faceThresholds.switchBox, this.faceThresholds.settingValue).then(responce => {
-          console.log(responce);
-          this.faceThresholds = responce.data
+        if (!this.faceThresholds.switchBox){
+          this.$message.error("请开启阈值设置后重试！");
+          this.faceThresholds.settingValue = "";
+          return ;
+        }
+        if (this.faceThresholds.settingValue >= 1 || this.faceThresholds.settingValue <= 0 ){
+          this.$message.error("阈值设置为0-1之间的小数！");
+          this.faceThresholds.settingValue = "";
+          return;
+        }
+        updateThresholdData(this.faceThresholds.switchBox, JSON.parse(this.faceThresholds.settingValue)).then(responce => {
+          if (responce.data.result === 0){
+            this.$message.success("提交成功！");
+            this.reload();
+          } else {
+            this.$message.error("数据提交失败！请检查！");
+          }
         }).catch(() => {
-          this.$message.error("数据获取失败！请检查！");
+          this.$message.error("数据提交失败！请检查！");
         })
       },
       reload() {
         queryThresholdData()
           .then(response => {
-            this.faceThresholds = response.data;
-            console.log(response);
+            this.faceThresholds.settingValue = response.data.picValue;
+            this.faceThresholds.switchBox = response.data.switchValue;
           })
           .catch(() => {
             this.$message.error("数据提交失败！请检查！");

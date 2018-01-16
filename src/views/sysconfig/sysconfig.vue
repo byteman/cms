@@ -43,12 +43,10 @@
       handleClick(tab) {
         switch (tab.name) {
           case 'basic':
-            // console.log(this.$refs.basicch)
             this.$refs.basicch.reload();
             break;
           case 'param':
-            // console.log(this.$refs.paramch)
-            this.$refs.paramch.reload()
+            this.$refs.paramch.reload();
             break;
           case 'status':
             this.$refs.statusch.reload();

@@ -211,15 +211,16 @@ export function AddFace(staticDBId ,img, birthday, gender, name) {
 // 查询阈值
 export function queryThresholdData() {
   return fetch({
-    url: '/v1/platform/getSwitchValue',
-    method: 'get'
+    url: 'api/v1/platform/getSwitchValue',
+    method: 'post',
+    data: {}
   })
 }
 
 // 修改阈值
 export function updateThresholdData(switchVal, picVal) {
   return fetch({
-    url: '/v1/platform/setPicValue',
+    url: 'api/v1/platform/setPicValue',
     method: 'post',
     data: {
       switchValue: switchVal,

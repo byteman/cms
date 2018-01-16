@@ -35,7 +35,7 @@ export default {
     CommQuery(0x10303)
       .then(response => {
         this.basic = response.data.data
-        console.log(this.list)
+        // console.log(this.list)
       })
       .catch(() => {})
   },
