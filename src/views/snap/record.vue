@@ -13,7 +13,7 @@
         </el-form-item>
 
         <el-form-item label="相机编号">
-          <el-select v-model="selectcam" placeholder="请输入相机编号">
+          <el-select v-model="selectcam" multiple :multiple-limit=1 placeholder="请输入相机编号">
             <el-option
               v-for="item in camoptions"
               :key="item.value"
@@ -85,29 +85,31 @@
         loading: false
       }
     },
+    created() {
+      console.log('snap record page created')
+    },
     mounted() {
-      this.loading = true;
+      this.loading = true
       CommQuery(0x12003)
         .then(response => {
-          const tmpList = response.data.data.channels;
-          // console.log(tmpList);
-          tmpList.forEach(item => {
-            item.value = item.id;
+          const tmpList = response.data.data.channels
+          tmpList.forEach( item => {
+            item.value = item.id
             item.label = item.id + '(' + item.name + ')'
-          });
+          })
           this.camoptions = tmpList
-          // console.log(this.camoptions)
+          console.log(this.camoptions)
         })
         .catch(() => {
-        });
-      this.onRefresh();
+        })
+      this.onRefresh()
     },
     methods: {
       onRefresh() {
-        let starttime = null;
-        let endtime = null;
-        let camid = null;
-        const camname = null;
+        let starttime = null
+        let endtime = null
+        let camid = null
+        const camname = null
 
         if (this.datetimerange.length === 2) {
           let y = this.datetimerange[0].getUTCFullYear()
@@ -117,7 +119,7 @@
           let M = this.datetimerange[0].getUTCMinutes()
           let s = this.datetimerange[0].getUTCSeconds()
           let utc = Date.UTC(y, m, d, h, M, s)
-          starttime = utc;
+          starttime = utc
           y = this.datetimerange[1].getUTCFullYear()
           m = this.datetimerange[1].getUTCMonth()
           d = this.datetimerange[1].getUTCDate()
@@ -125,50 +127,49 @@
           M = this.datetimerange[1].getUTCMinutes()
           s = this.datetimerange[1].getUTCSeconds()
           utc = Date.UTC(y, m, d, h, M, s)
-          endtime = utc;
+          endtime = utc
           console.log(starttime + endtime)
         }
         if (this.selectcam.length > 0) {
-          camid = [];
-          this.selectcam.forEach(item => {
+          camid = []
+          this.selectcam.forEach( item => {
             camid.push(item.toString())
           })
         }
-        this.loading = true;
+        this.loading = true
         QuerySnapRecord(this.currentPage.toString(), '10', starttime, endtime, camid, camname)
           .then(response => {
-            // console.log(response);
-            this.list = [];
-            this.total = 0;
-            const tmpList = response.data.data.list;
-            tmpList.forEach( item => {
-              item.aligndata = Base64ToImage(item.aligndata);
+            this.list = []
+            this.total = 0
+            const tmpList = response.data.data.list
+            tmpList.forEach( item =>  {
+              item.aligndata = Base64ToImage(item.aligndata)
               item.kfktimestamp = new Date(item.kfktimestamp).toLocaleString()
-            });
-            this.list = tmpList;
+            })
+            this.list = tmpList
             this.total = parseInt(response.data.data.total)
-            this.loading = false;
-            // console.log(this.list)
+            this.loading = false
+            console.log(this.list)
           })
           .catch(() => {
-            this.list = [];
-            this.total = 0;
-            this.loading = false;
-            // console.log('error')
+            this.list = []
+            this.total = 0
+            this.loading = false
+            console.log('error')
           })
       },
       onSubmit() {
         this.onRefresh()
       },
       onReset() {
-        this.selectcam = [];
-        this.datetimerange = [];
+        this.selectcam = []
+        this.datetimerange = []
       },
       handleSizeChange() {
         this.onRefresh()
       },
       handleCurrentChange(val) {
-        this.currentPage = val;
+        this.currentPage = val
         this.onRefresh()
       }
     }
