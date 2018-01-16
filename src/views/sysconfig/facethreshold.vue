@@ -7,10 +7,11 @@
     <el-form-item label="识别阈值">
       <el-input v-model="faceThresholds.settingValue"></el-input>
     </el-form-item>
-    <el-form-item>
-      <el-button type="primary" plain @click="submit_rec">提交</el-button>
-    </el-form-item>
+    <div class="footer">
+      <el-button type="primary" plain  @click="submit_rec">提交</el-button>
+    </div>
   </el-form>
+
 </template>
 
 <script>
@@ -74,6 +75,10 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  .footer {
+    height: 50px;
+    margin-top: 40px;
+    text-align: center;
+  }
 </style>
