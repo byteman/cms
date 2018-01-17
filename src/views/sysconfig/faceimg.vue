@@ -56,8 +56,7 @@
     <el-dialog title='批量导入人脸进底库' :visible.sync="upload_show" width="25%" center>
       <el-form ref="form" label-width="100px">
         <el-form-item label="底库">
-          <el-select v-model="selectdb" placeholder="请选择底库" @change="handleSelectDbChange" :maxlength="10"
-                     class="database-num2">
+          <el-select v-model="batchUploadDb" placeholder="请选择底库" :maxlength="10" class="database-num2">
             <el-option
               v-for="item in dboptions"
               :key="item.value"
@@ -71,24 +70,28 @@
             class="upload"
             :data="upload_form"
             :limit="1"
+            ref="upload"
             :action="upload_url"
             accept=".zip"
+            :auto-upload="false"
+            :show-file-list="true"
             :before-upload="handleBeforeUpload"
             :on-success='handleSuccess'
+            :on-progress="updateZipPag"
             :on-exceed="handleExceed"
             :on-preview="handlePreview"
             :on-error="updateZipError"
-            :auto-upload="true"
             :file-list="upload_file_list">
             <el-button size="large" type="primary" class="btn-distance database-num2">选择上传（仅支持zip文件）</el-button>
-            <div slot="tip" class="el-upload__tip">{{ upload_message }}</div>
+            <!--<div slot="tip" class="el-upload__tip">{{ upload_message }}</div>-->
             <div slot="tip" class="el-upload__tip">图片命名格式: <span class="redTip">姓名-用户id</span>-部门-性别-民族-籍贯-生日</div>
             <div slot="tip" class="el-upload__tip">红色部分为必选，图片仅支持jpg/png/bmp格式</div>
           </el-upload>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="upload_show = false">关闭</el-button>
+        <el-button plain type="primary" @click="updateZipPag">上传</el-button>
+        <el-button plain @click="upload_show = false">关闭</el-button>
       </span>
     </el-dialog>
 
@@ -194,7 +197,7 @@
         list: [],    // 列表数据
         upload_show: false,
         upload_file_list: [],
-        upload_form: {},
+        upload_form: {},   // 上传至底库
         upload_url: "",
         upload_message: "",
         face_title: "",
@@ -202,7 +205,7 @@
         face: {},
         face_avatar_url: "",
         face_dlg_btn_name: "",
-        selectedDb: [],
+        batchUploadDb: "",  // 批量上传底库
         // 表单验证
         devform: {
           name: "", // 姓名
@@ -236,7 +239,7 @@
       GetGroup(80001)
         .then(response => {
           const tmpList = response.data.data.group_ids;
-          tmpList.forEach(function (item) {
+          tmpList.forEach( item => {
             item.value = item.id;
             item.label = item.id + "(" + item.group_name + ")";
           });
@@ -248,20 +251,24 @@
         });
     },
     methods: {
+      // 上传单张人脸
       beforeUpload(file) {
         return false
       },
+      // 上传后文件可以预览
       handlePreview(file) {
         console.log(file);
       },
+
       updateZipError(err, file, fileList) {
         console.log(err);
-        console.log(file);
-        console.log(fileList);
-        if (err !== 0) {
-          this.upload_message = "上传文件:" + JSON.stringify(res);
-        }
+        // console.log(file);
+        // console.log(fileList);
+        // if (err !== 0) {
+          // this.upload_message = "上传文件:" + JSON.stringify(res);
+        // }
       },
+
       changeFile(file) {
         let This = this;
         let reader = new FileReader();
@@ -269,6 +276,31 @@
         reader.onload = function () {
           This.devform.face_avatar_url = this.result;
         };
+      },
+      // 上传文件时的处理函数
+      updateZipPag(event, file, fileList){
+        if (!this.batchUploadDb){
+          this.$message.error("请选择上传底库！");
+          return;
+        }
+
+        this.$refs.upload.submit();  // 上传文件
+        // this.$confirm('确认上传文件包？, 是否继续?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        //
+        // }).then(() => {
+        //   this.$message({
+        //     type: 'success',
+        //     message: '上传成功!'
+        //   })
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '取消上传！'
+        //   })
+        // })
       },
       // 刷新列表
       onRefresh() {
@@ -330,7 +362,7 @@
       // 导入人脸弹窗
       onImport() {
         this.upload_show = true;
-        this.upload_form.group_id = this.selectdb;
+        this.upload_form.group_id = this.batchUploadDb;  // 上传底库
         this.upload_file_list = [];
       },
       // 删除单张人脸
@@ -361,20 +393,32 @@
           });
       },
       handleBeforeUpload(file) {
-        if (!this.selectdb) {
+        console.log(file);
+        if (!this.batchUploadDb) {
+          // debugger;
           this.$message.error("底库不能为空，请选择底库后重试");
-          return false;
+          return ;
         }
         let zipReg = /^\S+\.zip$/;
         if (!zipReg.test(file.name)) {
-          this.$message.warning("请上传后缀为.zip的压缩包文件！");
-          return false;
+          this.$message.error("请上传后缀为.zip的压缩包文件！");
+          return ;
         }
-        this.upload_message = "";
-      },
+        if(!file){
+          this.$message.error("上传文件不能为空，请选择文件后重试！");
+          return;
+        }
+        },
+      // 上传压缩包
       handleSuccess(res, file, fileList) {
-        if (res.status !== 0) {
-          this.upload_message = "上传文件:" + JSON.stringify(res);
+        console.log(res);
+        if (res.result !== 0) {
+          this.$message.error("上传文件失败！")
+          this.upload_file_list.shift();
+        } else {
+          this.batchUploadDb = "";  // 清空底库
+          this.$message.success("上传文件成功！");
+          this.onRefresh();
         }
       },
       handleExceed(files, fileList) {

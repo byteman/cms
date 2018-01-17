@@ -304,7 +304,7 @@ export default {
             // console.log(msg);
             let live_id = msg.live_id;
             let channel_id = msg.channel_id;
-            let lib_name= msg.libName;
+            let lib_name= msg.libName ? msg.libName : "未知";
             // console.log(lib_name);
             let live_face = "data:image/jpg;base64," + msg.live_face;
             let registered_face = "data:image/jpg;base64," + msg.registered_face_0;
