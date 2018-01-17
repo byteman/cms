@@ -279,28 +279,17 @@
       },
       // 上传文件时的处理函数
       updateZipPag(event, file, fileList){
-        if (!this.batchUploadDb){
-          this.$message.error("请选择上传底库！");
+        if (!this.batchUploadDb) {
+          this.$message.error("底库不能为空，请选择底库！");
           return;
         }
-
-        this.$refs.upload.submit();  // 上传文件
-        // this.$confirm('确认上传文件包？, 是否继续?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        //
-        // }).then(() => {
-        //   this.$message({
-        //     type: 'success',
-        //     message: '上传成功!'
-        //   })
-        // }).catch(() => {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '取消上传！'
-        //   })
-        // })
+        // console.log(file);
+        // console.log(fileList);
+        // if (!file){
+        //   this.$message.error("文件不能为空，请选择上传的文件！");
+        //   return;
+        // }
+        this.$refs.upload.submit();  // 提交文件
       },
       // 刷新列表
       onRefresh() {
@@ -404,10 +393,7 @@
           this.$message.error("请上传后缀为.zip的压缩包文件！");
           return ;
         }
-        if(!file){
-          this.$message.error("上传文件不能为空，请选择文件后重试！");
-          return;
-        }
+
         },
       // 上传压缩包
       handleSuccess(res, file, fileList) {
