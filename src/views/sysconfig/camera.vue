@@ -61,7 +61,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="人脸底库">
-            <el-select :disabled="filedEnable" v-model="camera.group_id" placeholder="请选择人脸底库" style="width:100%">
+            <el-select :disabled="filedEnable" v-model="camera.group_id" multiple placeholder="请选择人脸底库" style="width:100%">
               <el-option
                 v-for="item in facedbs"
                 :key="item.id"
@@ -325,13 +325,14 @@
       console.log("camera created");
     },
     mounted() {
-      this.onRefresh();
+      this.onRefresh()
       CommQuery(80001)
         .then(response => {
-          this.facedbs = response.data.data.group_ids;
+          this.facedbs = response.data.data.group_ids
+          console.log(this.facedbs)
         })
         .catch(() => {
-        });
+        })
     },
 
     filters: {
@@ -379,10 +380,10 @@
       },
       onSelectChanged(value) {
         if (value === 'file') {
-          this.nameUser = '帧率'
+          this.nameUser = '帧率';
           this.namePwd = '循环次数'
         } else {
-          this.nameUser = '用户名'
+          this.nameUser = '用户名';
           this.namePwd = '密码'
         }
       },
@@ -608,6 +609,7 @@
             }
             this.camera = tmp.ags;
             console.log(this.camera);
+            console.log(this.camera.group_id);
             this.showChannel = true;
           })
           .catch(() => {
