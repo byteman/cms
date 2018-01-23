@@ -5,7 +5,7 @@
       </el-switch>
     </el-form-item>
     <el-form-item label="识别阈值">
-      <el-input v-model="faceThresholds.settingValue"></el-input>
+      <el-input v-model="faceThresholds.settingValue" ></el-input>
     </el-form-item>
     <div class="footer">
       <el-button type="primary" plain  @click="submit_rec">提交</el-button>
@@ -26,6 +26,7 @@
         }
       };
       return {
+        controlEdit: false,
         faceThresholds: {
           switchBox: false,   //  切换开关
           settingValue: ''   //  设置
@@ -40,11 +41,11 @@
     },
     methods: {
       submit_rec() {
-        if (!this.faceThresholds.switchBox){
-          this.$message.error("请开启阈值设置后重试！");
-          this.faceThresholds.settingValue = "";
-          return ;
-        }
+        // if (!this.faceThresholds.switchBox){
+        //   this.faceThresholds.settingValue =  0.00001;
+        // }
+        this.faceThresholds.settingValue = this.faceThresholds.switchBox ? this.faceThresholds.settingValue : 0.00001 ;
+
         if (this.faceThresholds.settingValue >= 1 || this.faceThresholds.settingValue <= 0 ){
           this.$message.error("阈值设置为0-1之间的小数！");
           this.faceThresholds.settingValue = "";
