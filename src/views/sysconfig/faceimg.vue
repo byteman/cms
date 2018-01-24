@@ -384,7 +384,7 @@
           return;
         }
       },
-      // 上传压缩包
+      // 上传完成时会调用钩子函数
       handleSuccess(res, file, fileList) {
         if (res.status !== 0) {
           this.$message.error("上传文件失败！")
