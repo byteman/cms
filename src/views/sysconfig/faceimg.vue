@@ -66,22 +66,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="图片压缩包">
-          <el-upload
-            class="upload"
-            :data="upload_form"
-            :limit="1"
-            ref="upload"
-            :action="upload_url"
-            accept=".zip"
-            :auto-upload="false"
-            :show-file-list="true"
-            :before-upload="handleBeforeUpload"
-            :on-success='handleSuccess'
-            :on-progress="updateZipPag"
-            :on-exceed="handleExceed"
-            :on-preview="handlePreview"
-            :on-error="updateZipError"
-            :file-list="upload_file_list">
+          <el-upload class="upload"
+                     :data="upload_form"
+                     :limit="1"
+                     ref="upload"
+                     :action="upload_url"
+                     accept=".zip"
+                     :auto-upload="false"
+                     :show-file-list="true"
+                     :on-success='handleSuccess'
+                     :on-exceed="handleExceed"
+                     :on-preview="handlePreview"
+                     :on-error="updateZipError"
+                     :file-list="upload_file_list">
             <el-button size="large" type="primary" class="btn-distance database-num2">选择上传（仅支持zip文件）</el-button>
             <!--<div slot="tip" class="el-upload__tip">{{ upload_message }}</div>-->
             <div slot="tip" class="el-upload__tip">图片命名格式: <span class="redTip">姓名-用户id</span>-部门-性别-民族-籍贯-生日</div>
@@ -239,7 +236,7 @@
       GetGroup(80001)
         .then(response => {
           const tmpList = response.data.data.group_ids;
-          tmpList.forEach( item => {
+          tmpList.forEach(item => {
             item.value = item.id;
             item.label = item.id + "(" + item.group_name + ")";
           });
@@ -265,7 +262,7 @@
         // console.log(file);
         // console.log(fileList);
         // if (err !== 0) {
-          // this.upload_message = "上传文件:" + JSON.stringify(res);
+        // this.upload_message = "上传文件:" + JSON.stringify(res);
         // }
       },
 
@@ -278,17 +275,11 @@
         };
       },
       // 上传文件时的处理函数
-      updateZipPag(event, file, fileList){
+      updateZipPag(event) {
         if (!this.batchUploadDb) {
           this.$message.error("底库不能为空，请选择底库！");
           return;
         }
-        // console.log(file);
-        // console.log(fileList);
-        // if (!file){
-        //   this.$message.error("文件不能为空，请选择上传的文件！");
-        //   return;
-        // }
         this.$refs.upload.submit();  // 提交文件
       },
       // 刷新列表
@@ -313,7 +304,7 @@
             this.list = [];
             this.total = 0;
             const tmpList = response.data.data.list;
-            tmpList.forEach( item => {
+            tmpList.forEach(item => {
               item.aligndata = Base64ToImage(item.img);
               if (!item.gender) {
                 item.gender = '未知'
@@ -364,7 +355,7 @@
           .then(() => {
             DeleteFace(row.staticDBId, row.id)
               .then(response => {
-                if (response.data.result === 0){
+                if (response.data.result === 0) {
                   this.$message.success("删除人脸成功!")
                   this.onRefresh();
                 } else {
@@ -384,26 +375,24 @@
       handleBeforeUpload(file) {
         console.log(file);
         if (!this.batchUploadDb) {
-          // debugger;
           this.$message.error("底库不能为空，请选择底库后重试");
-          return ;
+          return;
         }
         let zipReg = /^\S+\.zip$/;
         if (!zipReg.test(file.name)) {
           this.$message.error("请上传后缀为.zip的压缩包文件！");
-          return ;
+          return;
         }
-
-        },
+      },
       // 上传压缩包
       handleSuccess(res, file, fileList) {
-        console.log(res);
-        if (res.result !== 0) {
+        if (res.status !== 0) {
           this.$message.error("上传文件失败！")
           this.upload_file_list.shift();
         } else {
           this.batchUploadDb = "";  // 清空底库
           this.$message.success("上传文件成功！");
+          this.upload_show = false;
           this.onRefresh();
         }
       },
