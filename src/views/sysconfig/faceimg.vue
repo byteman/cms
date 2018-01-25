@@ -54,7 +54,7 @@
 
     <!--底库批量导入人脸-->
     <el-dialog title='批量导入人脸进底库' :visible.sync="upload_show" width="25%" center>
-      <el-form ref="form" label-width="100px">
+      <el-form ref="form" v-model="upload_form" label-width="100px">
         <el-form-item label="底库">
           <el-select v-model="batchUploadDb" placeholder="请选择底库" :maxlength="10" class="database-num2">
             <el-option
@@ -276,11 +276,14 @@
       },
       // 上传文件时的处理函数
       updateZipPag(event) {
-        if (!this.batchUploadDb) {
+        this.upload_form.group_id = this.batchUploadDb;  // 上传底库
+        console.log(this.upload_form.group_id);
+        if (!this.upload_form.group_id) {
           this.$message.error("底库不能为空，请选择底库！");
           return;
+        } else {
+          this.$refs.upload.submit();  // 提交文件
         }
-        this.$refs.upload.submit();  // 提交文件
       },
       // 刷新列表
       onRefresh() {
@@ -342,7 +345,7 @@
       // 导入人脸弹窗
       onImport() {
         this.upload_show = true;
-        this.upload_form.group_id = this.batchUploadDb;  // 上传底库
+        // this.upload_form.group_id = this.batchUploadDb;  // 上传底库
         this.upload_file_list = [];
       },
       // 删除单张人脸
