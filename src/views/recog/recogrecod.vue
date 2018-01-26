@@ -132,29 +132,29 @@
       <div class="show-dilog">
         <img class="show-dilog-avatar" :src="show_reg_src"/>
         <p class="show-dilog-score">{{ this.show_score }}</p>
-        <ul class="buttion-ul">
-          <li class="button-li1">
-            <el-button icon="el-icon-arrow-left" @click="specialcontroll(1,0x12030)"></el-button>
-          </li>
-          <li class="button-li2">
-            <el-button icon="el-icon-arrow-right" @click="specialcontroll(2,0x12030)"></el-button>
-          </li>
-          <li class="button-li3">
-            <el-button icon="el-icon-refresh" @click="specialcontroll(3,0x12030)"></el-button>
-          </li>
-          <li class="button-li4">
-            <el-button icon="el-icon-arrow-up" @click="specialcontroll(1,0x12017)"></el-button>
-          </li>
-          <li class="button-li5">
-            <el-button icon="el-icon-arrow-down" @click="specialcontroll(2,0x12017)"></el-button>
-          </li>
-          <li class="button-li6">
-            <el-button icon="el-icon-circle-close-outline" @click="specialcontroll(3,0x12017)"></el-button>
-          </li>
-          <li class="button-li7">
-            <el-button icon="el-icon-check" @click="markPicControl(1,0x12014)"></el-button>
-          </li>
-        </ul>
+        <!--<ul class="buttion-ul">-->
+          <!--<li class="button-li1">-->
+            <!--<el-button icon="el-icon-arrow-left" @click="specialcontroll(1,0x12030)"></el-button>-->
+          <!--</li>-->
+          <!--<li class="button-li2">-->
+            <!--<el-button icon="el-icon-arrow-right" @click="specialcontroll(2,0x12030)"></el-button>-->
+          <!--</li>-->
+          <!--<li class="button-li3">-->
+            <!--<el-button icon="el-icon-refresh" @click="specialcontroll(3,0x12030)"></el-button>-->
+          <!--</li>-->
+          <!--<li class="button-li4">-->
+            <!--<el-button icon="el-icon-arrow-up" @click="specialcontroll(1,0x12017)"></el-button>-->
+          <!--</li>-->
+          <!--<li class="button-li5">-->
+            <!--<el-button icon="el-icon-arrow-down" @click="specialcontroll(2,0x12017)"></el-button>-->
+          <!--</li>-->
+          <!--<li class="button-li6">-->
+            <!--<el-button icon="el-icon-circle-close-outline" @click="specialcontroll(3,0x12017)"></el-button>-->
+          <!--</li>-->
+          <!--<li class="button-li7">-->
+            <!--<el-button icon="el-icon-check" @click="markPicControl(1,0x12014)"></el-button>-->
+          <!--</li>-->
+        <!--</ul>-->
         <div class="clearfix"></div>
       </div>
     </el-dialog>
@@ -283,35 +283,35 @@
         this.show_channel_id = this.selectedchannel_id;
       },
       // 标记图片
-      markPicControl(iflag, bcode) {
-        markPic(iflag, bcode,
-          this.show_channel_id,
-          this.show_live_id,
-          this.show_reg_id,
-          this.show_similarLiveId,
-          this.show_matchedType,
-          this.show_qualityScore).then(responce => {
-          if (responce.data.status === 0) {
-            this.$message.success('操作成功！')
-          }
-          console.log(responce);
-        }).catch(() => {
-          this.$message.error('标记图片失败！')
-        })
-      },
+      // markPicControl(iflag, bcode) {
+      //   markPic(iflag, bcode,
+      //     this.show_channel_id,
+      //     this.show_live_id,
+      //     this.show_reg_id,
+      //     this.show_similarLiveId,
+      //     this.show_matchedType,
+      //     this.show_qualityScore).then(responce => {
+      //     if (responce.data.status === 0) {
+      //       this.$message.success('操作成功！')
+      //     }
+      //     console.log(responce);
+      //   }).catch(() => {
+      //     this.$message.error('标记图片失败！')
+      //   })
+      // },
       // 微调图片参数
-      specialcontroll(iflag, bcode) {
-        Special(iflag, bcode, this.show_channel_id, this.show_live_id, this.show_reg_id).then(resp => {
-          if (resp.data.status === 0) {
-            this.$message.success('操作成功')
-          } else {
-            this.$message.error('操作失败')
-          }
-        }).catch(() => {
-          this.$message.error('操作失败，请检查服务器！')
-        })
-        ;
-      },
+      // specialcontroll(iflag, bcode) {
+      //   Special(iflag, bcode, this.show_channel_id, this.show_live_id, this.show_reg_id).then(resp => {
+      //     if (resp.data.status === 0) {
+      //       this.$message.success('操作成功')
+      //     } else {
+      //       this.$message.error('操作失败')
+      //     }
+      //   }).catch(() => {
+      //     this.$message.error('操作失败，请检查服务器！')
+      //   })
+      //   ;
+      // },
       specialClick(row, index) {
         this.show = true;
         switch (index + '') {
