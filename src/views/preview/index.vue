@@ -286,8 +286,8 @@ export default {
 
         let wsc = new ReconnectingWebSocket(
           // 打包之前修改修改
-          // "ws://" + location.hostname + ':9980' + "/" + cameraId,
-          "ws://" + process.env.SOCKET_API + "/" + cameraId,
+          "ws://" + location.hostname + ':9980' + "/" + cameraId,
+          //"ws://" + process.env.SOCKET_API + "/" + cameraId,
           null,
           { debug: false, reconnectInterval: 4000 }
         );

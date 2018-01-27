@@ -74,3 +74,19 @@ export function markPic(iflag, bcode, channel_id, live_id, reg_id, similar_id, M
     }
   })
 }
+
+export function deleteResult(bcode, timestamp, channel_id, live_id){
+  return fetch({
+    url: '/channel/list',
+    method: 'post',
+    data: {
+      'requestdata': {
+        'token': '1',
+        'bcode': bcode + "",
+        'timeStamp': timestamp,
+        'channel_id': channel_id + "",
+        'live_id': live_id + "",
+      }
+    }
+  })
+}

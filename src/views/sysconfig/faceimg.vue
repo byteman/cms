@@ -231,8 +231,8 @@
     },
     mounted() {
       this.loading = true;
-      this.upload_url = process.env.BASE_API + "/system/increaseLib";
-      // this.upload_url = 'http://' + location.hostname + ':8887' + "/system/increaseLib";
+      //this.upload_url = process.env.BASE_API + "/system/increaseLib";
+      this.upload_url = 'http://' + location.hostname + ':8887' + "/system/increaseLib";
       GetGroup(80001)
         .then(response => {
           const tmpList = response.data.data.group_ids;
